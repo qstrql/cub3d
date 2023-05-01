@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_next_line.c                                 :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjouot <mjouot@marvin.42.fr>               +#+  +:+       +#+        */
+/*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/30 16:59:03 by mjouot            #+#    #+#             */
-/*   Updated: 2022/11/08 18:22:41 by mjouot           ###   ########.fr       */
+/*   Created: 2023/05/01 17:58:49 by mjouot            #+#    #+#             */
+/*   Updated: 2023/05/01 18:19:41 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+//#include "../INCLUDE/cub3d.h"
+#include "cub3d.h"
 
-#include "../../INCLUDES/libft.h"
-#include <stdlib.h> //free
-#include <sys/types.h> //ssize_t
-#include <unistd.h> //read
-
-static char	*ft_realloc(char *buf, char *line)
+char	*ft_realloc(char *buf, char *line)
 {
 	char	*re_line;
 
@@ -24,45 +21,45 @@ static char	*ft_realloc(char *buf, char *line)
 	return (re_line);
 }
 
-static char	*ft_get_line(char *buf)
+char	*ft_get_line(char *str)
 {
 	int		i;
 	char	*line;
 
 	i = 0;
-	if (buf[0] == '\0')
+	if (str[0] == '\0')
 		return (NULL);
-	while (buf[i] != '\0' && buf[i] != '\n')
+	while (str[i] != '\0' && str[i] != '\n')
 		i++;
-	if (buf[i] == '\n')
+	if (str[i] == '\n')
 		i += 1;
 	line = ft_calloc(i + 1, sizeof(char));
 	if (line == NULL)
 		return (NULL);
 	i = 0;
-	while (buf[i] != '\0' && buf[i] != '\n')
+	while (str[i] != '\0' && str[i] != '\n')
 	{
-		line[i] = buf[i];
+		line[i] = str[i];
 		i++;
 	}
-	if (buf[i] == '\n')
+	if (str[i] == '\n')
 		line[i] = '\n';
 	return (line);
 }
 
-static char	*ft_get_extra(char *buf)
+char	*ft_get_extra(char *str)
 {
 	int		i;
 	int		len;
 	char	*extra;
 
-	len = ft_strlen(buf);
+	len = ft_strlen(str);
 	i = 0;
-	while (buf[i] != '\0' && buf[i] != '\n')
+	while (str[i] != '\0' && str[i] != '\n')
 		i++;
-	if (buf[i] == '\0')
+	if (str[i] == '\0')
 	{
-		free(buf);
+		free(str);
 		return (NULL);
 	}
 	extra = ft_calloc((len - i) + 1, sizeof(char));
@@ -70,16 +67,16 @@ static char	*ft_get_extra(char *buf)
 	if (extra == NULL)
 		return (NULL);
 	len = 0;
-	while (buf[i + len] != '\0')
+	while (str[i + len] != '\0')
 	{
-		extra[len] = buf[i + len];
+		extra[len] = str[i + len];
 		len++;
 	}
-	free(buf);
+	free(str);
 	return (extra);
 }
 
-static char	*ft_reader(char *buf, int fd)
+char	*ft_reader(char *buf, int fd)
 {
 	char	*line;
 	ssize_t	size_read;
@@ -109,14 +106,14 @@ static char	*ft_reader(char *buf, int fd)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*buf[1024] = {NULL};
+	static char	*buf = NULL;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0)
 		return (NULL);
-	buf[fd] = ft_reader(buf[fd], fd);
-	if (buf[fd] == NULL)
+	buf = ft_reader(buf, fd);
+	if (buf == NULL)
 		return (NULL);
-	line = ft_get_line(buf[fd]);
-	buf[fd] = ft_get_extra(buf[fd]);
+	line = ft_get_line(buf);
+	buf = ft_get_extra(buf);
 	return (line);
 }

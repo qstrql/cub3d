@@ -6,12 +6,12 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:39:07 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 17:22:54 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/01 18:28:13 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
-#include <unistd.h>
+#include <stdbool.h>
 
 bool file_exist(char *argv)
 {
@@ -37,8 +37,24 @@ bool check_map_extension(char *argv)
         return (false);
 }
 
+bool map_is_a_directory(char *argv)
+{
+	int	tmp_fd;
+
+	tmp_fd = open(argv, O_DIRECTORY);
+	if (tmp_fd >= 0)
+	{
+		close(tmp_fd);
+		return (true);
+	}
+	return (false);
+
+}
+
 void parse_arg(char *argv)
 {
+	if (map_is_a_directory(argv) == true)
+		exit_msg("This file is a directory");
 	if (ft_strchr(argv, '.'))
 	{
 		if (check_map_extension(argv) == false)

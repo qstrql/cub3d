@@ -6,14 +6,17 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 17:27:02 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/01 18:04:35 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#include <asm-generic/errno-base.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
+
 # include <unistd.h>
 # include <fcntl.h>
 # include <string.h>
@@ -35,7 +38,10 @@ typedef struct s_mapfile
 	char **map;
 }				t_mapfile;
 
-//parse_arg.c
+//gnl.c
+char	*get_next_line(int fd);
+
+//parse_map.c
 void parse_map(char *file);
 
 //parse_arg.c

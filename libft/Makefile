@@ -6,7 +6,7 @@
 #    By: mjouot <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/05 16:46:46 by mjouot            #+#    #+#              #
-#    Updated: 2023/05/01 16:19:33 by mjouot           ###   ########.fr        #
+#    Updated: 2023/05/01 18:01:56 by mjouot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #=================================VARS=========================================#
@@ -72,7 +72,6 @@ SRCS = \
 	SRCS/extra/ft_putstr.c \
 	SRCS/extra/ft_putchar.c \
 	SRCS/extra/ft_putendl.c \
-	SRCS/extra/ft_get_next_line.c \
 	SRCS/extra/ft_intlen.c \
 	SRCS/extra/ft_ishexdigit.c \
 	SRCS/extra/ft_printf_tab.c

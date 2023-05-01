@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 16:15:51 by mjouot            #+#    #+#             */
-/*   Updated: 2022/11/02 18:24:54 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/01 18:01:17 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,6 @@
 # include <stddef.h>
 # include <stdarg.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 128
-# endif
 
 typedef struct s_list
 {
@@ -93,7 +90,6 @@ void	ft_putstr(const char *s);
 void	ft_putnbr(int n);
 void	ft_putchar(const char c);
 void	ft_putendl(char *s);
-char	*get_next_line(int fd);
 int		ft_intlen(int n);
 int		ft_ishexdigit(int c);
 
