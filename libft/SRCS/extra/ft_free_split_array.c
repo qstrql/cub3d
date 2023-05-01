@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_free_split_array.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/01 19:36:28 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 00:06:15 by mjouot           ###   ########.fr       */
+/*   Created: 2023/05/02 00:04:44 by mjouot            #+#    #+#             */
+/*   Updated: 2023/05/02 00:04:57 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
-#include "cub3d.h"
+#include "../../INCLUDES/libft.h"
 
-int	exit_msg(char *str)
+void	free_split_array(char ***array)
 {
-	ft_putendl_fd("Error", STDERR_FILENO);
-	ft_putstr_fd("cub3D: ", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	int	i;
+
+	i = 0;
+	if (*array == NULL)
+		return ;
+	while ((*array)[i] != NULL)
+	{
+		better_free((*array)[i]);
+		i++;
+	}
+	free((*array)[i]);
+	better_free(*array);
 }
+

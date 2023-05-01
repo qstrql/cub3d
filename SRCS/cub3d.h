@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 19:37:20 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/02 00:08:33 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ bool check_map_extension(char *argv);
 void parse_arg(char *argv);
 
 //utils.c
-void	better_free(void *ptr);
 int	exit_msg(char *str);
 
 #endif

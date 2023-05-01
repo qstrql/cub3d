@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 16:15:51 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 18:01:17 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/02 00:09:44 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define LIBFT_H
 
 # include "ft_printf.h"
+# include <stdlib.h>
+# include <stdbool.h>
 # include <stddef.h>
 # include <stdarg.h>
 
@@ -92,5 +94,9 @@ void	ft_putchar(const char c);
 void	ft_putendl(char *s);
 int		ft_intlen(int n);
 int		ft_ishexdigit(int c);
+int		ft_isspace(int c);
+void	better_free(void *ptr);
+void	free_split_array(char ***array);
+bool 	str_is_space_only(char *str);
 
 #endif

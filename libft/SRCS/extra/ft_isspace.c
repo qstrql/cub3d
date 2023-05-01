@@ -1,21 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/01 19:36:28 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 00:06:15 by mjouot           ###   ########.fr       */
+/*   Created: 2023/05/01 20:49:49 by mjouot            #+#    #+#             */
+/*   Updated: 2023/05/01 20:50:33 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
-#include "cub3d.h"
 
-int	exit_msg(char *str)
+int	ft_isspace(int c)
 {
-	ft_putendl_fd("Error", STDERR_FILENO);
-	ft_putstr_fd("cub3D: ", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' ||
+			c == '\f' || c == '\v');
 }

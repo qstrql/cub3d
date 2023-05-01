@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_better_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/01 19:36:28 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 00:06:15 by mjouot           ###   ########.fr       */
+/*   Created: 2023/05/02 00:05:25 by mjouot            #+#    #+#             */
+/*   Updated: 2023/05/02 00:06:11 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
-#include "cub3d.h"
+#include "../../INCLUDES/libft.h"
 
-int	exit_msg(char *str)
+void	better_free(void *ptr)
 {
-	ft_putendl_fd("Error", STDERR_FILENO);
-	ft_putstr_fd("cub3D: ", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	if (ptr != NULL)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
 }

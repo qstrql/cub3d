@@ -1,21 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_str_is_space_only.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/01 19:36:28 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 00:06:15 by mjouot           ###   ########.fr       */
+/*   Created: 2023/05/02 00:03:45 by mjouot            #+#    #+#             */
+/*   Updated: 2023/05/02 00:04:13 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
-#include "cub3d.h"
+#include "../../INCLUDES/libft.h"
 
-int	exit_msg(char *str)
+bool str_is_space_only(char *str)
 {
-	ft_putendl_fd("Error", STDERR_FILENO);
-	ft_putstr_fd("cub3D: ", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isspace(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
 }
+
