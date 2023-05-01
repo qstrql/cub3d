@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 18:04:35 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/01 19:37:20 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@
 # include <math.h>
 # include "../libft/INCLUDES/libft.h"
 
-typedef struct s_mapfile
+typedef struct s_mapdata
 {
+	char **raw_file;
 	char *no_texture_path;
 	char *so_texture_path;
 	char *we_texture_path;
@@ -36,7 +37,7 @@ typedef struct s_mapfile
 	int floor[3];
 	int ceiling[3];
 	char **map;
-}				t_mapfile;
+}				t_mapdata;
 
 //gnl.c
 char	*get_next_line(int fd);
@@ -50,6 +51,7 @@ bool check_map_extension(char *argv);
 void parse_arg(char *argv);
 
 //utils.c
+void	better_free(void *ptr);
 int	exit_msg(char *str);
 
 #endif

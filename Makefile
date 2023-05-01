@@ -6,12 +6,13 @@
 #    By: mjouot <mjouot@student.42angouleme.fr      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/01 15:48:29 by mjouot            #+#    #+#              #
-#    Updated: 2023/05/01 18:06:06 by mjouot           ###   ########.fr        #
+#    Updated: 2023/05/01 19:44:09 by mjouot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 SRCS = 	SRCS/main.c \
+		SRCS/utils.c \
 		SRCS/parse_arg.c \
 		SRCS/parse_map.c \
 		SRCS/get_next_line.c

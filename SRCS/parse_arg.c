@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:39:07 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 18:28:13 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/01 18:30:27 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -48,7 +48,6 @@ bool map_is_a_directory(char *argv)
 		return (true);
 	}
 	return (false);
-
 }
 
 void parse_arg(char *argv)
