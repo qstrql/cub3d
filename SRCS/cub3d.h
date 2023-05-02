@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 00:08:33 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/02 11:55:33 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void parse_map(char *file);
 
 //parse_arg.c
 bool file_exist(char *argv);
+bool file_is_a_directory(char *file);
 bool check_map_extension(char *argv);
 void parse_arg(char *argv);
 

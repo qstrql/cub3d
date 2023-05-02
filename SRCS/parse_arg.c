@@ -6,18 +6,18 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:39:07 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/01 18:30:27 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/02 11:54:53 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 #include <stdbool.h>
 
-bool file_exist(char *argv)
+bool file_exist(char *file)
 {
 	int	tmp_fd;
 
-	tmp_fd = open(argv, O_RDONLY);
+	tmp_fd = open(file, O_RDONLY);
 	if (tmp_fd == -1 && errno == ENOENT)
 		return (false);
 	else
@@ -37,11 +37,11 @@ bool check_map_extension(char *argv)
         return (false);
 }
 
-bool map_is_a_directory(char *argv)
+bool file_is_a_directory(char *file)
 {
 	int	tmp_fd;
 
-	tmp_fd = open(argv, O_DIRECTORY);
+	tmp_fd = open(file, O_DIRECTORY);
 	if (tmp_fd >= 0)
 	{
 		close(tmp_fd);
@@ -52,7 +52,7 @@ bool map_is_a_directory(char *argv)
 
 void parse_arg(char *argv)
 {
-	if (map_is_a_directory(argv) == true)
+	if (file_is_a_directory(argv) == true)
 		exit_msg("This file is a directory");
 	if (ft_strchr(argv, '.'))
 	{
