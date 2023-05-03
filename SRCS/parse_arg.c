@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:39:07 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/03 22:04:40 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/03 23:04:05 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -50,17 +50,18 @@ bool file_is_a_directory(char *file)
 	return (false);
 }
 
-void parse_arg(t_data *data, char *argv)
+int	parse_arg(char *argv)
 {
-	if (file_is_a_directory(argv) == true)
-		exit_msg(data, "This file is a directory");
+	if (file_exist(argv) == false)
+		return (error_msg(FILE_DOESNT_EXIST, INVALID_FILE));
 	if (ft_strchr(argv, '.'))
 	{
 		if (check_map_extension(argv) == false)
-			exit_msg(data, "The file extension is wrong, it must end in .cub");
+			return (error_msg(WRONG_FILE_EXTENSION, INVALID_FILE));
+		if (file_is_a_directory(argv) == true)
+			return (error_msg(FILE_IS_DIR, INVALID_FILE));
 	}
 	else
-		exit_msg(data, "The file provided does not have an extension");
-	if (file_exist(argv) == false)
-		exit_msg(data, "The file provided does not exist");
+		return (error_msg(FILE_WITHOUT_EXTENSION, INVALID_FILE));
+	return (VALID_FILE);
 }

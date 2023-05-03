@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:53:42 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/03 21:58:01 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/03 23:05:00 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -29,6 +29,6 @@ void	exit_program(t_data *data, int exit_code)
 	if (!data)
 		exit(exit_code);
 	close_window(data);
-	free_data_struct(data);
+	free_data_struct(data, exit_code);
 	exit(exit_code);
 }
