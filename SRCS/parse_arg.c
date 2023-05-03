@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:39:07 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 11:54:53 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/03 22:04:40 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -50,17 +50,17 @@ bool file_is_a_directory(char *file)
 	return (false);
 }
 
-void parse_arg(char *argv)
+void parse_arg(t_data *data, char *argv)
 {
 	if (file_is_a_directory(argv) == true)
-		exit_msg("This file is a directory");
+		exit_msg(data, "This file is a directory");
 	if (ft_strchr(argv, '.'))
 	{
 		if (check_map_extension(argv) == false)
-			exit_msg("The file extension is wrong, it must end in .cub");
+			exit_msg(data, "The file extension is wrong, it must end in .cub");
 	}
 	else
-		exit_msg("The file provided does not have an extension");
+		exit_msg(data, "The file provided does not have an extension");
 	if (file_exist(argv) == false)
-		exit_msg("The file provided does not exist");
+		exit_msg(data, "The file provided does not exist");
 }

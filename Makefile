@@ -6,7 +6,7 @@
 #    By: mjouot <mjouot@student.42angouleme.fr      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/01 15:48:29 by mjouot            #+#    #+#              #
-#    Updated: 2023/05/01 19:44:09 by mjouot           ###   ########.fr        #
+#    Updated: 2023/05/03 21:55:50 by mjouot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,9 @@ SRCS = 	SRCS/main.c \
 		SRCS/utils.c \
 		SRCS/parse_arg.c \
 		SRCS/parse_map.c \
+		SRCS/init_structs.c \
+		SRCS/exit_program.c \
+		SRCS/free_data_struct.c \
 		SRCS/get_next_line.c
 
 CC = clang

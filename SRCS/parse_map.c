@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 17:25:39 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/02 12:06:44 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/03 22:11:31 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -73,7 +73,6 @@ bool check_line_lenght(char **raw_file)
 		if (tmp[2])
 		{
 			free_split_array(&tmp);
-			free_split_array(&raw_file);
 			return (false);
 		}
 		free_split_array(&tmp);
@@ -118,24 +117,22 @@ bool check_texture_path(char **raw_file)
 	return (true);
 }
 
-void parse_raw_file_data(char **raw_file)
+void parse_raw_file_data(t_data *data)
 {
-	if (check_line_lenght(raw_file) == false)
-		exit_msg("Invalid map file");
-	if (check_texture_path(raw_file) == false)
-		exit_msg("Invalid map file");
+	if (check_line_lenght(data->raw_file) == false)
+		exit_msg(data, "Invalid map file");
+	if (check_texture_path(data->raw_file) == false)
+		exit_msg(data, "Invalid map file");
 	
 }
 
-void parse_map(char *file)
+void parse_map(t_data *data, char *file)
 {
 	int	i;
-	char **raw_file;
 
 	i = 0;
 	if (get_line_count(file) < 9)
-		exit_msg("Invalid map file");
-	raw_file = get_raw_file_data(file);
-	parse_raw_file_data(raw_file);
-	free_split_array(&raw_file);
+		exit_msg(data, "Invalid map file");
+	data->raw_file = get_raw_file_data(file);
+	parse_raw_file_data(data);
 }

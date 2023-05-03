@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   exit_program.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/03 22:07:04 by mjouot           ###   ########.fr       */
+/*   Created: 2023/05/03 21:53:42 by mjouot            #+#    #+#             */
+/*   Updated: 2023/05/03 21:58:01 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-int main(int argc, char **argv)
+void	close_window(t_data *data)
 {
-	t_data	data;
+	if (data->window && data->mlx)
+	//	mlx_destroy_window(data->mlx, data->window);
+	if (data->mlx)
+	{
+	//	mlx_destroy_display(data->mlx);
+	//	mlx_loop_end(data->mlx);
+		free(data->mlx);
+	}
+}
 
-	if (argc != 2)
-		exit_msg(NULL, "Wrong number of arguments, use ./cub3D <map_name.cub>");
-	init_data_struct(&data);
-	parse_arg(&data, argv[1]);
-	parse_map(&data, argv[1]);
+void	exit_program(t_data *data, int exit_code)
+{
+	if (!data)
+		exit(exit_code);
+	close_window(data);
+	free_data_struct(data);
+	exit(exit_code);
 }
