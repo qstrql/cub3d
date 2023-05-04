@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:54:42 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/03 23:36:53 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/04 16:59:46 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -29,12 +29,12 @@ void	init_textureinfo_struct(t_textureinfo *texture)
 	texture->so_texture_path = NULL;
 	texture->we_texture_path = NULL;
 	texture->ea_texture_path = NULL;
-	texture->floor[RED] = 0;
-	texture->floor[GREEN] = 0;
-	texture->floor[BLUE] = 0;
-	texture->ceiling[RED] = 0;
-	texture->ceiling[GREEN] = 0;
-	texture->ceiling[BLUE] = 0;
+	texture->floor[RED] = -1;
+	texture->floor[GREEN] = -1;
+	texture->floor[BLUE] = -1;
+	texture->ceiling[RED] = -1;
+	texture->ceiling[GREEN] = -1;
+	texture->ceiling[BLUE] = -1;
 }
 
 void	init_data_struct(t_data *data)
