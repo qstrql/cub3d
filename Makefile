@@ -6,7 +6,7 @@
 #    By: mjouot <mjouot@student.42angouleme.fr      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/01 15:48:29 by mjouot            #+#    #+#              #
-#    Updated: 2023/05/03 23:32:16 by mjouot           ###   ########.fr        #
+#    Updated: 2023/05/04 11:13:05 by mjouot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = cub3D
 SRCS = 	SRCS/main.c \
 		SRCS/utils.c \
 		SRCS/parse_arg.c \
-		SRCS/parse_file.c \
+		SRCS/get_file_content.c \
 		SRCS/init_structs.c \
 		SRCS/exit_program.c \
 		SRCS/free_data_struct.c \

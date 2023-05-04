@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/03 23:33:21 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/04 15:12:58 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@
 # include <math.h>
 # include "../libft/INCLUDES/libft.h"
 
-/* ************************************************************************** */
-/*                                  DEFINE & ENUMS                            */
-/* ************************************************************************** */
+/*-----------------DEFINES & ENUMS--------------------------------------------*/
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
@@ -48,9 +46,7 @@ enum e_rgb
 	BLUE = 2,
 };
 
-/* ************************************************************************** */
-/*                                  STRUCTURES                                */
-/* ************************************************************************** */
+/*-----------------STRUCTURES-------------------------------------------------*/
 
 typedef struct s_mapinfo
 {
@@ -61,17 +57,16 @@ typedef struct s_mapinfo
 	int			eof;
 	char		*map_path;
 	char		**map;
-
 }	t_mapinfo;
 
 typedef struct s_textureinfo
 {
-	char *no_texture_path;
-	char *so_texture_path;
-	char *we_texture_path;
-	char *ea_texture_path;
-	int floor[3];
-	int ceiling[3];
+	char	*no_texture_path;
+	char 	*so_texture_path;
+	char 	*we_texture_path;
+	char 	*ea_texture_path;
+	int 	floor[3];
+	int 	ceiling[3];
 }				t_textureinfo;
 
 typedef struct s_data
@@ -83,9 +78,7 @@ typedef struct s_data
 	char			**raw_file;
 }	t_data;
 
-/* ************************************************************************** */
-/*                                  FUNCTIONS                                 */
-/* ************************************************************************** */
+/*-----------------FUNCTIONS--------------------------------------------------*/
 
 //init_structs.c
 void	init_mapinfo_struct(t_mapinfo *map);
@@ -107,7 +100,7 @@ char	*get_next_line(int fd);
 //parse_file.c
 int	get_line_count(char *file);
 char **get_raw_file_data(char *file);
-void parse_file_content(t_data *data, char *file);
+void get_file_content(t_data *data, char *file);
 
 //parse_arg.c
 bool file_exist(char *argv);

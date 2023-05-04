@@ -6,15 +6,11 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 17:25:39 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/03 23:35:05 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/04 11:08:17 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 int	get_line_count(char *file)
 {
@@ -59,7 +55,7 @@ char **get_raw_file_data(char *file)
 	return (raw_file);
 }
 
-void parse_file_content(t_data *data, char *file_path)
+void get_file_content(t_data *data, char *file_path)
 {
 	int	i;
 	int	line_count;
