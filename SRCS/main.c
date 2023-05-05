@@ -6,55 +6,35 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/04 18:49:05 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/05 15:33:28 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-int	check_line_start(char *str)
+int	get_line_content(t_data *data, int i, int j)
 {
-	int	i;
-	int	ret;
-	char **tmp;
-
-	i = 0;
-	ret = 0;
-	tmp = ft_split(str, ' ');
-	if (tmp[2])
-	{
-		free_split_array(&tmp);
-		return (FAIL);
-	}
-	if (ft_strncmp(tmp[0], "NO", 3) == 0)
-		ret = 1;
-	else if (ft_strncmp(tmp[0], "SO", 3) == 0)
-		ret = 1;
-	else if (ft_strncmp(tmp[0], "EA", 3) == 0)
-		ret = 1;
-	else if (ft_strncmp(tmp[0], "WE", 3) == 0)
-		ret = 1;
-	else if (ft_strncmp(tmp[0], "F", 3) == 0)
-		ret = 1;
-	else if (ft_strncmp(tmp[0], "C", 3) == 0)
-		ret = 1;
-	printf("%d\n", ret);
-	free_split_array(&tmp);
-	return (ret);
+	return (EXIT_SUCCESS);	
 }
 
 int	check_file_content(t_data *data)
 {
 	int	i;
+	int	j;
 
 	i = 0;
 	if (data->map.line_count < 9)
 		return (INVALID_FILE);
-	while (str_is_space_only(data->raw_file[i]))
-		i++;
-	if (check_line_start(data->raw_file[i]) == 0)
-		return (FAIL);
-	//if (str[i] && str[i + 1])
+	while (data->raw_file[i])
+	{
+		while (str_is_space_only(data->raw_file[i]))
+			i++;
+		j = 0;
+		while (data->raw_file[i][j])
+		{
+			get_line_content(data, i, j);
+		}
+	}
 	//if (check NSEW texture path)
 	//if (check C/F RGB value)
 	//fill data->map.map;
