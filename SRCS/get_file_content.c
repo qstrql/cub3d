@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_file.c                                       :+:      :+:    :+:   */
+/*   get_file_content.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 17:25:39 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/04 11:08:17 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/06 00:04:24 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -63,6 +63,6 @@ void get_file_content(t_data *data, char *file_path)
 	i = 0;
 	line_count = get_line_count(file_path);
 	data->map.line_count = line_count;
-	data->map.map_path = file_path; 
+	data->map.map_path = ft_strdup(file_path); 
 	data->raw_file = get_raw_file_data(file_path);
 }

@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/04 15:12:58 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/06 00:07:28 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@
 # define VALID_FILE 1
 # define INVALID_FILE 0
 # define FAIL 0
+# define SUCCESS 1
 
 # define USAGE "Wrong number of arguments, use ./cub3D <path/map_name.cub>"
 # define FILE_IS_DIR "This file is a directory"
 # define WRONG_FILE_EXTENSION "The file's extension is wrong"
 # define FILE_WITHOUT_EXTENSION "The file provided does not have an extension"
 # define FILE_DOESNT_EXIST "The provided file does not exist"
+# define WRONG_FILE_CONTENT "File content is wrong or missing"
 
 enum e_rgb
 {
@@ -59,30 +61,32 @@ typedef struct s_mapinfo
 	char		**map;
 }	t_mapinfo;
 
-typedef struct s_textureinfo
+typedef struct s_config
 {
-	char	*no_texture_path;
-	char 	*so_texture_path;
-	char 	*we_texture_path;
-	char 	*ea_texture_path;
-	int 	floor[3];
-	int 	ceiling[3];
-}				t_textureinfo;
+	char	*no;
+	char 	*so;
+	char 	*we;
+	char 	*ea;
+	int 	*floor;
+	int 	*ceiling;
+}				t_config;
 
 typedef struct s_data
 {
 	void			*mlx;
 	void			*window;
-	t_textureinfo	texture;
+	t_config		config;
 	t_mapinfo		map;
 	char			**raw_file;
 }	t_data;
 
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
+void	debugprint(t_data *data);
+
 //init_structs.c
 void	init_mapinfo_struct(t_mapinfo *map);
-void	init_textureinfo_struct(t_textureinfo *texture);
+void	init_config_struct(t_config *config);
 void	init_data_struct(t_data *data);
 
 //exit_program.c
@@ -91,7 +95,7 @@ void	exit_program(t_data *data, int exit_code);
 
 //free_data_struct.c
 void	free_mapinfo_struct(t_mapinfo *map);
-void	free_textureinfo_struct(t_textureinfo *texture);
+void	free_config_struct(t_config *config);
 int		free_data_struct(t_data *data, int exit_code);
 
 //gnl.c
