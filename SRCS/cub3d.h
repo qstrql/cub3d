@@ -84,7 +84,7 @@ typedef struct s_sprite
 {
 	mlx_image_t		*img;
 	mlx_texture_t	*texture;
-}
+}	t_sprite;
 
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
