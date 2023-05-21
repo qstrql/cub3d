@@ -203,30 +203,47 @@ void	debugprint(t_data *data)
 	printf("%s\n", data->map.map_path);	
 }
 
-void mlx_test()
+void	draw_cats(bool invert, mlx_t *mlx)
 {
-	void	*mlx;
-	mlx_texture_t*	dark_cat = mlx_load_png("img/dark_cat.png");
-	mlx_texture_t*	normal_cat = mlx_load_png("img/normal_cat.png");
-
-	mlx = mlx_init(1600, 900, "aaaaaaa", false);
-	mlx_image_t*	normal_cat_image = mlx_texture_to_image(mlx, normal_cat);
-	mlx_image_t*	dark_cat_image = mlx_texture_to_image(mlx, dark_cat);
-	mlx_resize_image(normal_cat_image, 128, 128);
-	mlx_resize_image(dark_cat_image, 128, 128);
+	t_sprite	dark_cat;
+	t_sprite	normal_cat;
+	dark_cat.texture = mlx_load_png("img/dark_cat.png");
+	normal_cat.texture = mlx_load_png("img/normal_cat.png");
+	normal_cat.img = mlx_texture_to_image(mlx, normal_cat.texture);
+	dark_cat.img = mlx_texture_to_image(mlx, dark_cat.texture);
+	mlx_resize_image(normal_cat.img, 128, 128);
+	mlx_resize_image(dark_cat.img, 128, 128);
 	for (int i = 0; i <= 900 / 128; i++)
 	{
 		for (int j = 0; j <= 1600 / 128; j++)
 		{
-			//printf("x : %d, y : %d\n", i *)
-			if (!(j % 2))
-				mlx_image_to_window(mlx, normal_cat_image, j * 128, i * 128);
+			if ((j % 2) != invert)
+				mlx_image_to_window(mlx, dark_cat.img, j * 128, i * 128);
 			else
-				mlx_image_to_window(mlx, dark_cat_image, j * 128, i * 128);
+				mlx_image_to_window(mlx, normal_cat.img, j * 128, i * 128);
 		}
 	}
-	mlx_set_icon(mlx, normal_cat);
-	mlx_image_to_window(mlx, normal_cat_image, 0, 0);
+}
+
+void	input_hook(void *param)
+{
+	mlx_t *mlx = param;
+	static int i = 0;
+	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(mlx);
+	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
+	{
+		i++;
+		draw_cats(i % 2, mlx);
+	}
+}
+void 	mlx_test()
+{
+	void	*mlx;
+
+	mlx = mlx_init(1600, 900, "aaaaaaa", false);
+	draw_cats(false, mlx);
+	mlx_loop_hook(mlx, input_hook, mlx);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 }
