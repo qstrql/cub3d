@@ -12,6 +12,54 @@
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
+//For autocomplete
+/*-----------------------------------------------------------------------------*/
+mlx_t* mlx_init(int32_t width, int32_t height, const char* title, bool resize);
+void mlx_set_setting(mlx_settings_t setting, int32_t value);
+void mlx_close_window(mlx_t* mlx);
+void mlx_loop(mlx_t* mlx);
+void mlx_set_icon(mlx_t* mlx, mlx_texture_t* image);
+void mlx_terminate(mlx_t* mlx);
+double mlx_get_time(void);
+void mlx_focus(mlx_t* mlx);
+void mlx_get_monitor_size(int32_t index, int32_t* width, int32_t* height);
+void mlx_set_window_pos(mlx_t* mlx, int32_t xpos, int32_t ypos);
+void mlx_get_window_pos(mlx_t* mlx, int32_t* xpos, int32_t* ypos);
+void mlx_set_window_size(mlx_t* mlx, int32_t new_width, int32_t new_height);
+void mlx_set_window_limit(mlx_t* mlx, int32_t min_w, int32_t min_h, int32_t max_w, int32_t max_h);
+void mlx_set_window_title(mlx_t* mlx, const char* title);
+bool mlx_is_key_down(mlx_t* mlx, keys_t key);
+bool mlx_is_mouse_down(mlx_t* mlx, mouse_key_t key);
+void mlx_get_mouse_pos(mlx_t* mlx, int32_t* x, int32_t* y);
+void mlx_set_mouse_pos(mlx_t* mlx, int32_t x, int32_t y);
+void mlx_set_cursor_mode(mlx_t* mlx, mouse_mode_t mode);
+mlx_win_cursor_t* mlx_create_std_cursor(cursor_t type);
+mlx_win_cursor_t* mlx_create_cursor(mlx_texture_t* texture);
+void mlx_destroy_cursor(mlx_win_cursor_t* cursor);
+void mlx_set_cursor(mlx_t* mlx, mlx_win_cursor_t* cursor);
+void mlx_scroll_hook(mlx_t* mlx, mlx_scrollfunc func, void* param);
+void mlx_mouse_hook(mlx_t* mlx, mlx_mousefunc func, void* param);
+void mlx_cursor_hook(mlx_t* mlx, mlx_cursorfunc func, void* param);
+void mlx_key_hook(mlx_t* mlx, mlx_keyfunc func, void* param);
+void mlx_close_hook(mlx_t* mlx, mlx_closefunc func, void* param);
+void mlx_resize_hook(mlx_t* mlx, mlx_resizefunc func, void* param);
+bool mlx_loop_hook(mlx_t* mlx, void (*f)(void*), void* param);
+mlx_texture_t* mlx_load_png(const char* path);
+xpm_t* mlx_load_xpm42(const char* path);
+void mlx_delete_texture(mlx_texture_t* texture);
+void mlx_delete_xpm42(xpm_t* xpm);
+mlx_image_t* mlx_texture_to_image(mlx_t* mlx, mlx_texture_t* texture);
+void mlx_put_pixel(mlx_image_t* image, uint32_t x, uint32_t y, uint32_t color);
+mlx_image_t* mlx_new_image(mlx_t* mlx, uint32_t width, uint32_t height);
+int32_t mlx_image_to_window(mlx_t* mlx, mlx_image_t* img, int32_t x, int32_t y);
+void mlx_delete_image(mlx_t* mlx, mlx_image_t* image);
+bool mlx_resize_image(mlx_image_t* img, uint32_t nwidth, uint32_t nheight);
+void mlx_set_instance_depth(mlx_instance_t* instance, int32_t zdepth);
+mlx_image_t* mlx_put_string(mlx_t* mlx, const char* str, int32_t x, int32_t y);
+const mlx_texture_t* mlx_get_font(void);
+int32_t mlx_get_texoffset(char c);
+/*-----------------------------------------------------------------------------*/
+
 int	skip_empty_char(char *line, int j)
 {
 	int	i;
@@ -21,6 +69,7 @@ int	skip_empty_char(char *line, int j)
 		i++;
 	return (i);
 }
+
 char	*get_textures_path(char *line, int j)
 {
 	int	i;
@@ -154,15 +203,51 @@ void	debugprint(t_data *data)
 	printf("%s\n", data->map.map_path);	
 }
 
+void mlx_test()
+{
+	void	*mlx;
+	mlx_texture_t*	dark_cat = mlx_load_png("img/dark_cat.png");
+	mlx_texture_t*	normal_cat = mlx_load_png("img/normal_cat.png");
+
+	mlx = mlx_init(1600, 900, "aaaaaaa", false);
+	mlx_image_t*	normal_cat_image = mlx_texture_to_image(mlx, normal_cat);
+	mlx_image_t*	dark_cat_image = mlx_texture_to_image(mlx, dark_cat);
+	mlx_resize_image(normal_cat_image, 128, 128);
+	mlx_resize_image(dark_cat_image, 128, 128);
+	for (int i = 0; i <= 900 / 128; i++)
+	{
+		for (int j = 0; j <= 1600 / 128; j++)
+		{
+			//printf("x : %d, y : %d\n", i *)
+			if (!(j % 2))
+				mlx_image_to_window(mlx, normal_cat_image, j * 128, i * 128);
+			else
+				mlx_image_to_window(mlx, dark_cat_image, j * 128, i * 128);
+		}
+	}
+	mlx_set_icon(mlx, normal_cat);
+	mlx_image_to_window(mlx, normal_cat_image, 0, 0);
+	mlx_loop(mlx);
+	mlx_terminate(mlx);
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	if (argc != 2)
-		return (error_msg(USAGE, EXIT_FAILURE));
-	init_data_struct(&data);
-	if (parse_file(&data, argv[1]) != VALID_FILE)
-		return (INVALID_FILE);
-	debugprint(&data);
-	free_data_struct(&data, EXIT_SUCCESS);
+	//if (argc != 2)
+	//	return (error_msg(USAGE, EXIT_FAILURE));
+	if (argc == 2)
+	{
+		init_data_struct(&data);
+		if (parse_file(&data, argv[1]) != VALID_FILE)
+			return (INVALID_FILE);
+		debugprint(&data);
+		free_data_struct(&data, EXIT_SUCCESS);
+	}
+	else
+	{
+		printf("ouai\n");
+		mlx_test();
+	}
 }

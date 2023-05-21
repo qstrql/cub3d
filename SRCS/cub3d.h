@@ -22,11 +22,11 @@
 # include <stdbool.h>
 # include <math.h>
 # include "../libft/INCLUDES/libft.h"
-
+# include "../MLX42/include/MLX42/MLX42.h"
 /*-----------------DEFINES & ENUMS--------------------------------------------*/
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+# define BUFFER_SIZE 1
 # endif
 
 # define VALID_FILE 1
@@ -79,6 +79,12 @@ typedef struct s_data
 	t_mapinfo		map;
 	char			**raw_file;
 }	t_data;
+
+typedef struct s_sprite
+{
+	mlx_image_t		*img;
+	mlx_texture_t	*texture;
+}
 
 /*-----------------FUNCTIONS--------------------------------------------------*/
 

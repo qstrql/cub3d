@@ -50,7 +50,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 		@rm .progressbar
 		make -C libft
-		$(CC) $(FLAGS) $^ -o $(NAME) $(MLX) libft/libft.a
+		$(CC) $(FLAGS) $^ -o $(NAME) $(MLX) libft/libft.a MLX42/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
 %.o:%.c
 	$(if $(filter $(NB_COMPIL),0), @echo "$(BLUE)Compiling cub3D$(NOC)")
