@@ -35,10 +35,10 @@ void	free_config_struct(t_config *config)
 		free(config->ceiling);
 }
 
-int	free_data_struct(t_data *data, int exit_code)
+int	free_data_struct(t_game *data, int exit_code)
 {
 	free_config_struct(&data->config);
-	free_mapinfo_struct(&data->map);
+	free_mapinfo_struct(data->mapinfo);
 	if (data->raw_file)
 		free_split_array(&data->raw_file);
 	return (exit_code);

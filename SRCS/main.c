@@ -134,7 +134,7 @@ int	get_map_config(t_config *config, char *line, int j)
 	return (SUCCESS);
 }
 
-int	get_config_content(t_data *data, int i, int j)
+int	get_config_content(t_game *data, int i, int j)
 {
 	if (ft_isprint(data->raw_file[i][j]) && !ft_isdigit(data->raw_file[i][j]))
 	{
@@ -158,14 +158,14 @@ int	get_config_content(t_data *data, int i, int j)
 	return (EXIT_SUCCESS);	
 }
 
-int	check_file_content(t_data *data)
+int	check_file_content(t_game *data)
 {
 	int	i;
 	int	j;
 
 	i = 0;
 	j = 0;
-	if (data->map.line_count < 9)
+	if (data->mapinfo->line_count < 9)
 		return (INVALID_FILE);
 	while (data->raw_file[i])
 	{
@@ -183,7 +183,7 @@ int	check_file_content(t_data *data)
 	return (VALID_FILE);
 }
 
-int	parse_file(t_data *data, char *argv)
+int	parse_file(t_game *data, char *argv)
 {
 	if (parse_arg(argv) == FAIL)
 		exit_program(data, INVALID_FILE);
@@ -193,64 +193,172 @@ int	parse_file(t_data *data, char *argv)
 	return (VALID_FILE);
 }
 
-void	debugprint(t_data *data)
+void	debugprint(t_game *data)
 {
 	printf("%s\n", data->config.no);	
 	printf("%s\n", data->config.so);	
 	printf("%s\n", data->config.we);	
 	printf("%s\n", data->config.ea);	
-	printf("%d\n", data->map.line_count);	
-	printf("%s\n", data->map.map_path);	
+	printf("%d\n", data->mapinfo->line_count);	
+	printf("%s\n", data->mapinfo->map_path);	
 }
 
-void	draw_cats(bool invert, mlx_t *mlx)
+//void	draw_player(mlx_t *mlx int **map);
+
+void	print_map(t_mapinfo *map)
 {
-	t_sprite	dark_cat;
-	t_sprite	normal_cat;
-	dark_cat.texture = mlx_load_png("img/dark_cat.png");
-	normal_cat.texture = mlx_load_png("img/normal_cat.png");
-	normal_cat.img = mlx_texture_to_image(mlx, normal_cat.texture);
-	dark_cat.img = mlx_texture_to_image(mlx, dark_cat.texture);
-	mlx_resize_image(normal_cat.img, 128, 128);
-	mlx_resize_image(dark_cat.img, 128, 128);
-	for (int i = 0; i <= 900 / 128; i++)
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < map->height)
 	{
-		for (int j = 0; j <= 1600 / 128; j++)
+		while (map->map[i][j])
 		{
-			if ((j % 2) != invert)
-				mlx_image_to_window(mlx, dark_cat.img, j * 128, i * 128);
-			else
-				mlx_image_to_window(mlx, normal_cat.img, j * 128, i * 128);
+			printf("%c, ", map->map[i][j]);
+			j++;
 		}
+		j = 0;
+		i++;
+		printf("\n");
 	}
+}
+
+void	draw_map(mlx_t *mlx, t_mapinfo *map, t_sprite wall_sprite)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < map->height)
+	{
+		while (j < map->width)
+		{
+			if (map->map[i][j] == '1')
+				mlx_image_to_window(mlx, wall_sprite.img, j * wall_sprite.img->width, i * wall_sprite.img->height);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+void	draw_player(mlx_t *mlx, char **map, t_player *player, char direction)
+{
+	(void)map;
+	(void)mlx;
+	if (direction == 'L')
+	{
+		player->angle -= 0.1;
+		if (player->angle < 0)
+			player->angle += 2 * PI;
+		player->dx = cos(player->angle) * 5;
+		player->dy = sin(player->angle) * 5;
+	}
+	if (direction == 'R')
+	{
+		player->angle += 0.1;
+		if (player->angle < 0)
+			player->angle -= 2 * PI;
+		player->dx = cos(player->angle) * 5;
+		player->dy = sin(player->angle) * 5;
+	}
+	if (direction == 'U')
+	{
+		player->x += player->dx;
+		player->y += player->dy;
+	}
+	if (direction == 'D')
+	{
+		player->x -= player->dx;
+		player->y -= player->dy;
+	}
+	player->sprite.img->instances[0].x = player->x;
+	player->sprite.img->instances[0].y = player->y;
 }
 
 void	input_hook(void *param)
 {
-	mlx_t *mlx = param;
-	static int i = 0;
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
-	{
-		i++;
-		draw_cats(i % 2, mlx);
-	}
+	t_game	*game = param;
+
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(game->mlx);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W) || mlx_is_key_down(game->mlx, MLX_KEY_UP))
+		draw_player(game->mlx, game->mapinfo->map, game->player, 'U');
+	if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
+		draw_player(game->mlx, game->mapinfo->map, game->player, 'D');
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A) || mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+		draw_player(game->mlx, game->mapinfo->map, game->player, 'L');
+	if (mlx_is_key_down(game->mlx, MLX_KEY_D) || mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		draw_player(game->mlx, game->mapinfo->map, game->player, 'R');
 }
+
+void	free_sprite(t_sprite *sprite, mlx_t *mlx)
+{
+	mlx_delete_image(mlx, sprite->img);
+	mlx_delete_texture(sprite->texture);
+}
+
 void 	mlx_test()
 {
-	void	*mlx;
+	t_game		game;
+	t_mapinfo	mapinfo;
+	t_player	player;
+	t_sprite	cat;
 
-	mlx = mlx_init(1600, 900, "aaaaaaa", false);
-	draw_cats(false, mlx);
-	mlx_loop_hook(mlx, input_hook, mlx);
-	mlx_loop(mlx);
-	mlx_terminate(mlx);
+	game.mapinfo = &mapinfo;
+	game.player = &player;
+	player.x = 64;
+	player.y = 64;
+	player.angle = 0.1;
+	player.dx = cos(player.angle) * 5;
+	player.dy = sin(player.angle) * 5;
+	game.mapinfo->map = ft_calloc(sizeof(char *), 11); //https://www.youtube.com/watch?v=t8K3CxkYNWA
+	game.mapinfo->height = 10;
+	game.mapinfo->width = 10;
+	for (int i = 0; i < 10; i++)
+	{
+		game.mapinfo->map[i] = ft_calloc(sizeof(char), 11);
+		if (i == 0 || i == 9)
+		{
+			for (int j = 0; j < 10; j++)
+				game.mapinfo->map[i][j] = '1';
+		}
+		else
+		{
+			game.mapinfo->map[i][0] = '1';
+			game.mapinfo->map[i][9] = '1';
+			for (int j = 1; j < 9; j++)
+				game.mapinfo->map[i][j] = '0';
+		}
+	}
+	game.mapinfo->map[5][5] = '1';
+	game.mapinfo->map[1][2] = '1';
+	game.mapinfo->map[2][2] = '1';
+	print_map(game.mapinfo);
+
+	game.mlx = mlx_init(1600, 900, "aaaaaaa", false);
+	cat.texture = mlx_load_png("img/normal_cat.png");
+	cat.img = mlx_texture_to_image(game.mlx, cat.texture);
+	player.sprite.texture = mlx_load_png("img/dark_cat.png");
+	player.sprite.img = mlx_texture_to_image(game.mlx, player.sprite.texture);
+	mlx_resize_image(cat.img, 64, 64);
+	mlx_resize_image(player.sprite.img, 32, 32);
+
+	draw_map(game.mlx, game.mapinfo, cat);
+	mlx_image_to_window(game.mlx, player.sprite.img, 64, 64);
+	mlx_loop_hook(game.mlx, input_hook, &game);
+	mlx_loop(game.mlx);
+	free_sprite(&player.sprite, game.mlx);
+	free_sprite(&cat, game.mlx);
+	mlx_terminate(game.mlx);
 }
 
 int	main(int argc, char **argv)
 {
-	t_data	data;
+	t_game	data;
 
 	//if (argc != 2)
 	//	return (error_msg(USAGE, EXIT_FAILURE));

@@ -41,6 +41,8 @@
 # define FILE_DOESNT_EXIST "The provided file does not exist"
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
 
+# define PI 3.1415926535
+
 enum e_rgb
 {
 	RED = 0,
@@ -71,38 +73,48 @@ typedef struct s_config
 	int 	*ceiling;
 }				t_config;
 
-typedef struct s_data
-{
-	void			*mlx;
-	void			*window;
-	t_config		config;
-	t_mapinfo		map;
-	char			**raw_file;
-}	t_data;
-
 typedef struct s_sprite
 {
 	mlx_image_t		*img;
 	mlx_texture_t	*texture;
 }	t_sprite;
 
+typedef struct s_player
+{
+	t_sprite	sprite;
+	float		x;
+	float		y;
+	float		dx;
+	float		dy;
+	float		angle;
+}	t_player;
+
+typedef struct s_game
+{
+	mlx_t		*mlx;
+	t_mapinfo	*mapinfo;
+	t_player	*player;
+	t_config		config;
+	char			**raw_file;
+}	t_game;
+
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
-void	debugprint(t_data *data);
+void	debugprint(t_game *data);
 
 //init_structs.c
 void	init_mapinfo_struct(t_mapinfo *map);
 void	init_config_struct(t_config *config);
-void	init_data_struct(t_data *data);
+void	init_data_struct(t_game *data);
 
 //exit_program.c
-void	close_window(t_data *data);
-void	exit_program(t_data *data, int exit_code);
+void	close_window(t_game *data);
+void	exit_program(t_game *data, int exit_code);
 
 //free_data_struct.c
 void	free_mapinfo_struct(t_mapinfo *map);
 void	free_config_struct(t_config *config);
-int		free_data_struct(t_data *data, int exit_code);
+int		free_data_struct(t_game *data, int exit_code);
 
 //gnl.c
 char	*get_next_line(int fd);
@@ -110,7 +122,7 @@ char	*get_next_line(int fd);
 //parse_file.c
 int	get_line_count(char *file);
 char **get_raw_file_data(char *file);
-void get_file_content(t_data *data, char *file);
+void get_file_content(t_game *data, char *file);
 
 //parse_arg.c
 bool file_exist(char *argv);
@@ -120,6 +132,6 @@ int	parse_arg(char *argv);
 
 //utils.c
 int		error_msg(char *str, int exit_code);
-void	exit_msg(t_data *data, char *str);
+void	exit_msg(t_game *data, char *str);
 
 #endif

@@ -12,8 +12,10 @@
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-void	close_window(t_data *data)
+void	close_window(t_game *data)
 {
+	(void)data;
+	/*
 	if (data->window && data->mlx)
 	//	mlx_destroy_window(data->mlx, data->window);
 	if (data->mlx)
@@ -22,9 +24,10 @@ void	close_window(t_data *data)
 	//	mlx_loop_end(data->mlx);
 		free(data->mlx);
 	}
+	*/
 }
 
-void	exit_program(t_data *data, int exit_code)
+void	exit_program(t_game *data, int exit_code)
 {
 	if (!data)
 		exit(exit_code);

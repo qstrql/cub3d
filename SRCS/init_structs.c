@@ -33,11 +33,10 @@ void	init_config_struct(t_config *config)
 	config->ceiling = NULL;
 }
 
-void	init_data_struct(t_data *data)
+void	init_data_struct(t_game *data)
 {
 	data->mlx = NULL;
-	data->window = NULL;
 	init_config_struct(&data->config);
-	init_mapinfo_struct(&data->map);
+	init_mapinfo_struct(data->mapinfo);
 	data->raw_file = NULL;
 }

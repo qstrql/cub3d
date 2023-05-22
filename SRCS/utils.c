@@ -20,7 +20,7 @@ int	error_msg(char *str, int exit_code)
 	return (exit_code);
 }
 
-void exit_msg(t_data *data, char *str)
+void exit_msg(t_game *data, char *str)
 {
 	ft_putendl_fd("Error", STDERR_FILENO);
 	ft_putstr_fd("cub3D: ", STDERR_FILENO);
