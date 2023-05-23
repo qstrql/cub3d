@@ -12,6 +12,8 @@
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
+#define WIN_WIDTH 1600
+#define WIN_HEIGHT 900
 //For autocomplete
 /*-----------------------------------------------------------------------------*/
 mlx_t* mlx_init(int32_t width, int32_t height, const char* title, bool resize);
@@ -245,9 +247,107 @@ void	draw_map(mlx_t *mlx, t_mapinfo *map, t_sprite wall_sprite)
 	}
 }
 
-void	draw_player(mlx_t *mlx, char **map, t_player *player, char direction)
+void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color)
 {
-	(void)map;
+	static mlx_image_t *line = NULL;
+
+	if (line != NULL)
+		mlx_delete_image(mlx, line);
+	line = mlx_new_image(mlx, WIN_WIDTH, WIN_HEIGHT);
+	double deltaX = endX - beginX;
+	double deltaY = endY - beginY;
+	int pixels = sqrt((deltaX * deltaX) + (deltaY * deltaY));
+	deltaX /= pixels;
+	deltaY /= pixels;
+	double pixelX = beginX;
+	double pixelY = beginY;
+	while (pixels)
+	{
+		if (pixelX > WIN_WIDTH || pixelX < 0
+		 || pixelY > WIN_HEIGHT || pixelY < 0)
+			break;
+    	mlx_put_pixel(line, pixelX, pixelY, color);
+    	pixelX += deltaX;
+   		pixelY += deltaY;
+    	--pixels;
+	}
+	mlx_image_to_window(mlx, line, 16, 16);
+}
+
+void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
+{
+	int	ray;
+	int	map_x;
+	int	map_y;
+	int	dof;
+
+	float	ray_x;
+	float	ray_y;
+	float	ray_angle;
+	float	xo;
+	float	yo;
+
+	ray_angle = player->angle;
+	for (ray = 0; ray < 1; ray++)
+	{
+		//Horizontal
+		dof = 0;
+		float aTan = -1/tan(ray_angle);
+		//up
+		if (ray_angle > PI)
+		{
+			ray_y = (((int)player->y>>6)<<6) - 0.0001;
+			ray_x = (player->y - ray_y) * aTan + player->x;
+			yo = -64;
+			xo = -yo*aTan;
+		}
+		//down
+		if (ray_angle < PI)
+		{
+			ray_y = (((int)player->y>>6)<<6) + 64;
+			ray_x = (player->y - ray_y) * aTan + player->x;
+			yo = 64;
+			xo = -yo*aTan;
+		}
+		//left or right
+		if (ray_angle == 0 || ray_angle == PI)
+		{
+			ray_x = player->x;
+			ray_y = player->y;
+			dof = 8;
+		}
+		while (dof < 8)
+		{
+			map_x = (int)(ray_x)>>6;
+			map_y = (int)(ray_y)>>6;
+			printf("map x : %d, map y : %d, ray x : %f, ray y : %f\n", map_x, map_y, ray_x, ray_y);
+			//ne marche pas peut etre a cause du double tableau pr la map, a voir
+			//test : je comprends pas pk ca loop vu que meme une map en simple tableau loop, a voir
+			if (map_x > 0 && map_y > 0)
+			{
+				if (map_x < map->width && map_y < map->height && map->map[map_y][map_x] == '1')
+					dof = 8;
+				else
+				{
+					ray_x += xo;
+					ray_y += yo;
+					dof += 1; //next step
+				}
+			}
+			else
+			{
+				ray_x += xo;
+				ray_y += yo;
+				dof += 1; //next step
+			}
+		}
+		printf("p x : %f, p y : %f, ray x : %f, ray y : %f\n", player->x, player->y, ray_x, ray_y);
+		draw_line(mlx, (int)player->x, (int)player->y, (int)ray_x, (int)ray_y, 0xFF00FF);
+	}
+}
+
+void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
+{
 	(void)mlx;
 	if (direction == 'L')
 	{
@@ -277,6 +377,8 @@ void	draw_player(mlx_t *mlx, char **map, t_player *player, char direction)
 	}
 	player->sprite.img->instances[0].x = player->x;
 	player->sprite.img->instances[0].y = player->y;
+	//draw_line(mlx, player->x, player->y, player->x + player->dx * 10, player->y + player->dy * 10, 0xFF00FF);
+	cast_rays_3d(mlx, player, map);
 }
 
 void	input_hook(void *param)
@@ -286,13 +388,13 @@ void	input_hook(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W) || mlx_is_key_down(game->mlx, MLX_KEY_UP))
-		draw_player(game->mlx, game->mapinfo->map, game->player, 'U');
+		draw_player(game->mlx, game->mapinfo, game->player, 'U');
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
-		draw_player(game->mlx, game->mapinfo->map, game->player, 'D');
+		draw_player(game->mlx, game->mapinfo, game->player, 'D');
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A) || mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		draw_player(game->mlx, game->mapinfo->map, game->player, 'L');
+		draw_player(game->mlx, game->mapinfo, game->player, 'L');
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D) || mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		draw_player(game->mlx, game->mapinfo->map, game->player, 'R');
+		draw_player(game->mlx, game->mapinfo, game->player, 'R');
 }
 
 void	free_sprite(t_sprite *sprite, mlx_t *mlx)
@@ -312,10 +414,10 @@ void 	mlx_test()
 	game.player = &player;
 	player.x = 64;
 	player.y = 64;
-	player.angle = 0.1;
+	player.angle = 0;
 	player.dx = cos(player.angle) * 5;
 	player.dy = sin(player.angle) * 5;
-	game.mapinfo->map = ft_calloc(sizeof(char *), 11); //https://www.youtube.com/watch?v=t8K3CxkYNWA
+	game.mapinfo->map = ft_calloc(sizeof(char *), 11);
 	game.mapinfo->height = 10;
 	game.mapinfo->width = 10;
 	for (int i = 0; i < 10; i++)
@@ -339,7 +441,7 @@ void 	mlx_test()
 	game.mapinfo->map[2][2] = '1';
 	print_map(game.mapinfo);
 
-	game.mlx = mlx_init(1600, 900, "aaaaaaa", false);
+	game.mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "aaaaaaa", false);
 	cat.texture = mlx_load_png("img/normal_cat.png");
 	cat.img = mlx_texture_to_image(game.mlx, cat.texture);
 	player.sprite.texture = mlx_load_png("img/dark_cat.png");

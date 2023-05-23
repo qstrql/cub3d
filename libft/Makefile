@@ -68,6 +68,8 @@ SRCS = \
 	SRCS/extra/ft_isprime.c \
 	SRCS/extra/ft_printf_strs.c \
 	SRCS/extra/ft_abs.c \
+	SRCS/extra/ft_min.c \
+	SRCS/extra/ft_max.c \
 	SRCS/extra/ft_putnbr.c \
 	SRCS/extra/ft_putstr.c \
 	SRCS/extra/ft_putchar.c \

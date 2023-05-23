@@ -88,6 +88,8 @@ int		ft_isprime(int n);
 void	ft_printf_strs(char **strs);
 void	ft_printf_tab(int *tab, int len);
 int		ft_abs(int n);
+int		ft_min(int a, int b);
+int		ft_max(int a, int b);
 void	ft_putstr(const char *s);
 void	ft_putnbr(int n);
 void	ft_putchar(const char c);
