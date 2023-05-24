@@ -57,10 +57,10 @@ char **get_raw_file_data(char *file)
 
 void get_file_content(t_game *data, char *file_path)
 {
-	int	i;
+	//int	i;
 	int	line_count;
 
-	i = 0;
+	//i = 0;
 	line_count = get_line_count(file_path);
 	data->mapinfo->line_count = line_count;
 	data->mapinfo->map_path = ft_strdup(file_path); 

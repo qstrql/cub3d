@@ -12,8 +12,8 @@
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-#define WIN_WIDTH 1600
-#define WIN_HEIGHT 900
+#define WIN_WIDTH 800
+#define WIN_HEIGHT 600
 //For autocomplete
 /*-----------------------------------------------------------------------------*/
 mlx_t* mlx_init(int32_t width, int32_t height, const char* title, bool resize);
@@ -296,7 +296,8 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		//up
 		if (ray_angle > PI)
 		{
-			ray_y = (((int)player->y>>6)<<6) - 0.0001;
+			printf("angle > pi\n");
+			ray_y = (((int)player->y / 64) * 64) - 0.0001;
 			ray_x = (player->y - ray_y) * aTan + player->x;
 			yo = -64;
 			xo = -yo*aTan;
@@ -304,7 +305,8 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		//down
 		if (ray_angle < PI)
 		{
-			ray_y = (((int)player->y>>6)<<6) + 64;
+			printf("angle < pi\n");
+			ray_y = (((int)player->y / 64) * 64) + 64;
 			ray_x = (player->y - ray_y) * aTan + player->x;
 			yo = 64;
 			xo = -yo*aTan;
@@ -312,6 +314,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		//left or right
 		if (ray_angle == 0 || ray_angle == PI)
 		{
+			printf("uh");
 			ray_x = player->x;
 			ray_y = player->y;
 			dof = 8;
@@ -360,7 +363,7 @@ void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
 	if (direction == 'R')
 	{
 		player->angle += 0.1;
-		if (player->angle < 0)
+		if (player->angle > 2 * PI)
 			player->angle -= 2 * PI;
 		player->dx = cos(player->angle) * 5;
 		player->dy = sin(player->angle) * 5;
