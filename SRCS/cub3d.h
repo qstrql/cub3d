@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <math.h>
+# include <limits.h>
 # include "../libft/INCLUDES/libft.h"
 # include "../MLX42/include/MLX42/MLX42.h"
 /*-----------------DEFINES & ENUMS--------------------------------------------*/
@@ -41,7 +42,7 @@
 # define FILE_DOESNT_EXIST "The provided file does not exist"
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
 
-# define PI 3.1415926535
+# define PI 3.141592
 
 enum e_rgb
 {

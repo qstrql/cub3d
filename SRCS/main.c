@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/06 00:11:03 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/24 19:23:36 by lbertaux         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -265,13 +265,20 @@ void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color)
 	{
 		if (pixelX > WIN_WIDTH || pixelX < 0
 		 || pixelY > WIN_HEIGHT || pixelY < 0)
-			break;
+		 {
+			break ;
+		 }
     	mlx_put_pixel(line, pixelX, pixelY, color);
     	pixelX += deltaX;
    		pixelY += deltaY;
     	--pixels;
 	}
 	mlx_image_to_window(mlx, line, 16, 16);
+}
+
+int		ft_float_to_int(float f)
+{
+	return ((int)(f - fmod(f, 1)));
 }
 
 void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
@@ -296,7 +303,6 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		//up
 		if (ray_angle > PI)
 		{
-			printf("angle > pi\n");
 			ray_y = (((int)player->y / 64) * 64) - 0.0001;
 			ray_x = (player->y - ray_y) * aTan + player->x;
 			yo = -64;
@@ -305,16 +311,15 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		//down
 		if (ray_angle < PI)
 		{
-			printf("angle < pi\n");
 			ray_y = (((int)player->y / 64) * 64) + 64;
 			ray_x = (player->y - ray_y) * aTan + player->x;
 			yo = 64;
 			xo = -yo*aTan;
 		}
 		//left or right
-		if (ray_angle == 0 || ray_angle == PI)
+		//probleme sur ca
+		if (ray_angle == 0 || ray_angle == PI * 2)
 		{
-			printf("uh");
 			ray_x = player->x;
 			ray_y = player->y;
 			dof = 8;
@@ -323,9 +328,6 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		{
 			map_x = (int)(ray_x)>>6;
 			map_y = (int)(ray_y)>>6;
-			printf("map x : %d, map y : %d, ray x : %f, ray y : %f\n", map_x, map_y, ray_x, ray_y);
-			//ne marche pas peut etre a cause du double tableau pr la map, a voir
-			//test : je comprends pas pk ca loop vu que meme une map en simple tableau loop, a voir
 			if (map_x > 0 && map_y > 0)
 			{
 				if (map_x < map->width && map_y < map->height && map->map[map_y][map_x] == '1')
@@ -344,9 +346,15 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 				dof += 1; //next step
 			}
 		}
-		printf("p x : %f, p y : %f, ray x : %f, ray y : %f\n", player->x, player->y, ray_x, ray_y);
-		draw_line(mlx, (int)player->x, (int)player->y, (int)ray_x, (int)ray_y, 0xFF00FF);
-	}
+		if (ray_x > (float)INT_MAX - 1|| ray_x < INT_MIN)
+			ray_x = player->x;
+		if (ray_y > (float)INT_MAX - 1|| ray_y < INT_MIN)
+			ray_y = player->y;
+		draw_line(mlx, (ft_float_to_int(player->x)), ft_float_to_int(player->y), ft_float_to_int(ray_x), ft_float_to_int(ray_y), 0xFF0000FF);
+		printf("player : %f (%d), %f (%d)\n", player->x, ft_float_to_int(player->x), player->y, ft_float_to_int(player->y));
+		printf("ray : %f (%d), %f (%d) [%f]\n", ray_x, ft_float_to_int(ray_x), ray_y, ft_float_to_int(ray_y), ray_angle);
+		}
+
 }
 
 void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
