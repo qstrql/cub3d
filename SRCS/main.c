@@ -12,7 +12,8 @@
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-#define WIN_WIDTH 800
+#define FOV 85
+#define WIN_WIDTH FOV * 8
 #define WIN_HEIGHT 600
 //For autocomplete
 /*-----------------------------------------------------------------------------*/
@@ -247,7 +248,7 @@ void	draw_map(mlx_t *mlx, t_mapinfo *map, t_sprite wall_sprite)
 	}
 }
 
-void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color)
+void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color, int width)
 {
 	static mlx_image_t *line = NULL;
 
@@ -268,7 +269,8 @@ void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color)
 		{
 			break ;
 		}
-    	mlx_put_pixel(line, pixelX, pixelY, color);
+		for (int i = 0; i < width; i++)
+    		mlx_put_pixel(line, pixelX + i, pixelY, color);
     	pixelX += deltaX;
    		pixelY += deltaY;
     	--pixels;
@@ -285,6 +287,21 @@ float	dist(float ax, float ay, float bx, float by)
 {
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
+
+/*
+void	draw_3d_image(mlx_t *mlx, int ray, float dist)
+{
+
+
+	while (pixel_pos < WINDOW_WIDTH)
+	{
+		for (int i = 0; i < WINDOW_HEIGHT; i++)
+			mlx_put_pixel(window, pixel_pos, i, 0x00FF00FF)
+		pixel_pos++;
+	}
+	mlx_image_to_window(mlx, window, 0, 0);
+}
+*/
 
 void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 {
@@ -305,13 +322,24 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 	float	hit_y_hor;
 	float	hit_x_ver;
 	float	hit_y_ver;
+	float	dist_real;
 
+	int		cast_color;
+	static mlx_image_t	*window = NULL;
+	if (window != NULL)
+			mlx_delete_image(mlx, window);
+	window = mlx_new_image(mlx, WIN_WIDTH * 2, WIN_HEIGHT * 2);
 	dist_h = 10000000;
 	hit_x_hor = player->x;
 	hit_y_hor = player->y;
-	ray_angle = player->angle;
+	//ray_angle = player->angle;
+	ray_angle = player->angle - (RAD1 * 30);
+	if (ray_angle < 0)
+		ray_angle += 2 * PI;
+	if (ray_angle > 2 * PI)
+		ray_angle = -2 * PI;
 	ray = 0;
-	while (ray < 1)
+	while (ray < FOV)
 	{
 		//La majorité du code c'est des calculs plutot inexplicables mais je vais essayer d'au moins expliquer leur but
 		//------------------------- Horizontal -------------------------
@@ -355,7 +383,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 				//Si on a en effet une collision, on recupere le x et y du ray, ainsi que la distance de la collision par rapport au joueur
 				if (map_x < map->width && map_y < map->height && map->map[map_y][map_x] == '1')
 				{
-					printf("hitting [%d][%d]\n", map_y, map_x);
+					//printf("hitting [%d][%d]\n", map_y, map_x);
 					hit_x_hor = ray_x;
 					hit_y_hor = ray_y;
 					dist_h = dist(player->x, player->y, hit_x_hor, hit_y_hor);
@@ -425,7 +453,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 				//Si on a en effet une collision, on recupere le x et y de ray, ainsi que la distance de la collision par rapport au joueur
 				if (map_x < map->width && map_y < map->height && map->map[map_y][map_x] == '1')
 				{
-					printf("hitting [%d][%d]\n", map_y, map_x);
+					//printf("hitting [%d][%d]\n", map_y, map_x);
 					hit_x_ver = ray_x;
 					hit_y_ver = ray_y;
 					dist_v = dist(player->x, player->y, hit_x_ver, hit_y_ver);
@@ -451,24 +479,58 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 			ray_y = player->y;
 		
 		//Des deux distance récupérées, on regarde laquelle et la plus courte et on draw celle la
-		if (dist_v < dist_h )
+		if (dist_v < dist_h)
 		{
 			ray_x = hit_x_ver;
 			ray_y = hit_y_ver;
+			dist_real = dist_v;
+			cast_color = 0xFF0000FF;
 		}
 		else
 		{
 			ray_x = hit_x_hor;
 			ray_y = hit_y_hor;
+			dist_real = dist_h;
+			cast_color = 0xAB0213FF;
 		}
-		draw_line(mlx, (ft_float_to_int(player->x)) + 16, ft_float_to_int(player->y), ft_float_to_int(ray_x), ft_float_to_int(ray_y), 0x00FF00FF);
+		(void)mlx;
+		//draw_line(mlx, (ft_float_to_int(player->x)) + 16, ft_float_to_int(player->y), ft_float_to_int(ray_x), ft_float_to_int(ray_y), 0x00FF00FF, 1);
+		float	line_height;
+		float	line_offset;
+		float	cor_angle;
+
+		cor_angle = player->angle - ray_angle;
+		if (cor_angle < 0)
+			cor_angle += 2 * PI;
+		if (cor_angle > 2 * PI)
+			ray_angle = -2 * PI;
+		dist_real = dist_real * cos(cor_angle);
+		line_height = (64 * WIN_HEIGHT) / dist_real;
+		if (line_height > WIN_HEIGHT)
+			line_height = WIN_HEIGHT;
+		line_offset = (WIN_HEIGHT / 2) - (line_height / 2);
+		printf("line off : %f, line height : %f\n", line_offset, line_height);
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = line_offset; j < line_height + line_offset; j++)
+			{
+				//printf("drawing %dx%d\n", i, j);
+				mlx_put_pixel(window, (ray * 8) + i, j, cast_color);
+			}
+		}
 		ray++;
+		ray_angle += RAD1;
+		if (ray_angle < 0)
+			ray_angle += 2 * PI;
+		if (ray_angle > 2 * PI)
+			ray_angle = -2 * PI;
+		
 	}
+	mlx_image_to_window(mlx, window, 0, 0);
 }
 
 void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
 {
-	(void)mlx;
 	if (direction == 'L')
 	{
 		player->angle -= 0.1;
@@ -495,8 +557,8 @@ void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
 		player->x -= player->dx;
 		player->y -= player->dy;
 	}
-	player->sprite.img->instances[0].x = player->x;
-	player->sprite.img->instances[0].y = player->y;
+	//player->sprite.img->instances[0].x = player->x;
+	//player->sprite.img->instances[0].y = player->y;
 	//draw_line(mlx, player->x, player->y, player->x + player->dx * 10, player->y + player->dy * 10, 0xFF00FF);
 	cast_rays_3d(mlx, player, map);
 }
@@ -509,11 +571,11 @@ void	input_hook(void *param)
 		mlx_close_window(game->mlx);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W) || mlx_is_key_down(game->mlx, MLX_KEY_UP))
 		draw_player(game->mlx, game->mapinfo, game->player, 'U');
-	if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
 		draw_player(game->mlx, game->mapinfo, game->player, 'D');
-	if (mlx_is_key_down(game->mlx, MLX_KEY_A) || mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_A) || mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
 		draw_player(game->mlx, game->mapinfo, game->player, 'L');
-	if (mlx_is_key_down(game->mlx, MLX_KEY_D) || mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_D) || mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
 		draw_player(game->mlx, game->mapinfo, game->player, 'R');
 }
 
@@ -569,8 +631,8 @@ void 	mlx_test()
 	mlx_resize_image(cat.img, 64, 64);
 	mlx_resize_image(player.sprite.img, 32, 32);
 
-	draw_map(game.mlx, game.mapinfo, cat);
-	mlx_image_to_window(game.mlx, player.sprite.img, 64, 64);
+	//draw_map(game.mlx, game.mapinfo, cat);
+	//mlx_image_to_window(game.mlx, player.sprite.img, 64, 64);
 	mlx_loop_hook(game.mlx, input_hook, &game);
 	mlx_loop(game.mlx);
 	free_sprite(&player.sprite, game.mlx);

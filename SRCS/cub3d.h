@@ -45,6 +45,7 @@
 # define PI 3.141592
 # define PI2 PI/2
 # define PI3 3*PI/2
+# define RAD1 0.0174533
 
 enum e_rgb
 {
