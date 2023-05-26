@@ -6,7 +6,7 @@
 #    By: mjouot <mjouot@student.42angouleme.fr      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/01 15:48:29 by mjouot            #+#    #+#              #
-#    Updated: 2023/05/04 11:13:05 by mjouot           ###   ########.fr        #
+#    Updated: 2023/05/22 16:37:02 by mjouot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,6 @@ SRCS = 	SRCS/main.c \
 CC = clang
 OBJS = $(SRCS:.c=.o)
 FLAGS = -Wall -Werror -Wextra -I ./libft/INCLUDES/ -ggdb3
-#MLX = -Lmlx_linux -Imlx_linux -lmlx -lXext -lX11 -lm -lz -O3
 #====================================COLORS====================================#
 NOC            = \033[0m
 BOLD        = \033[1m
@@ -50,7 +49,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 		@rm .progressbar
 		make -C libft
-		$(CC) $(FLAGS) $^ -o $(NAME) $(MLX) libft/libft.a MLX42/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+		$(CC) $(FLAGS) $^ -o $(NAME) libft/libft.a MLX42/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
 %.o:%.c
 	$(if $(filter $(NB_COMPIL),0), @echo "$(BLUE)Compiling cub3D$(NOC)")
