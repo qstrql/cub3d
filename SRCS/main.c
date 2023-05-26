@@ -264,21 +264,26 @@ void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color)
 	while (pixels)
 	{
 		if (pixelX > WIN_WIDTH || pixelX < 0
-		 || pixelY > WIN_HEIGHT || pixelY < 0)
-		 {
+		|| pixelY > WIN_HEIGHT || pixelY < 0)
+		{
 			break ;
-		 }
+		}
     	mlx_put_pixel(line, pixelX, pixelY, color);
     	pixelX += deltaX;
    		pixelY += deltaY;
     	--pixels;
 	}
-	mlx_image_to_window(mlx, line, 16, 16);
+	mlx_image_to_window(mlx, line, 0, 0);
 }
 
 int		ft_float_to_int(float f)
 {
 	return ((int)(f - fmod(f, 1)));
+}
+
+float	dist(float ax, float ay, float bx, float by)
+{
+	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
 
 void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
@@ -294,13 +299,26 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 	float	xo;
 	float	yo;
 
+	float	dist_h;
+	float	dist_v;
+	float	hit_x_hor;
+	float	hit_y_hor;
+	float	hit_x_ver;
+	float	hit_y_ver;
+
+	dist_h = 10000000;
+	hit_x_hor = player->x;
+	hit_y_hor = player->y;
 	ray_angle = player->angle;
-	for (ray = 0; ray < 1; ray++)
+	ray = 0;
+	while (ray < 1)
 	{
-		//Horizontal
+		//La majorité du code c'est des calculs plutot inexplicables mais je vais essayer d'au moins expliquer leur but
+		//------------------------- Horizontal -------------------------
 		dof = 0;
-		float aTan = -1/tan(ray_angle);
-		//up
+		float aTan = -1 / tan(ray_angle);
+		//Cast du ray, si son angle dépasse un certain angle, on le reset pour le remttre bien
+		//Up (par rapport a l'axe horizontal, donc gauche pour nous)
 		if (ray_angle > PI)
 		{
 			ray_y = (((int)player->y / 64) * 64) - 0.0001;
@@ -308,7 +326,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 			yo = -64;
 			xo = -yo*aTan;
 		}
-		//down
+		//Down (par rapport a l'axe horizontal, donc droite pour nous)
 		if (ray_angle < PI)
 		{
 			ray_y = (((int)player->y / 64) * 64) + 64;
@@ -316,22 +334,33 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 			yo = 64;
 			xo = -yo*aTan;
 		}
-		//left or right
-		//probleme sur ca
+		//Si on regarde directement en bas ou en haut, on ne peut evidemment rien hit horizontalement, donc on met le dof directement a 8 
+		//Left/Right (par rapport a l'axe horizontal, donc haut/bas pour nous)
 		if (ray_angle == 0 || ray_angle == PI * 2)
 		{
 			ray_x = player->x;
 			ray_y = player->y;
 			dof = 8;
 		}
+		//Check de collisions
+		//Dof est le nombre de fois ou on va iterer pour check une collision, le check n'est fait que a chaque X de tile
+		//Ex : Nos tiles sont de 64 pixels, donc on va check tt les 64 pixels, aux extrémités de nos cases.
 		while (dof < 8)
 		{
+			//Bitshift de 6 = Division par 64, juste plus efficace
 			map_x = (int)(ray_x)>>6;
 			map_y = (int)(ray_y)>>6;
-			if (map_x > 0 && map_y > 0)
+			if (map_x >= 0 && map_y >= 0)
 			{
+				//Si on a en effet une collision, on recupere le x et y du ray, ainsi que la distance de la collision par rapport au joueur
 				if (map_x < map->width && map_y < map->height && map->map[map_y][map_x] == '1')
+				{
+					printf("hitting [%d][%d]\n", map_y, map_x);
+					hit_x_hor = ray_x;
+					hit_y_hor = ray_y;
+					dist_h = dist(player->x, player->y, hit_x_hor, hit_y_hor);
 					dof = 8;
+				}
 				else
 				{
 					ray_x += xo;
@@ -350,11 +379,91 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 			ray_x = player->x;
 		if (ray_y > (float)INT_MAX - 1|| ray_y < INT_MIN)
 			ray_y = player->y;
-		draw_line(mlx, (ft_float_to_int(player->x)), ft_float_to_int(player->y), ft_float_to_int(ray_x), ft_float_to_int(ray_y), 0xFF0000FF);
-		printf("player : %f (%d), %f (%d)\n", player->x, ft_float_to_int(player->x), player->y, ft_float_to_int(player->y));
-		printf("ray : %f (%d), %f (%d) [%f]\n", ray_x, ft_float_to_int(ray_x), ray_y, ft_float_to_int(ray_y), ray_angle);
-		}
 
+		//------------------------- Vertical -------------------------
+		dof = 0;
+		float nTan = -tan(ray_angle);
+		dist_v = 10000000;
+		hit_x_ver = player->x;
+		hit_y_ver = player->y;
+		//left
+		//Cast du ray, si son angle dépasse un certain angle, on le reset pour le remttre bien
+		//Left (par rapport a l'axe vertical)
+		if (ray_angle > PI2 && ray_angle < PI3)
+		{
+			ray_x = (((int)player->x / 64) * 64) - 0.0001;
+			ray_y = (player->x - ray_x) * nTan + player->y;
+			xo = -64;
+			yo = -xo*nTan;
+		}
+		//Right (par rapport a l'axe vertical)
+		if (ray_angle < PI2 || ray_angle > PI3)
+		{
+			ray_x = (((int)player->x / 64) * 64) + 64;
+			ray_y = (player->x - ray_x) * nTan + player->y;
+			xo = 64;
+			yo = -xo*nTan;
+		}
+		//Si on regarde directement en bas ou en haut, on ne peut evidemment rien hit horizontalement, donc on met le dof directement a 8
+		//Up/Down
+		if (ray_angle == 0 || ray_angle == PI * 2)
+		{
+			ray_x = player->x;
+			ray_y = player->y;
+			dof = 8;
+		}
+		//Check de collisions
+		//Dof est le nombre de fois ou on va iterer pour check une collision, le check n'est fait que a chaque X de tile
+		//Ex : Nos tiles sont de 64 pixels, donc on va check tt les 64 pixels, aux extrémités de nos cases.
+		while (dof < 8)
+		{
+			//Bitshift de 6 = Division par 64, juste plus rapide
+			map_x = (int)(ray_x)>>6;
+			map_y = (int)(ray_y)>>6;
+			if (map_x >= 0 && map_y >= 0)
+			{
+				//Si on a en effet une collision, on recupere le x et y de ray, ainsi que la distance de la collision par rapport au joueur
+				if (map_x < map->width && map_y < map->height && map->map[map_y][map_x] == '1')
+				{
+					printf("hitting [%d][%d]\n", map_y, map_x);
+					hit_x_ver = ray_x;
+					hit_y_ver = ray_y;
+					dist_v = dist(player->x, player->y, hit_x_ver, hit_y_ver);
+					dof = 8;
+				}
+				else
+				{
+					ray_x += xo;
+					ray_y += yo;
+					dof += 1; //next step
+				}
+			}
+			else
+			{
+				ray_x += xo;
+				ray_y += yo;
+				dof += 1; //next step
+			}
+		}
+		if (ray_x > (float)INT_MAX - 1|| ray_x < INT_MIN)
+			ray_x = player->x;
+		if (ray_y > (float)INT_MAX - 1|| ray_y < INT_MIN)
+			ray_y = player->y;
+		
+		//Des deux distance récupérées, on regarde laquelle et la plus courte et on draw celle la
+		if (dist_v < dist_h )
+		{
+			ray_x = hit_x_ver;
+			ray_y = hit_y_ver;
+		}
+		else
+		{
+			ray_x = hit_x_hor;
+			ray_y = hit_y_hor;
+		}
+		draw_line(mlx, (ft_float_to_int(player->x)) + 16, ft_float_to_int(player->y), ft_float_to_int(ray_x), ft_float_to_int(ray_y), 0x00FF00FF);
+		ray++;
+	}
 }
 
 void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)

@@ -43,6 +43,8 @@
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
 
 # define PI 3.141592
+# define PI2 PI/2
+# define PI3 3*PI/2
 
 enum e_rgb
 {
