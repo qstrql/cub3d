@@ -18,7 +18,10 @@ SRCS = 	SRCS/main.c \
 		SRCS/init_structs.c \
 		SRCS/exit_program.c \
 		SRCS/free_data_struct.c \
-		SRCS/get_next_line.c
+		SRCS/get_next_line.c \
+		SRCS/cast_rays.c \
+		SRCS/cast_rays_utils.c \
+		SRCS/draw_rays.c
 
 CC = clang
 OBJS = $(SRCS:.c=.o)

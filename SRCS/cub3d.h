@@ -47,6 +47,11 @@
 # define PI3 3*PI/2
 # define RAD1 0.0174533
 
+# define RAYS 75
+# define PIXEL_SIZE 12
+# define WIN_WIDTH PIXEL_SIZE * RAYS
+# define WIN_HEIGHT 600
+
 enum e_rgb
 {
 	RED = 0,
@@ -102,6 +107,32 @@ typedef struct s_game
 	char			**raw_file;
 }	t_game;
 
+typedef struct s_ray
+{
+	int		ray_num;
+	int		map_x;
+	int		map_y;
+	int		dof;
+	int		cast_color;
+	float	ray_x;
+	float	ray_y;
+	float	ray_angle;
+	float	xo;
+	float	yo;
+	float	dist_h;
+	float	dist_v;
+	float	hit_x_hor;
+	float	hit_y_hor;
+	float	hit_x_ver;
+	float	hit_y_ver;
+	float	dist_real;
+	float	aTan;
+	float	nTan;
+	float	line_height;
+	float	line_offset;
+	float	cor_angle;
+}	t_ray;
+
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
 void	debugprint(t_game *data);
@@ -138,4 +169,21 @@ int	parse_arg(char *argv);
 int		error_msg(char *str, int exit_code);
 void	exit_msg(t_game *data, char *str);
 
+//cast_rays.c
+void	ray_collision_check_horizontal(t_ray *ray,
+			t_player *player, t_mapinfo *map);
+void	initial_horizontal_math(t_ray *ray, t_player *player);
+void	ray_collision_check_vertical(t_ray *ray,
+			t_player *player, t_mapinfo *map);
+void	initial_vertical_math(t_ray *ray, t_player *player);
+
+//cast_rays_utils.c
+float	set_angle(float angle, float wanted_value);
+void	check_distance(t_ray *ray);
+float	dist(float ax, float ay, float bx, float by);
+
+//draw_rays.c
+void    draw_pixels(t_ray *ray, mlx_image_t *window);
+void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window);
+void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
 #endif
