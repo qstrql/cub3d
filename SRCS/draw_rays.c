@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "cub3d.h"
 
-void	draw_pixels(t_ray *ray, mlx_image_t *window)
+void	draw_pixels(t_ray *ray, mlx_image_t *window, mlx_texture_t *texture)
 {
 	int	i;
 	int	j;
@@ -23,14 +23,22 @@ void	draw_pixels(t_ray *ray, mlx_image_t *window)
 		while (j < ray->line_height + ray->line_offset)
 		{
 			mlx_put_pixel(window,
-				(ray->ray_num * PIXEL_SIZE) + i, j, ray->cast_color);
+				(ray->ray_num * PIXEL_SIZE) + i, j, texture->pixels[j * (ray->ray_num * PIXEL_SIZE) + i]);
 			j++;
 		}
 		i++;
 	}
 }
 
-void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window)
+void	get_tile_color(t_ray *ray, t_mapinfo *map)
+{
+	if (map->map[ray->map_y][ray->map_x] == '1')
+		ray->cast_color = 0xFF0000FF;
+	else if (map->map[ray->map_y][ray->map_x] == '2')
+		ray->cast_color = 0x00FF00FF;
+}
+
+void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, mlx_texture_t *texture)
 {
 	ray->cor_angle = player->angle - ray->ray_angle;
 	if (ray->cor_angle < 0)
@@ -42,7 +50,7 @@ void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window)
 	if (ray->line_height > WIN_HEIGHT)
 		ray->line_height = WIN_HEIGHT;
 	ray->line_offset = (WIN_HEIGHT / 2) - (ray->line_height / 2);
-	draw_pixels(ray, window);
+	draw_pixels(ray, window, texture);
 	ray->ray_num++;
 	ray->ray_angle += RAD1;
 	if (ray->ray_angle < 0)
@@ -54,6 +62,7 @@ void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window)
 void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 {
 	static mlx_image_t	*window = NULL;
+	mlx_texture_t *cat = mlx_load_png("img/normal_cat.png");
 	t_ray				ray;
 
 	if (window != NULL)
@@ -71,7 +80,8 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		initial_vertical_math(&ray, player);
 		ray_collision_check_vertical(&ray, player, map);
 		check_distance(&ray);
-		draw_rays(&ray, player, window);
+		//get_tile_color(&ray, map);
+		draw_rays(&ray, player, window, cat);
 	}
-	mlx_image_to_window(mlx, window, 0, 0);
+	mlx_image_to_window(mlx, window, 640, 0);
 }

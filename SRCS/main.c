@@ -293,18 +293,35 @@ void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
 		player->dx = cos(player->angle) * 5;
 		player->dy = sin(player->angle) * 5;
 	}
+
+	int	x_offset;
+	int	y_offset;
+
+	if (player->dx < 0)
+		x_offset = -20;
+	else
+		x_offset = 20;
+	if (player->dy < 0)
+		y_offset = -20;
+	else
+		y_offset = 20;
+
 	if (direction == 'U')
 	{
-		player->x += player->dx;
-		player->y += player->dy;
+		if (map->map[(int)(player->y / 64)][(int)((player->x + x_offset) / 64)] == '0')
+			player->x += player->dx;
+		if (map->map[(int)((player->y + y_offset) / 64)][(int)(player->x / 64)] == '0')
+			player->y += player->dy;
 	}
 	if (direction == 'D')
 	{
-		player->x -= player->dx;
-		player->y -= player->dy;
+		if (map->map[(int)(player->y / 64)][(int)((player->x - x_offset) / 64)] == '0')
+			player->x -= player->dx;
+		if (map->map[(int)((player->y - y_offset) / 64)][(int)(player->x / 64)] == '0')
+			player->y -= player->dy;
 	}
-	//player->sprite.img->instances[0].x = player->x;
-	//player->sprite.img->instances[0].y = player->y;
+	player->sprite.img->instances[0].x = player->x;
+	player->sprite.img->instances[0].y = player->y;
 	//draw_line(mlx, player->x, player->y, player->x + player->dx * 10, player->y + player->dy * 10, 0xFF00FF, 1);
 	cast_rays_3d(mlx, player, map);
 }
@@ -331,17 +348,33 @@ void	free_sprite(t_sprite *sprite, mlx_t *mlx)
 	mlx_delete_texture(sprite->texture);
 }
 
+void	debug_2d_map(t_game *game, t_player *player)
+{
+	t_sprite	cat;
+
+	cat.texture = mlx_load_png("img/normal_cat.png");
+	cat.img = mlx_texture_to_image(game->mlx, cat.texture);
+	player->sprite.texture = mlx_load_png("img/dark_cat.png");
+	player->sprite.img = mlx_texture_to_image(game->mlx, player->sprite.texture);
+	mlx_resize_image(cat.img, 64, 64);
+	mlx_resize_image(player->sprite.img, 32, 32);
+
+	draw_map(game->mlx, game->mapinfo, cat);
+	mlx_image_to_window(game->mlx, player->sprite.img, 64, 64);
+	//free_sprite(&player.sprite, game.mlx);
+	//free_sprite(&cat, game.mlx);
+}
+
 void 	mlx_test()
 {
 	t_game		game;
 	t_mapinfo	mapinfo;
 	t_player	player;
-	t_sprite	cat;
 
 	game.mapinfo = &mapinfo;
 	game.player = &player;
-	player.x = 64;
-	player.y = 64;
+	player.x = 256;
+	player.y = 256;
 	player.angle = 0;
 	player.dx = cos(player.angle) * 5;
 	player.dy = sin(player.angle) * 5;
@@ -365,24 +398,16 @@ void 	mlx_test()
 		}
 	}
 	game.mapinfo->map[5][5] = '1';
-	game.mapinfo->map[1][2] = '1';
+	game.mapinfo->map[5][6] = '1';
+	game.mapinfo->map[1][2] = '2';
 	game.mapinfo->map[2][2] = '1';
 	print_map(game.mapinfo);
 
 	game.mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "aaaaaaa", false);
-	cat.texture = mlx_load_png("img/normal_cat.png");
-	cat.img = mlx_texture_to_image(game.mlx, cat.texture);
-	player.sprite.texture = mlx_load_png("img/dark_cat.png");
-	player.sprite.img = mlx_texture_to_image(game.mlx, player.sprite.texture);
-	mlx_resize_image(cat.img, 64, 64);
-	mlx_resize_image(player.sprite.img, 32, 32);
-
-	//draw_map(game.mlx, game.mapinfo, cat);
-	//mlx_image_to_window(game.mlx, player.sprite.img, 64, 64);
+	debug_2d_map(&game, game.player);
+	cast_rays_3d(game.mlx, game.player, game.mapinfo);
 	mlx_loop_hook(game.mlx, input_hook, &game);
 	mlx_loop(game.mlx);
-	free_sprite(&player.sprite, game.mlx);
-	free_sprite(&cat, game.mlx);
 	mlx_terminate(game.mlx);
 }
 
@@ -402,7 +427,6 @@ int	main(int argc, char **argv)
 	}
 	else
 	{
-		printf("ouai\n");
 		mlx_test();
 	}
 }

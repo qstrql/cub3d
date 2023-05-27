@@ -33,6 +33,8 @@ void	check_distance(t_ray *ray)
 		ray->ray_x = ray->hit_x_ver;
 		ray->ray_y = ray->hit_y_ver;
 		ray->dist_real = ray->dist_v;
+		ray->map_x = ray->ver_map_x;
+		ray->map_y = ray->ver_map_y;
 		ray->cast_color = 0xFF0000FF;
 	}
 	else
@@ -40,6 +42,8 @@ void	check_distance(t_ray *ray)
 		ray->ray_x = ray->hit_x_hor;
 		ray->ray_y = ray->hit_y_hor;
 		ray->dist_real = ray->dist_h;
+		ray->map_x = ray->hor_map_x;
+		ray->map_y = ray->hor_map_y;
 		ray->cast_color = 0xAB0213FF;
 	}
 }

@@ -16,12 +16,12 @@ void	ray_collision_check_horizontal(t_ray *ray,
 {
 	while (ray->dof < 8)
 	{
-		ray->map_x = (int)(ray->ray_x) >> 6;
-		ray->map_y = (int)(ray->ray_y) >> 6;
-		if (ray->map_x >= 0 && ray->map_y >= 0)
+		ray->hor_map_x = (int)(ray->ray_x) >> 6;
+		ray->hor_map_y = (int)(ray->ray_y) >> 6;
+		if (ray->hor_map_x >= 0 && ray->hor_map_y >= 0)
 		{
-			if (ray->map_x < map->width && ray->map_y < map->height
-				&& map->map[ray->map_y][ray->map_x] != '0')
+			if (ray->hor_map_x < map->width && ray->hor_map_y < map->height
+				&& map->map[ray->hor_map_y][ray->hor_map_x] != '0')
 			{
 				ray->hit_x_hor = ray->ray_x;
 				ray->hit_y_hor = ray->ray_y;
@@ -74,12 +74,12 @@ void	ray_collision_check_vertical(t_ray *ray,
 {
 	while (ray->dof < 8)
 	{
-		ray->map_x = (int)(ray->ray_x) >> 6;
-		ray->map_y = (int)(ray->ray_y) >> 6;
-		if (ray->map_x >= 0 && ray->map_y >= 0)
+		ray->ver_map_x = (int)(ray->ray_x) >> 6;
+		ray->ver_map_y = (int)(ray->ray_y) >> 6;
+		if (ray->ver_map_x >= 0 && ray->ver_map_y >= 0)
 		{
-			if (ray->map_x < map->width && ray->map_y < map->height
-				&& map->map[ray->map_y][ray->map_x] != '0')
+			if (ray->ver_map_x < map->width && ray->ver_map_y < map->height
+				&& map->map[ray->ver_map_y][ray->ver_map_x] != '0')
 			{
 				ray->hit_x_ver = ray->ray_x;
 				ray->hit_y_ver = ray->ray_y;

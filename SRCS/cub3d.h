@@ -47,9 +47,9 @@
 # define PI3 3*PI/2
 # define RAD1 0.0174533
 
-# define RAYS 75
+# define RAYS 60
 # define PIXEL_SIZE 12
-# define WIN_WIDTH PIXEL_SIZE * RAYS
+# define WIN_WIDTH PIXEL_SIZE * RAYS + 640
 # define WIN_HEIGHT 600
 
 enum e_rgb
@@ -96,6 +96,8 @@ typedef struct s_player
 	float		dx;
 	float		dy;
 	float		angle;
+	int			map_pos_x;
+	int			map_pos_y;
 }	t_player;
 
 typedef struct s_game
@@ -112,6 +114,10 @@ typedef struct s_ray
 	int		ray_num;
 	int		map_x;
 	int		map_y;
+	int		hor_map_x;
+	int		hor_map_y;
+	int		ver_map_x;
+	int		ver_map_y;
 	int		dof;
 	int		cast_color;
 	float	ray_x;
@@ -183,7 +189,7 @@ void	check_distance(t_ray *ray);
 float	dist(float ax, float ay, float bx, float by);
 
 //draw_rays.c
-void    draw_pixels(t_ray *ray, mlx_image_t *window);
-void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window);
+void    draw_pixels(t_ray *ray, mlx_image_t *window, mlx_texture_t *texture);
+void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, mlx_texture_t *texture);
 void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
 #endif
