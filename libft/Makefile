@@ -57,16 +57,9 @@ SRCS = \
     SRCS/libft/ft_lstiter.c \
     SRCS/libft/ft_lstmap.c \
 	\
-	SRCS/printf/ft_printf.c \
-	SRCS/printf/ft_check_str.c \
-	SRCS/printf/ft_printnbr.c \
-	SRCS/printf/ft_printnbr_base.c \
-	SRCS/printf/ft_utilities.c \
-	\
 	SRCS/extra/ft_super_strjoin.c \
 	SRCS/extra/ft_strndup.c \
 	SRCS/extra/ft_isprime.c \
-	SRCS/extra/ft_printf_strs.c \
 	SRCS/extra/ft_abs.c \
 	SRCS/extra/ft_min.c \
 	SRCS/extra/ft_max.c \
@@ -79,8 +72,7 @@ SRCS = \
 	SRCS/extra/ft_ishexdigit.c \
 	SRCS/extra/ft_str_is_space_only.c \
 	SRCS/extra/ft_free_split_array.c \
-	SRCS/extra/ft_better_free.c \
-	SRCS/extra/ft_printf_tab.c
+	SRCS/extra/ft_better_free.c
 CC = cc
 OBJS = $(SRCS:.c=.o)
 FLAGS = -Wall -Wextra -Werror -I ./INCLUDES
