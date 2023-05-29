@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:54:42 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/05 23:56:00 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/29 15:04:49 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -37,6 +37,6 @@ void	init_data_struct(t_game *data)
 {
 	data->mlx = NULL;
 	init_config_struct(&data->config);
-	init_mapinfo_struct(data->mapinfo);
+//	init_mapinfo_struct(data->mapinfo);
 	data->raw_file = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:52:40 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/06 00:02:14 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/29 15:50:25 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -38,7 +38,7 @@ void	free_config_struct(t_config *config)
 int	free_data_struct(t_game *data, int exit_code)
 {
 	free_config_struct(&data->config);
-	free_mapinfo_struct(data->mapinfo);
+//	free_mapinfo_struct(data->mapinfo);
 	if (data->raw_file)
 		free_split_array(&data->raw_file);
 	return (exit_code);

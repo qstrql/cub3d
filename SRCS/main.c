@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/24 19:23:36 by lbertaux         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:38:59 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -60,125 +60,131 @@ const mlx_texture_t* mlx_get_font(void);
 int32_t mlx_get_texoffset(char c);
 /*-----------------------------------------------------------------------------*/
 
-int	skip_empty_char(char *line, int j)
+bool check_if_struct_filled(t_config config) 
 {
-	int	i;
-
-	i = j;
-	while (line[i] && (line[i] == ' ' || line[i] == '\t' || line[i] == '\n'))
-		i++;
-	return (i);
+	if (config.no == NULL || config.so == NULL || config.we == NULL ||
+			config.ea == NULL || config.floor == NULL || config.ceiling == NULL)
+	{
+        return false;
+	}
+	else
+	{
+        return true;
+	}
 }
 
-char	*get_textures_path(char *line, int j)
+int check_for_correct_coord(char *coord)
+{
+	if (ft_strncmp(coord, "NO", 3) == 0)
+		return (1);
+	else if (ft_strncmp(coord, "SO", 3) == 0)
+		return (1);
+	else if (ft_strncmp(coord, "EA", 3) == 0)
+		return (1);
+	else if (ft_strncmp(coord, "WE", 3) == 0)
+		return (1);
+	else
+		return (0);
+}
+
+int	check_for_correct_rgb(char *rgb)
 {
 	int	i;
-	int	len;
-	char *texture;
 
-	j = skip_empty_char(line, j);
-	len = j;
-	while (line[len] && (line[len] != ' ' && line[len] != '\t'))
-		len++;
-	texture = ft_calloc((len - j + 1), sizeof(char));
-	if (texture == NULL)
-		return (NULL);
 	i = 0;
-	while (line[j] && (line[j] != ' ' && line[j] != '\t' && line[j] != '\n'))
-		texture[i++] = line[j++];
-	j = skip_empty_char(line, j);
-	if (line[j] && line[j] != '\n')
-		better_free(texture);
-	return (texture);
-}
-
-int	get_textures_config(t_config *config, char *line, int j)
-{
+	while (rgb[i])
 	{
-		if (line[j + 2] && ft_isprint(line[j + 2]))
-			return (FAIL);
-		if (line[j] == 'N' && line[j + 1] == 'O' && !(config->no))
-			config->no = get_textures_path(line, j + 2);
-		else if (line[j] == 'S' && line[j + 1] == 'O' && !(config->so))
-			config->so = get_textures_path(line, j + 2);
-		else if (line[j] == 'W' && line[j + 1] == 'E' && !(config->we))
-			config->we = get_textures_path(line, j + 2);
-		else if (line[j] == 'E' && line[j + 1] == 'A' && !(config->ea))
-			config->ea = get_textures_path(line, j + 2);
-		else
+		if (!ft_isdigit(rgb[i]) && rgb[i] != ',')
 			return (FAIL);
 	}
 	return (SUCCESS);
 }
 
-int	get_rgb_config(t_config *config, char *line, int j)
+int	get_rbg(t_config config, char **line)
 {
-	if (line[j + 1] && !ft_isprint(line[j + 1]))
+	char **tmp;
+
+	if (check_for_correct_rgb(line[1]) == FAIL)
 		return (FAIL);
-	if (!config->floor && line[j] == 'F')
+	tmp = ft_split(line[1], ',');
+	if (tmp[3] || !tmp[2])
 	{
-		return (SUCCESS);
+		free_split_array(&tmp);
+		return (FAIL);
 	}
-	else if (!config->ceiling && line[j] == 'C')
+	if (ft_strncmp(line[0], "F", 2))
 	{
-		return (SUCCESS);
+		config.floor = malloc(3 * sizeof(int));
+		config.floor[RED] = ft_atoi(tmp[0]);
+		config.floor[GREEN] = ft_atoi(tmp[1]);
+		config.floor[BLUE] = ft_atoi(tmp[2]);
 	}
+	else 
+	{
+		config.ceiling = malloc(3 * sizeof(int));
+		config.ceiling[RED] = ft_atoi(tmp[0]);
+		config.ceiling[GREEN] = ft_atoi(tmp[1]);
+		config.ceiling[BLUE] = ft_atoi(tmp[2]);
+	}
+	free_split_array(&tmp);
 	return (SUCCESS);
 }
 
-int	get_map_config(t_config *config, char *line, int j)
+int	get_coord_path(t_config config, char **line)
 {
-	(void)config;
-	(void)line;
-	(void)j;
-	return (SUCCESS);
+	
+	if (ft_strncmp(line[0], "NO", 3) == 0)
+		config.no = ft_strdup(line[1]);
+	else if (ft_strncmp(line[0], "SO", 3) == 0)
+		config.so = ft_strdup(line[1]);
+	else if (ft_strncmp(line[0], "EA", 3) == 0)
+		config.ea = ft_strdup(line[1]);
+	else if (ft_strncmp(line[0], "WE", 3) == 0)
+		config.we = ft_strdup(line[1]);
+	else
+	 	return (FAIL);
+	return (SUCCESS);	
 }
 
-int	get_config_content(t_game *data, int i, int j)
+int get_texture_rgb(t_config config, char **line)
 {
-	if (ft_isprint(data->raw_file[i][j]) && !ft_isdigit(data->raw_file[i][j]))
-	{
-		if (data->raw_file[i][j + 1] && ft_isprint(data->raw_file[i][j + 1] &&
-				!ft_isdigit(data->raw_file[i][j + 1])))
-		{
-			if (get_textures_config(&data->config, data->raw_file[i], j) == FAIL)
-				return (FAIL);
-		}
-		else
-		{
-			if (get_rgb_config(&data->config, data->raw_file[i], j) == FAIL)
-				return (FAIL);
-		}
-	}
-	else if (ft_isdigit(data->raw_file[i][j]))
-	{
-		if (get_map_config(&data->config, data->raw_file[i], j) == FAIL)
-			return (FAIL);
-	}
-	return (EXIT_SUCCESS);	
+	int ret;
+
+	ret = FAIL;
+	printf("%s\n", line[0]);
+	if (ft_strncmp(line[0], "F", 2) == 0 || ft_strncmp(line[0], "C", 2) == 0)
+		ret = get_rbg(config, line);
+	else if (check_for_correct_coord(line[0]) == 1)
+		ret = get_coord_path(config, line);
+	else
+		return (ret);
+	return (ret);	
 }
 
 int	check_file_content(t_game *data)
 {
 	int	i;
-	int	j;
+	char **tmp;
 
 	i = 0;
-	j = 0;
-	if (data->mapinfo->line_count < 9)
-		return (INVALID_FILE);
 	while (data->raw_file[i])
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
-		j = skip_empty_char(data->raw_file[i], j);
-		while (data->raw_file[i][j])
+		tmp = ft_split(data->raw_file[i], ' ');
+		if (check_if_struct_filled(data->config) == false)
+			if (tmp[2])
+				return (INVALID_FILE);
+		if (get_texture_rgb(data->config, tmp) == FAIL)
 		{
-			if (get_config_content(data, i, j) == FAIL)
-				return (FAIL);
+			free_split_array(&tmp);
+			return (INVALID_FILE);
 		}
+		free_split_array(&tmp);
 		i++;
 	}
+	if (check_if_struct_filled(data->config) == false)
+		return (INVALID_FILE);
 	debugprint(data);
 	return (VALID_FILE);
 }
@@ -195,12 +201,30 @@ int	parse_file(t_game *data, char *argv)
 
 void	debugprint(t_game *data)
 {
-	printf("%s\n", data->config.no);	
-	printf("%s\n", data->config.so);	
-	printf("%s\n", data->config.we);	
-	printf("%s\n", data->config.ea);	
-	printf("%d\n", data->mapinfo->line_count);	
-	printf("%s\n", data->mapinfo->map_path);	
+	if (data) {
+		if (data->config.no) {
+			printf("%s\n", data->config.no);
+		}
+		if (data->config.so) {
+			printf("%s\n", data->config.so);
+		}
+		if (data->config.we) {
+			printf("%s\n", data->config.we);
+		}
+		if (data->config.ea) {
+			printf("%s\n", data->config.ea);
+		}
+		if (data->config.ceiling) {
+			printf("%d\n", data->config.ceiling[RED]);
+			printf("%d\n", data->config.ceiling[GREEN]);
+			printf("%d\n", data->config.ceiling[BLUE]);
+		}
+		if (data->config.floor) {
+			printf("%d\n", data->config.floor[RED]);
+			printf("%d\n", data->config.floor[GREEN]);
+			printf("%d\n", data->config.floor[BLUE]);
+		}
+	}
 }
 
 //void	draw_player(mlx_t *mlx int **map);
