@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/29 17:38:59 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/29 18:23:13 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -133,13 +133,13 @@ int	get_rbg(t_config config, char **line)
 int	get_coord_path(t_config config, char **line)
 {
 	
-	if (ft_strncmp(line[0], "NO", 3) == 0)
+	if (ft_strncmp(line[0], "NO", 3) == 0 && !config.no)
 		config.no = ft_strdup(line[1]);
-	else if (ft_strncmp(line[0], "SO", 3) == 0)
+	else if (ft_strncmp(line[0], "SO", 3) == 0 && !config.so)
 		config.so = ft_strdup(line[1]);
-	else if (ft_strncmp(line[0], "EA", 3) == 0)
+	else if (ft_strncmp(line[0], "EA", 3) == 0 && !config.ea)
 		config.ea = ft_strdup(line[1]);
-	else if (ft_strncmp(line[0], "WE", 3) == 0)
+	else if (ft_strncmp(line[0], "WE", 3) == 0 && !config.we)
 		config.we = ft_strdup(line[1]);
 	else
 	 	return (FAIL);
@@ -173,7 +173,7 @@ int	check_file_content(t_game *data)
 			i++;
 		tmp = ft_split(data->raw_file[i], ' ');
 		if (check_if_struct_filled(data->config) == false)
-			if (tmp[2])
+			if (tmp[2] || !tmp[1])
 				return (INVALID_FILE);
 		if (get_texture_rgb(data->config, tmp) == FAIL)
 		{
