@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/29 18:23:13 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/30 15:42:13 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -60,10 +60,10 @@ const mlx_texture_t* mlx_get_font(void);
 int32_t mlx_get_texoffset(char c);
 /*-----------------------------------------------------------------------------*/
 
-bool check_if_struct_filled(t_config config) 
+bool check_if_struct_filled(t_config *config) 
 {
-	if (config.no == NULL || config.so == NULL || config.we == NULL ||
-			config.ea == NULL || config.floor == NULL || config.ceiling == NULL)
+	if (config->no == NULL || config->so == NULL || config->we == NULL ||
+		config->ea == NULL || config->floor == NULL || config->ceiling == NULL)
 	{
         return false;
 	}
@@ -96,62 +96,84 @@ int	check_for_correct_rgb(char *rgb)
 	{
 		if (!ft_isdigit(rgb[i]) && rgb[i] != ',')
 			return (FAIL);
+		i++;
 	}
 	return (SUCCESS);
 }
 
-int	get_rbg(t_config config, char **line)
+int	fill_floor_rgb(t_config *config, char **tmp)
+{
+	config->floor = malloc(3 * sizeof(int));
+	config->floor[RED] = ft_atoi(tmp[0]);
+	config->floor[GREEN] = ft_atoi(tmp[1]);
+	config->floor[BLUE] = ft_atoi(tmp[2]);
+	if (config->floor[RED] > 255 ||  config->floor[RED] < 0)
+		return (FAIL);
+	if (config->floor[GREEN] > 255 ||  config->floor[GREEN] < 0)
+		return (FAIL);
+	if (config->floor[BLUE] > 255 ||  config->floor[BLUE] < 0)
+		return (FAIL);
+	return (SUCCESS);
+}
+
+int fill_ceiling_rgb(t_config *config, char **tmp)
+{
+	config->ceiling = malloc(3 * sizeof(int));
+	config->ceiling[RED] = ft_atoi(tmp[0]);
+	config->ceiling[GREEN] = ft_atoi(tmp[1]);
+	config->ceiling[BLUE] = ft_atoi(tmp[2]);
+	if (config->ceiling[RED] > 255 ||  config->ceiling[RED] < 0)
+		return (FAIL);
+	if (config->ceiling[GREEN] > 255 ||  config->ceiling[GREEN] < 0)
+		return (FAIL);
+	if (config->ceiling[BLUE] > 255 ||  config->ceiling[BLUE] < 0)
+		return (FAIL);
+	return (SUCCESS);
+}
+
+int	get_rbg(t_config *config, char **line)
 {
 	char **tmp;
+	int	ret;
 
+	ret = FAIL;
 	if (check_for_correct_rgb(line[1]) == FAIL)
-		return (FAIL);
+		return (ret);
 	tmp = ft_split(line[1], ',');
 	if (tmp[3] || !tmp[2])
 	{
 		free_split_array(&tmp);
-		return (FAIL);
+		return (ret);
 	}
 	if (ft_strncmp(line[0], "F", 2))
-	{
-		config.floor = malloc(3 * sizeof(int));
-		config.floor[RED] = ft_atoi(tmp[0]);
-		config.floor[GREEN] = ft_atoi(tmp[1]);
-		config.floor[BLUE] = ft_atoi(tmp[2]);
-	}
-	else 
-	{
-		config.ceiling = malloc(3 * sizeof(int));
-		config.ceiling[RED] = ft_atoi(tmp[0]);
-		config.ceiling[GREEN] = ft_atoi(tmp[1]);
-		config.ceiling[BLUE] = ft_atoi(tmp[2]);
-	}
+		ret = fill_floor_rgb(config, tmp);
+	if (ft_strncmp(line[0], "C", 2))
+		ret = fill_ceiling_rgb(config, tmp);
 	free_split_array(&tmp);
-	return (SUCCESS);
+	return (ret);
 }
 
-int	get_coord_path(t_config config, char **line)
+int	get_coord_path(t_config *config, char **line)
 {
 	
-	if (ft_strncmp(line[0], "NO", 3) == 0 && !config.no)
-		config.no = ft_strdup(line[1]);
-	else if (ft_strncmp(line[0], "SO", 3) == 0 && !config.so)
-		config.so = ft_strdup(line[1]);
-	else if (ft_strncmp(line[0], "EA", 3) == 0 && !config.ea)
-		config.ea = ft_strdup(line[1]);
-	else if (ft_strncmp(line[0], "WE", 3) == 0 && !config.we)
-		config.we = ft_strdup(line[1]);
+	if (ft_strncmp(line[0], "NO", 3) == 0 && !config->no)
+		config->no = ft_strdup(line[1]);
+	else if (ft_strncmp(line[0], "SO", 3) == 0 && !config->so)
+		config->so = ft_strdup(line[1]);
+	else if (ft_strncmp(line[0], "EA", 3) == 0 && !config->ea)
+		config->ea = ft_strdup(line[1]);
+	else if (ft_strncmp(line[0], "WE", 3) == 0 && !config->we)
+		config->we = ft_strdup(line[1]);
 	else
 	 	return (FAIL);
 	return (SUCCESS);	
 }
 
-int get_texture_rgb(t_config config, char **line)
+int get_texture_rgb(t_config *config, char **line)
 {
 	int ret;
 
 	ret = FAIL;
-	printf("%s\n", line[0]);
 	if (ft_strncmp(line[0], "F", 2) == 0 || ft_strncmp(line[0], "C", 2) == 0)
 		ret = get_rbg(config, line);
 	else if (check_for_correct_coord(line[0]) == 1)
@@ -171,11 +193,12 @@ int	check_file_content(t_game *data)
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
+		data->raw_file[i] = ft_strtrim(data->raw_file[i], " \t\n");
 		tmp = ft_split(data->raw_file[i], ' ');
-		if (check_if_struct_filled(data->config) == false)
+		if (check_if_struct_filled(&data->config) == false)
 			if (tmp[2] || !tmp[1])
 				return (INVALID_FILE);
-		if (get_texture_rgb(data->config, tmp) == FAIL)
+		if (get_texture_rgb(&data->config, tmp) == FAIL)
 		{
 			free_split_array(&tmp);
 			return (INVALID_FILE);
@@ -183,7 +206,7 @@ int	check_file_content(t_game *data)
 		free_split_array(&tmp);
 		i++;
 	}
-	if (check_if_struct_filled(data->config) == false)
+	if (check_if_struct_filled(&data->config) == false)
 		return (INVALID_FILE);
 	debugprint(data);
 	return (VALID_FILE);
@@ -195,7 +218,10 @@ int	parse_file(t_game *data, char *argv)
 		exit_program(data, INVALID_FILE);
 	get_file_content(data, argv);
 	if (check_file_content(data) == FAIL)
+	{
+		debugprint(data);
 		exit_msg(data, WRONG_FILE_CONTENT);
+	}
 	return (VALID_FILE);
 }
 
