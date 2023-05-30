@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/30 15:42:13 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/05/30 16:02:27 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -193,7 +193,7 @@ int	check_file_content(t_game *data)
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
-		data->raw_file[i] = ft_strtrim(data->raw_file[i], " \t\n");
+		data->raw_file[i] = ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
 		tmp = ft_split(data->raw_file[i], ' ');
 		if (check_if_struct_filled(&data->config) == false)
 			if (tmp[2] || !tmp[1])
