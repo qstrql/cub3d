@@ -260,7 +260,7 @@ void	draw_map(mlx_t *mlx, t_mapinfo *map, t_sprite wall_sprite)
 	{
 		while (j < map->width)
 		{
-			if (map->map[i][j] == '1')
+			if (map->map[i][j] != '0')
 				mlx_image_to_window(mlx, wall_sprite.img, j * wall_sprite.img->width, i * wall_sprite.img->height);
 			j++;
 		}

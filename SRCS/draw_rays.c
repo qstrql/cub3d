@@ -17,13 +17,21 @@ void	draw_pixels(t_ray *ray, mlx_image_t *window, mlx_texture_t *texture)
 	int	j;
 
 	i = 0;
+	(void)texture;
 	while (i < PIXEL_SIZE)
 	{
-		j = ray->line_offset;
-		while (j < ray->line_height + ray->line_offset)
+		j = 0;
+		while (j < WIN_HEIGHT)
 		{
-			mlx_put_pixel(window,
-				(ray->ray_num * PIXEL_SIZE) + i, j, texture->pixels[j * (ray->ray_num * PIXEL_SIZE) + i]);
+			if (j < ray->line_offset)
+				mlx_put_pixel(window,
+					(ray->ray_num * PIXEL_SIZE) + i, j, 0xB3FFFEFF);
+			else if (j > ray->line_offset && j < ray->line_height + ray->line_offset)
+				mlx_put_pixel(window,
+					(ray->ray_num * PIXEL_SIZE) + i, j, ray->cast_color);
+			else
+				mlx_put_pixel(window,
+					(ray->ray_num * PIXEL_SIZE) + i, j, 0x053604FF);
 			j++;
 		}
 		i++;
