@@ -48,7 +48,7 @@
 # define RAD1 0.0174533
 
 # define RAYS 60
-# define PIXEL_SIZE 12
+# define PIXEL_SIZE 8
 # define WIN_WIDTH PIXEL_SIZE * RAYS + 640
 # define WIN_HEIGHT 600
 
@@ -120,6 +120,8 @@ typedef struct s_ray
 	int		ver_map_y;
 	int		dof;
 	int		cast_color;
+	float	texture_offset;
+	float	texture_step;
 	float	ray_x;
 	float	ray_y;
 	float	ray_angle;
@@ -139,57 +141,80 @@ typedef struct s_ray
 	float	cor_angle;
 }	t_ray;
 
+typedef struct s_rgb
+{
+	int	r;
+	int	g;
+	int	b;
+	int	a;
+}	t_rgb;
+
+typedef struct	s_rc_texture
+{
+	t_rgb	*pixels;
+	int	width;
+	int	height;
+}	t_rc_texture;
+
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
-void	debugprint(t_game *data);
+void			debugprint(t_game *data);
 
 //init_structs.c
-void	init_mapinfo_struct(t_mapinfo *map);
-void	init_config_struct(t_config *config);
-void	init_data_struct(t_game *data);
+void			init_mapinfo_struct(t_mapinfo *map);
+void			init_config_struct(t_config *config);
+void			init_data_struct(t_game *data);
 
 //exit_program.c
-void	close_window(t_game *data);
-void	exit_program(t_game *data, int exit_code);
+void			close_window(t_game *data);
+void			exit_program(t_game *data, int exit_code);
 
 //free_data_struct.c
-void	free_mapinfo_struct(t_mapinfo *map);
-void	free_config_struct(t_config *config);
-int		free_data_struct(t_game *data, int exit_code);
+void			free_mapinfo_struct(t_mapinfo *map);
+void			free_config_struct(t_config *config);
+int				free_data_struct(t_game *data, int exit_code);
 
 //gnl.c
-char	*get_next_line(int fd);
+char			*get_next_line(int fd);
 
 //parse_file.c
-int	get_line_count(char *file);
-char **get_raw_file_data(char *file);
-void get_file_content(t_game *data, char *file);
+int				get_line_count(char *file);
+char			**get_raw_file_data(char *file);
+void			get_file_content(t_game *data, char *file);
 
 //parse_arg.c
-bool file_exist(char *argv);
-bool file_is_a_directory(char *file);
-bool check_map_extension(char *argv);
-int	parse_arg(char *argv);
+bool			file_exist(char *argv);
+bool			file_is_a_directory(char *file);
+bool			check_map_extension(char *argv);
+int				parse_arg(char *argv);
 
 //utils.c
-int		error_msg(char *str, int exit_code);
-void	exit_msg(t_game *data, char *str);
+int				error_msg(char *str, int exit_code);
+void			exit_msg(t_game *data, char *str);
 
 //cast_rays.c
-void	ray_collision_check_horizontal(t_ray *ray,
+void			ray_collision_check_horizontal(t_ray *ray,
 			t_player *player, t_mapinfo *map);
-void	initial_horizontal_math(t_ray *ray, t_player *player);
-void	ray_collision_check_vertical(t_ray *ray,
+void			initial_horizontal_math(t_ray *ray, t_player *player);
+void			ray_collision_check_vertical(t_ray *ray,
 			t_player *player, t_mapinfo *map);
-void	initial_vertical_math(t_ray *ray, t_player *player);
+void			initial_vertical_math(t_ray *ray, t_player *player);
 
 //cast_rays_utils.c
-float	set_angle(float angle, float wanted_value);
-void	check_distance(t_ray *ray);
-float	dist(float ax, float ay, float bx, float by);
+float			set_angle(float angle, float wanted_value);
+void			check_distance(t_ray *ray);
+float			dist(float ax, float ay, float bx, float by);
 
 //draw_rays.c
-void    draw_pixels(t_ray *ray, mlx_image_t *window, mlx_texture_t *texture);
-void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, mlx_texture_t *texture);
-void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
+void    		draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture);
+void			draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, t_rc_texture *texture);
+void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
+int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
+
+//rc_texture_utils.c
+t_rgb			*texture_to_rgb_array(mlx_texture_t *texture);
+void			free_rc_texture(t_rc_texture *texture);
+t_rc_texture	*init_rc_texture(char *path, mlx_t *mlx);
+t_rgb			get_rgb_value(t_rc_texture texture, int x, int y);
+int32_t			color_int32(t_rgb rgb);
 #endif
