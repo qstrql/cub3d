@@ -111,6 +111,7 @@ typedef struct s_game
 
 typedef struct s_ray
 {
+	bool	vertical;
 	int		ray_num;
 	int		map_x;
 	int		map_y;
@@ -119,7 +120,6 @@ typedef struct s_ray
 	int		ver_map_x;
 	int		ver_map_y;
 	int		dof;
-	int		cast_color;
 	float	texture_offset;
 	float	texture_step;
 	float	ray_x;

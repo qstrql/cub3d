@@ -253,8 +253,6 @@ void	debugprint(t_game *data)
 	}
 }
 
-//void	draw_player(mlx_t *mlx int **map);
-
 void	print_map(t_mapinfo *map)
 {
 	int	i;

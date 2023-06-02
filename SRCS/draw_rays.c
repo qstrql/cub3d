@@ -29,10 +29,14 @@ void	draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture)
 		draw_end = 0;
 	i = 0;
 
+	float	tx;
 	float	ty = ray->texture_step * ray->texture_offset;
-	printf("step : %f, offset : %f\n", ray->texture_step, ray->texture_offset);
-	float	tx = (int)(ray->ray_x / 2) % 32;
-	(void)texture;
+	//printf("step : %f, offset : %f\n", ray->texture_step, ray->texture_offset);
+	if (!ray->vertical)
+		tx = (int)(ray->ray_x / (64 / texture->width)) % texture->width;
+	else
+		tx = (int)(ray->ray_y / (64 / texture->width)) % texture->width;
+
 	while (i < PIXEL_SIZE)
 	{
 		j = 0;
@@ -45,7 +49,7 @@ void	draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture)
 			{
 				//printf("drawing x : %f, y : %f\n", tx, ty);
 				mlx_put_pixel(window,
-					(ray->ray_num * PIXEL_SIZE) + i, j, color_int32(texture->pixels[(int)ty * 32 + (int)tx]));
+					(ray->ray_num * PIXEL_SIZE) + i, j, color_int32(texture->pixels[(int)ty * texture->width + (int)tx]));
 				ty += ray->texture_step;
 			}
 			else
@@ -60,14 +64,6 @@ void	draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture)
 	//				(ray->ray_num * PIXEL_SIZE) + i, j, ft_pixel(texture->pixels[pixel], texture->pixels[pixel + 1], texture->pixels[pixel + 2], texture->pixels[pixel + 3]));
 }
 
-void	get_tile_color(t_ray *ray, t_mapinfo *map)
-{
-	if (map->map[ray->map_y][ray->map_x] == '1')
-		ray->cast_color = 0xFF0000FF;
-	else if (map->map[ray->map_y][ray->map_x] == '2')
-		ray->cast_color = 0x00FF00FF;
-}
-
 void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, t_rc_texture *texture)
 {
 	ray->cor_angle = player->angle - ray->ray_angle;
@@ -77,7 +73,7 @@ void	draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, t_rc_texture *
 		ray->ray_angle = -2 * PI;
 	ray->dist_real = ray->dist_real * cos(ray->cor_angle);
 	ray->line_height = (int)(WIN_HEIGHT * 64 / ray->dist_real);
-	ray->texture_step = 32.0 / (float)ray->line_height;
+	ray->texture_step = texture->height / (float)ray->line_height;
 	ray->texture_offset = 0;
 	if (ray->line_height > WIN_HEIGHT)
 	{
@@ -102,7 +98,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 
 	if (window != NULL)
 		mlx_delete_image(mlx, window);
-	cat_texture = init_rc_texture("img/normal_cat.png", mlx);
+	cat_texture = init_rc_texture("img/wallpaper.png", mlx);
 	window = mlx_new_image(mlx, WIN_WIDTH * 2, WIN_HEIGHT * 2);
 	ray.hit_x_hor = player->x;
 	ray.hit_y_hor = player->y;

@@ -84,7 +84,7 @@ t_rc_texture	*init_rc_texture(char *path, mlx_t *mlx)
 	if (tmp_texture == NULL)
 		return (NULL);
     tmp_img = mlx_texture_to_image(mlx, tmp_texture);
-    mlx_resize_image(tmp_img, 32, 32);
+    mlx_resize_image(tmp_img, 64, 64);
 	ret = ft_calloc(1, sizeof(ret));
 	ret->pixels = texture_to_rgb_array_img(tmp_img);
 	ret->width = tmp_img->width;
