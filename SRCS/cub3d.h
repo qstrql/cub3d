@@ -42,15 +42,8 @@
 # define FILE_DOESNT_EXIST "The provided file does not exist"
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
 
-# define PI 3.141592
-# define PI2 PI/2
-# define PI3 3*PI/2
-# define RAD1 0.0174533
-
-# define RAYS 60
-# define PIXEL_SIZE 8
-# define WIN_WIDTH PIXEL_SIZE * RAYS + 640
-# define WIN_HEIGHT 600
+# define WIN_WIDTH 640
+# define WIN_HEIGHT 480
 
 enum e_rgb
 {
@@ -91,11 +84,14 @@ typedef struct s_sprite
 typedef struct s_player
 {
 	t_sprite	sprite;
-	float		x;
-	float		y;
-	float		dx;
-	float		dy;
-	float		angle;
+	double		x;
+	double		y;
+	double		dir_x;
+	double		dir_y;
+	double		plane_x;
+	double		plane_y;
+	double		move_speed;
+	double		rot_speed;
 	int			map_pos_x;
 	int			map_pos_y;
 }	t_player;
@@ -111,34 +107,14 @@ typedef struct s_game
 
 typedef struct s_ray
 {
-	bool	vertical;
-	int		ray_num;
-	int		map_x;
-	int		map_y;
-	int		hor_map_x;
-	int		hor_map_y;
-	int		ver_map_x;
-	int		ver_map_y;
-	int		dof;
-	float	texture_offset;
-	float	texture_step;
-	float	ray_x;
-	float	ray_y;
-	float	ray_angle;
-	float	xo;
-	float	yo;
-	float	dist_h;
-	float	dist_v;
-	float	hit_x_hor;
-	float	hit_y_hor;
-	float	hit_x_ver;
-	float	hit_y_ver;
-	float	dist_real;
-	float	aTan;
-	float	nTan;
-	float	line_height;
-	float	line_offset;
-	float	cor_angle;
+	double	camera_x;
+	double	ray_dir_x;
+	double	ray_dir_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	perp_wall_dist;
 }	t_ray;
 
 typedef struct s_rgb
@@ -206,7 +182,7 @@ void			check_distance(t_ray *ray);
 float			dist(float ax, float ay, float bx, float by);
 
 //draw_rays.c
-void    		draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture);
+void    		draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture, int draw_start, int draw_end, int num);
 void			draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, t_rc_texture *texture);
 void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);

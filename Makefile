@@ -20,7 +20,6 @@ SRCS = 	SRCS/main.c \
 		SRCS/free_data_struct.c \
 		SRCS/get_next_line.c \
 		SRCS/cast_rays.c \
-		SRCS/cast_rays_utils.c \
 		SRCS/draw_rays.c \
 		SRCS/rc_texture_utils.c
 
