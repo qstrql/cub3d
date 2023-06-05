@@ -107,6 +107,7 @@ typedef struct s_game
 
 typedef struct s_ray
 {
+	int		num;
 	double	camera_x;
 	double	ray_dir_x;
 	double	ray_dir_y;
@@ -115,6 +116,12 @@ typedef struct s_ray
 	double	side_dist_x;
 	double	side_dist_y;
 	double	perp_wall_dist;
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	int		hit;
+	int		side;
 }	t_ray;
 
 typedef struct s_rgb
@@ -169,21 +176,12 @@ int				error_msg(char *str, int exit_code);
 void			exit_msg(t_game *data, char *str);
 
 //cast_rays.c
-void			ray_collision_check_horizontal(t_ray *ray,
-			t_player *player, t_mapinfo *map);
-void			initial_horizontal_math(t_ray *ray, t_player *player);
-void			ray_collision_check_vertical(t_ray *ray,
-			t_player *player, t_mapinfo *map);
-void			initial_vertical_math(t_ray *ray, t_player *player);
-
-//cast_rays_utils.c
-float			set_angle(float angle, float wanted_value);
-void			check_distance(t_ray *ray);
-float			dist(float ax, float ay, float bx, float by);
+void			initial_ray_calculations(t_ray *ray, t_player *player);
+void			dda_init_calculations(t_ray *ray, t_player *player);
+void			dda_calculations(t_ray *ray, t_mapinfo *map);
 
 //draw_rays.c
-void    		draw_pixels(t_ray *ray, mlx_image_t *window, t_rc_texture *texture, int draw_start, int draw_end, int num);
-void			draw_rays(t_ray *ray, t_player *player, mlx_image_t *window, t_rc_texture *texture);
+void			draw_pixels(mlx_image_t *window, t_rc_texture *texture, int line[], int num);
 void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
