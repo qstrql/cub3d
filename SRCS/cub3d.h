@@ -97,6 +97,13 @@ typedef struct s_sprite
 	mlx_texture_t	*texture;
 }	t_sprite;
 
+typedef struct	s_minimap
+{
+	int					cell_size;
+	mlx_texture_t		**textures;
+	mlx_image_t			**images;
+}	t_minimap;
+
 typedef struct s_player
 {
 	t_sprite	sprite;
@@ -110,6 +117,7 @@ typedef struct s_player
 	double		rot_speed;
 	int			map_pos_x;
 	int			map_pos_y;
+	t_minimap	minimap;
 }	t_player;
 
 typedef struct s_game
@@ -144,6 +152,7 @@ typedef struct s_ray
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
 void			debugprint(t_game *data);
+void	display_map(mlx_t *mlx, t_player player, t_mapinfo map);
 
 //init_structs.c
 t_mapinfo		*init_mapinfo_struct(void);
@@ -189,7 +198,6 @@ void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_rc_texture
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 //rc_texture_utils.c
-t_rgb			*texture_to_rgb_array(mlx_texture_t *texture);
 void			free_rc_texture(t_rc_texture *texture);
 t_rc_texture	*init_rc_texture(char *path, mlx_t *mlx);
 t_rgb			get_rgb_value(t_rc_texture texture, int x, int y);

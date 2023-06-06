@@ -277,82 +277,9 @@ void	print_map(t_mapinfo *map)
 	}
 }
 
-void	draw_map(mlx_t *mlx, t_mapinfo *map, t_sprite wall_sprite)
+void	rotate_player(t_game *game, char rotation)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (i < map->height)
-	{
-		while (j < map->width)
-		{
-			if (map->map[i][j] != '0')
-				mlx_image_to_window(mlx, wall_sprite.img, j * wall_sprite.img->width, i * wall_sprite.img->height);
-			j++;
-		}
-		j = 0;
-		i++;
-	}
-}
-
-void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color, int width)
-{
-	static mlx_image_t *line = NULL;
-
-	if (line != NULL)
-		mlx_delete_image(mlx, line);
-	line = mlx_new_image(mlx, WIN_WIDTH, WIN_HEIGHT);
-	double deltaX = endX - beginX;
-	double deltaY = endY - beginY;
-	int pixels = sqrt((deltaX * deltaX) + (deltaY * deltaY));
-	deltaX /= pixels;
-	deltaY /= pixels;
-	double pixelX = beginX;
-	double pixelY = beginY;
-	while (pixels)
-	{
-		if (pixelX > WIN_WIDTH || pixelX < 0
-		|| pixelY > WIN_HEIGHT || pixelY < 0)
-		{
-			break ;
-		}
-		for (int i = 0; i < width; i++)
-    		mlx_put_pixel(line, pixelX + i, pixelY, color);
-    	pixelX += deltaX;
-   		pixelY += deltaY;
-    	--pixels;
-	}
-	mlx_image_to_window(mlx, line, 0, 0);
-}
-
-void	draw_player(t_game *game, char direction)
-{
-	if (direction == 'U')
-	{
-		if (game->mapinfo->map[(int)(game->player->x + game->player->dir_x * game->player->move_speed)][(int)game->player->y] == '0')
-			game->player->x += game->player->dir_x * game->player->move_speed;
-		if (game->mapinfo->map[(int)(game->player->x)][(int)(game->player->y + game->player->dir_y * game->player->move_speed)] == '0')
-			game->player->y += game->player->dir_y * game->player->move_speed;
-	}
-	if (direction == 'D')
-	{
-		if (game->mapinfo->map[(int)(game->player->x - game->player->dir_x * game->player->move_speed)][(int)game->player->y] == '0')
-			game->player->x -= game->player->dir_x * game->player->move_speed;
-		if (game->mapinfo->map[(int)(game->player->x)][(int)(game->player->y - game->player->dir_y * game->player->move_speed)] == '0')
-			game->player->y -= game->player->dir_y * game->player->move_speed;
-	}
-	if (direction == 'R')
-	{
-		double	oldDirX = game->player->dir_x;
-		game->player->dir_x = game->player->dir_x * cos(-game->player->rot_speed) - game->player->dir_y * sin(-game->player->rot_speed);
-		game->player->dir_y = oldDirX * sin(-game->player->rot_speed) + game->player->dir_y * cos(-game->player->rot_speed);
-		double	oldPlaneX = game->player->plane_x;
-		game->player->plane_x = game->player->plane_x * cos(-game->player->rot_speed) - game->player->plane_y * sin(-game->player->rot_speed);
-		game->player->plane_y = oldPlaneX * sin(-game->player->rot_speed) + game->player->plane_y * cos(-game->player->rot_speed);
-	}
-	if (direction == 'L')
+	if (rotation == 'L')
 	{
 		double	oldDirX = game->player->dir_x;
 		game->player->dir_x = game->player->dir_x * cos(game->player->rot_speed) - game->player->dir_y * sin(game->player->rot_speed);
@@ -361,6 +288,103 @@ void	draw_player(t_game *game, char direction)
 		game->player->plane_x = game->player->plane_x * cos(game->player->rot_speed) - game->player->plane_y * sin(game->player->rot_speed);
 		game->player->plane_y = oldPlaneX * sin(game->player->rot_speed) + game->player->plane_y * cos(game->player->rot_speed);
 	}
+	else if (rotation == 'R')
+	{
+		double	oldDirX = game->player->dir_x;
+		game->player->dir_x = game->player->dir_x * cos(-game->player->rot_speed) - game->player->dir_y * sin(-game->player->rot_speed);
+		game->player->dir_y = oldDirX * sin(-game->player->rot_speed) + game->player->dir_y * cos(-game->player->rot_speed);
+		double	oldPlaneX = game->player->plane_x;
+		game->player->plane_x = game->player->plane_x * cos(-game->player->rot_speed) - game->player->plane_y * sin(-game->player->rot_speed);
+		game->player->plane_y = oldPlaneX * sin(-game->player->rot_speed) + game->player->plane_y * cos(-game->player->rot_speed);
+	}
+}
+
+void	move_player(t_game *game, char direction)
+{
+	if (direction == 'W')
+	{
+		if (game->mapinfo->map[(int)(game->player->x + game->player->dir_x * game->player->move_speed)][(int)game->player->y] == '0')
+			game->player->x += game->player->dir_x * game->player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->x)][(int)(game->player->y + game->player->dir_y * game->player->move_speed)] == '0')
+			game->player->y += game->player->dir_y * game->player->move_speed;
+	}
+	else if (direction == 'S')
+	{
+		if (game->mapinfo->map[(int)(game->player->x - game->player->dir_x * game->player->move_speed)][(int)game->player->y] == '0')
+			game->player->x -= game->player->dir_x * game->player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->x)][(int)(game->player->y - game->player->dir_y * game->player->move_speed)] == '0')
+			game->player->y -= game->player->dir_y * game->player->move_speed;
+	}
+}
+
+void	strafe_player(t_game *game, char direction)
+{
+	if (direction == 'A')
+	{
+		if (game->mapinfo->map[(int)(game->player->y - -game->player->dir_x * game->player->move_speed)][(int)game->player->x] == '0')
+			game->player->y -= -game->player->dir_x * game->player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->y)][(int)(game->player->x - game->player->dir_y * game->player->move_speed)] == '0')
+			game->player->x -= game->player->dir_y * game->player->move_speed;
+	}
+	else if (direction == 'D')
+	{
+		if (game->mapinfo->map[(int)(game->player->y + -game->player->dir_x * game->player->move_speed)][(int)game->player->x] == '0')
+			game->player->y += -game->player->dir_x * game->player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->y)][(int)(game->player->x + game->player->dir_y * game->player->move_speed)] == '0')
+			game->player->x += game->player->dir_y * game->player->move_speed;
+	}
+}
+
+void	display_map(mlx_t *mlx, t_player player, t_mapinfo map)
+{
+	int i;
+	int j;
+	int middle;
+
+	i = 0;
+	j = 0;
+	middle = (WIN_WIDTH - player.minimap.cell_size * map.width) / 2;
+	if (player.minimap.images[0]->enabled == true)
+	{
+		player.minimap.images[0]->enabled = false;
+		mlx_delete_image(mlx, player.minimap.images[1]);
+		mlx_delete_image(mlx, player.minimap.images[2]);
+		mlx_delete_image(mlx, player.minimap.images[3]);
+		return ;
+	}
+	player.minimap.images[1] = mlx_texture_to_image(mlx, player.minimap.textures[1]);
+	player.minimap.images[2] = mlx_texture_to_image(mlx, player.minimap.textures[2]);
+	player.minimap.images[3] = mlx_texture_to_image(mlx, player.minimap.textures[3]);
+	mlx_resize_image(player.minimap.images[1], player.minimap.cell_size, player.minimap.cell_size);
+	mlx_resize_image(player.minimap.images[2], player.minimap.cell_size, player.minimap.cell_size);
+	mlx_resize_image(player.minimap.images[3], player.minimap.cell_size, player.minimap.cell_size);
+	player.minimap.images[0]->instances[0].x = middle;
+	player.minimap.images[0]->enabled = true;
+	while (i < map.height)
+	{
+		while (j < map.width)
+		{
+			if (i == player.map_pos_x && j == player.map_pos_y)
+				mlx_image_to_window(mlx, player.minimap.images[3], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+			else if (map.map[i][j] == '1')
+				mlx_image_to_window(mlx, player.minimap.images[1], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+			else if (map.map[i][j] == '0')
+				mlx_image_to_window(mlx, player.minimap.images[2], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+void	player_loop(t_game *game, char direction, char rotation)
+{
+	if (rotation != 'X')
+		rotate_player(game, rotation);
+	if (direction == 'W' || direction == 'S')
+		move_player(game, direction);
+	else if (direction == 'A' || direction == 'D')
+		strafe_player(game, direction);
 	game->player->map_pos_x = (int)game->player->x;
 	game->player->map_pos_y = (int)game->player->y;
 	cast_rays_3d(game->mlx, game->player, game->mapinfo, game->textures);
@@ -369,44 +393,57 @@ void	draw_player(t_game *game, char direction)
 void	input_hook(void *param)
 {
 	t_game	*game = param;
+	char	dir;
+	char	rot;
 
+	dir = 'X';
+	rot = 'X';
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_W) || mlx_is_key_down(game->mlx, MLX_KEY_UP))
-		draw_player(game, 'U');
-	else if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
-		draw_player(game, 'D');
-	else if (mlx_is_key_down(game->mlx, MLX_KEY_A) || mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		draw_player(game, 'L');
-	else if (mlx_is_key_down(game->mlx, MLX_KEY_D) || mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		draw_player(game, 'R');
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_M) && !game->player->minimap.images[0]->enabled)
+		display_map(game->mlx, *game->player, *game->mapinfo);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_N) && game->player->minimap.images[0]->enabled)
+		display_map(game->mlx, *game->player, *game->mapinfo);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W) && !game->player->minimap.images[0]->enabled)
+		dir = 'W';
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_S) && !game->player->minimap.images[0]->enabled)
+		dir = 'S';
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_A) && !game->player->minimap.images[0]->enabled)
+		dir = 'A';
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_D) && !game->player->minimap.images[0]->enabled)
+		dir = 'D';
+	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT) && !game->player->minimap.images[0]->enabled)
+		rot = 'L';
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT) && !game->player->minimap.images[0]->enabled)
+		rot = 'R';
+	if (dir != 'X' || rot != 'X')
+		player_loop(game, dir, rot);
 }
 
-void	free_sprite(t_sprite *sprite, mlx_t *mlx)
+void	init_player(t_player *player, mlx_t *mlx, t_mapinfo map)
 {
-	mlx_delete_image(mlx, sprite->img);
-	mlx_delete_texture(sprite->texture);
-}
-
-void	debug_2d_map(t_game *game, t_player *player)
-{
-	t_sprite	cat;
-
-	cat.texture = mlx_load_png("img/normal_cat.png");
-	cat.img = mlx_texture_to_image(game->mlx, cat.texture);
-	player->sprite.texture = mlx_load_png("img/dark_cat.png");
-	player->sprite.img = mlx_texture_to_image(game->mlx, player->sprite.texture);
-	mlx_resize_image(cat.img, 64, 64);
-	mlx_resize_image(player->sprite.img, 32, 32);
-
-	draw_map(game->mlx, game->mapinfo, cat);
-	mlx_image_to_window(game->mlx, player->sprite.img, 64, 64);
-	//free_sprite(&player.sprite, game.mlx);
-	//free_sprite(&cat, game.mlx);
-}
-
-void	init_player(t_player *player)
-{
+	player->minimap.images = ft_calloc(4, sizeof(mlx_image_t));
+	player->minimap.textures = ft_calloc(4, sizeof(mlx_texture_t));
+	player->minimap.textures[0] = mlx_load_png("img/map.png");
+	player->minimap.images[0] = mlx_texture_to_image(mlx, player->minimap.textures[0]);
+	player->minimap.textures[1] = mlx_load_png("img/minimap_wall.png");
+	player->minimap.images[1] = mlx_texture_to_image(mlx, player->minimap.textures[1]);
+	player->minimap.textures[2] = mlx_load_png("img/minimap_ground.png");
+	player->minimap.images[2] = mlx_texture_to_image(mlx, player->minimap.textures[2]);
+	player->minimap.textures[3] = mlx_load_png("img/minimap_player.png");
+	player->minimap.images[3] = mlx_texture_to_image(mlx, player->minimap.textures[3]);
+	if (map.width >= map.height)
+	{
+		player->minimap.cell_size = WIN_WIDTH / map.width / 2;
+		mlx_resize_image(player->minimap.images[0], player->minimap.cell_size * map.width + 50, player->minimap.cell_size * map.width + 50);
+	}
+	else
+	{
+		player->minimap.cell_size = WIN_HEIGHT / map.height / 2;
+		mlx_resize_image(player->minimap.images[0], player->minimap.cell_size * map.height + 50, player->minimap.cell_size * map.height + 50);
+	}
+	mlx_image_to_window(mlx, player->minimap.images[0], 0, 0);
+	player->minimap.images[0]->enabled = false;
 	player->dir_x = -1;
 	player->dir_y = 0;
 	player->x = 5;
@@ -425,7 +462,6 @@ void 	mlx_test()
 
 	game.mapinfo = &mapinfo;
 	game.player = &player;
-	init_player(&player);
 	game.mapinfo->map = ft_calloc(sizeof(char *), 11);
 	game.mapinfo->height = 10;
 	game.mapinfo->width = 10;
@@ -457,10 +493,26 @@ void 	mlx_test()
 	game.textures[1] = init_rc_texture("img/Untitled.png", game.mlx);
 	game.textures[2] = init_rc_texture("img/wallpaper.png", game.mlx);
 	game.textures[3] = init_rc_texture("img/dark_cat.png", game.mlx);
-	cast_rays_3d(game.mlx, game.player, game.mapinfo, game.textures);
+	init_player(&player, game.mlx, *game.mapinfo);
+	//cast_rays_3d(game.mlx, game.player, game.mapinfo, game.textures);
+	player_loop(&game, 'X', 'X');
 	mlx_loop_hook(game.mlx, input_hook, &game);
 	mlx_loop(game.mlx);
 	free_split_array(&game.mapinfo->map);
+	free_rc_texture(game.textures[0]);
+	free_rc_texture(game.textures[1]);
+	free_rc_texture(game.textures[2]);
+	free_rc_texture(game.textures[3]);
+	mlx_delete_texture(game.player->minimap.textures[0]);
+	mlx_delete_texture(game.player->minimap.textures[1]);
+	mlx_delete_texture(game.player->minimap.textures[2]);
+	mlx_delete_texture(game.player->minimap.textures[3]);
+	mlx_delete_image(game.mlx, player.minimap.images[0]);
+	mlx_delete_image(game.mlx, player.minimap.images[1]);
+	mlx_delete_image(game.mlx, player.minimap.images[2]);
+	mlx_delete_image(game.mlx, player.minimap.images[3]);
+	free(game.player->minimap.images);
+	free(game.player->minimap.textures);
 	mlx_terminate(game.mlx);
 }
 
