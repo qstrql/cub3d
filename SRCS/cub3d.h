@@ -44,7 +44,8 @@
 
 # define WIN_WIDTH 640
 # define WIN_HEIGHT 480
-
+# define TEXTURE_WIDTH 256
+# define TEXTURE_HEIGHT 256
 enum e_rgb
 {
 	RED = 0,
@@ -120,7 +121,7 @@ typedef struct s_ray
 	int		map_y;
 	int		step_x;
 	int		step_y;
-	int		hit;
+	char	hit;
 	int		side;
 }	t_ray;
 
@@ -183,6 +184,7 @@ void			dda_calculations(t_ray *ray, t_mapinfo *map);
 //draw_rays.c
 void			draw_pixels(mlx_image_t *window, t_rc_texture *texture, int line[], int num);
 void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
+void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player);
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 //rc_texture_utils.c
