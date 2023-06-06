@@ -55,6 +55,21 @@ enum e_rgb
 
 /*-----------------STRUCTURES-------------------------------------------------*/
 
+typedef struct s_rgb
+{
+	int	r;
+	int	g;
+	int	b;
+	int	a;
+}	t_rgb;
+
+typedef struct	s_rc_texture
+{
+	t_rgb	*pixels;
+	int	width;
+	int	height;
+}	t_rc_texture;
+
 typedef struct s_mapinfo
 {
 	int			fd;
@@ -99,10 +114,11 @@ typedef struct s_player
 
 typedef struct s_game
 {
-	mlx_t		*mlx;
-	t_mapinfo	*mapinfo;
-	t_player	*player;
+	mlx_t			*mlx;
+	t_mapinfo		*mapinfo;
+	t_player		*player;
 	t_config		config;
+	t_rc_texture	*textures[4];
 	char			**raw_file;
 }	t_game;
 
@@ -124,21 +140,6 @@ typedef struct s_ray
 	char	hit;
 	int		side;
 }	t_ray;
-
-typedef struct s_rgb
-{
-	int	r;
-	int	g;
-	int	b;
-	int	a;
-}	t_rgb;
-
-typedef struct	s_rc_texture
-{
-	t_rgb	*pixels;
-	int	width;
-	int	height;
-}	t_rc_texture;
 
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
@@ -183,8 +184,8 @@ void			dda_calculations(t_ray *ray, t_mapinfo *map);
 
 //draw_rays.c
 void			draw_pixels(mlx_image_t *window, t_rc_texture *texture, int line[], int num);
-void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map);
-void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player);
+void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map, t_rc_texture *textures[]);
+void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_rc_texture *textures[]);
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 //rc_texture_utils.c

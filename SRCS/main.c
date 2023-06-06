@@ -323,43 +323,43 @@ void draw_line(void *mlx, int beginX, int beginY, int endX, int endY, int color,
 	mlx_image_to_window(mlx, line, 0, 0);
 }
 
-void	draw_player(mlx_t *mlx, t_mapinfo *map, t_player *player, char direction)
+void	draw_player(t_game *game, char direction)
 {
 	if (direction == 'U')
 	{
-		if (map->map[(int)(player->x + player->dir_x * player->move_speed)][(int)player->y] == '0')
-			player->x += player->dir_x * player->move_speed;
-		if (map->map[(int)(player->x)][(int)(player->y + player->dir_y * player->move_speed)] == '0')
-			player->y += player->dir_y * player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->x + game->player->dir_x * game->player->move_speed)][(int)game->player->y] == '0')
+			game->player->x += game->player->dir_x * game->player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->x)][(int)(game->player->y + game->player->dir_y * game->player->move_speed)] == '0')
+			game->player->y += game->player->dir_y * game->player->move_speed;
 	}
 	if (direction == 'D')
 	{
-		if (map->map[(int)(player->x - player->dir_x * player->move_speed)][(int)player->y] == '0')
-			player->x -= player->dir_x * player->move_speed;
-		if (map->map[(int)(player->x)][(int)(player->y - player->dir_y * player->move_speed)] == '0')
-			player->y -= player->dir_y * player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->x - game->player->dir_x * game->player->move_speed)][(int)game->player->y] == '0')
+			game->player->x -= game->player->dir_x * game->player->move_speed;
+		if (game->mapinfo->map[(int)(game->player->x)][(int)(game->player->y - game->player->dir_y * game->player->move_speed)] == '0')
+			game->player->y -= game->player->dir_y * game->player->move_speed;
 	}
 	if (direction == 'R')
 	{
-		double	oldDirX = player->dir_x;
-		player->dir_x = player->dir_x * cos(-player->rot_speed) - player->dir_y * sin(-player->rot_speed);
-		player->dir_y = oldDirX * sin(-player->rot_speed) + player->dir_y * cos(-player->rot_speed);
-		double	oldPlaneX = player->plane_x;
-		player->plane_x = player->plane_x * cos(-player->rot_speed) - player->plane_y * sin(-player->rot_speed);
-		player->plane_y = oldPlaneX * sin(-player->rot_speed) + player->plane_y * cos(-player->rot_speed);
+		double	oldDirX = game->player->dir_x;
+		game->player->dir_x = game->player->dir_x * cos(-game->player->rot_speed) - game->player->dir_y * sin(-game->player->rot_speed);
+		game->player->dir_y = oldDirX * sin(-game->player->rot_speed) + game->player->dir_y * cos(-game->player->rot_speed);
+		double	oldPlaneX = game->player->plane_x;
+		game->player->plane_x = game->player->plane_x * cos(-game->player->rot_speed) - game->player->plane_y * sin(-game->player->rot_speed);
+		game->player->plane_y = oldPlaneX * sin(-game->player->rot_speed) + game->player->plane_y * cos(-game->player->rot_speed);
 	}
 	if (direction == 'L')
 	{
-		double	oldDirX = player->dir_x;
-		player->dir_x = player->dir_x * cos(player->rot_speed) - player->dir_y * sin(player->rot_speed);
-		player->dir_y = oldDirX * sin(player->rot_speed) + player->dir_y * cos(player->rot_speed);
-		double	oldPlaneX = player->plane_x;
-		player->plane_x = player->plane_x * cos(player->rot_speed) - player->plane_y * sin(player->rot_speed);
-		player->plane_y = oldPlaneX * sin(player->rot_speed) + player->plane_y * cos(player->rot_speed);
+		double	oldDirX = game->player->dir_x;
+		game->player->dir_x = game->player->dir_x * cos(game->player->rot_speed) - game->player->dir_y * sin(game->player->rot_speed);
+		game->player->dir_y = oldDirX * sin(game->player->rot_speed) + game->player->dir_y * cos(game->player->rot_speed);
+		double	oldPlaneX = game->player->plane_x;
+		game->player->plane_x = game->player->plane_x * cos(game->player->rot_speed) - game->player->plane_y * sin(game->player->rot_speed);
+		game->player->plane_y = oldPlaneX * sin(game->player->rot_speed) + game->player->plane_y * cos(game->player->rot_speed);
 	}
-	player->map_pos_x = (int)player->x;
-	player->map_pos_y = (int)player->y;
-	cast_rays_3d(mlx, player, map);
+	game->player->map_pos_x = (int)game->player->x;
+	game->player->map_pos_y = (int)game->player->y;
+	cast_rays_3d(game->mlx, game->player, game->mapinfo, game->textures);
 }
 
 void	input_hook(void *param)
@@ -369,13 +369,13 @@ void	input_hook(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W) || mlx_is_key_down(game->mlx, MLX_KEY_UP))
-		draw_player(game->mlx, game->mapinfo, game->player, 'U');
+		draw_player(game, 'U');
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
-		draw_player(game->mlx, game->mapinfo, game->player, 'D');
+		draw_player(game, 'D');
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_A) || mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		draw_player(game->mlx, game->mapinfo, game->player, 'L');
+		draw_player(game, 'L');
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_D) || mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		draw_player(game->mlx, game->mapinfo, game->player, 'R');
+		draw_player(game, 'R');
 }
 
 void	free_sprite(t_sprite *sprite, mlx_t *mlx)
@@ -401,22 +401,27 @@ void	debug_2d_map(t_game *game, t_player *player)
 	//free_sprite(&cat, game.mlx);
 }
 
+void	init_player(t_player *player)
+{
+	player->dir_x = -1;
+	player->dir_y = 0;
+	player->x = 5;
+	player->y = 4;
+	player->plane_x = 0;
+	player->plane_y = 0.66;
+	player->move_speed = 0.07;
+	player->rot_speed = 0.08;
+}
+
 void 	mlx_test()
 {
-	t_game		game;
-	t_mapinfo	mapinfo;
-	t_player	player;
+	t_game			game;
+	t_mapinfo		mapinfo;
+	t_player		player;
 
 	game.mapinfo = &mapinfo;
 	game.player = &player;
-	player.dir_x = -1;
-	player.dir_y = 0;
-	player.x = 5;
-	player.y = 4;
-	player.plane_x = 0;
-	player.plane_y = 0.66;
-	player.move_speed = 0.07;
-	player.rot_speed = 0.08;
+	init_player(&player);
 	game.mapinfo->map = ft_calloc(sizeof(char *), 11);
 	game.mapinfo->height = 10;
 	game.mapinfo->width = 10;
@@ -439,14 +444,16 @@ void 	mlx_test()
 	game.mapinfo->map[6][7] = '1';
 	game.mapinfo->map[6][6] = '1';
 	game.mapinfo->map[7][7] = '1';
-
 	game.mapinfo->map[2][1] = '1';
 	game.mapinfo->map[2][2] = '1';
 	print_map(game.mapinfo);
 
-	game.mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "aaaaaaa", false);
-	//debug_2d_map(&game, game.player);
-	cast_rays_3d(game.mlx, game.player, game.mapinfo);
+	game.mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "Cub3d II : Part IV, 358/2 days : Remastered : Remake (Cloud version)", false);
+	game.textures[0] = init_rc_texture("img/normal_cat.png", game.mlx);
+	game.textures[1] = init_rc_texture("img/Untitled.png", game.mlx);
+	game.textures[2] = init_rc_texture("img/wallpaper.png", game.mlx);
+	game.textures[3] = init_rc_texture("img/dark_cat.png", game.mlx);
+	cast_rays_3d(game.mlx, game.player, game.mapinfo, game.textures);
 	mlx_loop_hook(game.mlx, input_hook, &game);
 	mlx_loop(game.mlx);
 	free_split_array(&game.mapinfo->map);

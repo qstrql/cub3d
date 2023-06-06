@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 #include "cub3d.h"
 
-t_rc_texture	*texture_test;
-
 int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
@@ -39,7 +37,7 @@ void	draw_pixels(mlx_image_t *window,
 	}
 }
 
-void	draw_rays(mlx_image_t *window, t_ray *ray, t_player *player)
+void	draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_rc_texture *textures[])
 {
 	int		line_height;
 	int		draw_start;
@@ -71,17 +69,16 @@ void	draw_rays(mlx_image_t *window, t_ray *ray, t_player *player)
 	if (ray->side == 1 && ray->ray_dir_y < 0)
 		texture_x = TEXTURE_WIDTH - texture_x - 1;
 	line[3] = texture_x;
-	draw_pixels(window, texture_test, line, ray->num);
+	draw_pixels(window, textures[2], line, ray->num);
 }
 
-void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
+void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map, t_rc_texture *textures[])
 {
 	t_ray				ray;
 	static mlx_image_t	*window = NULL;
 
 	if (window != NULL)
 		mlx_delete_image(mlx, window);
-	texture_test = init_rc_texture("img/normal_cat.png", mlx);
 	window = mlx_new_image(mlx, WIN_WIDTH * 2, WIN_HEIGHT * 2);
 	ray.num = 0;
 	while (ray.num < WIN_WIDTH)
@@ -89,7 +86,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map)
 		initial_ray_calculations(&ray, player);
 		dda_init_calculations(&ray, player);
 		dda_calculations(&ray, map);
-		draw_rays(window, &ray, player);
+		draw_rays(window, &ray, player, textures);
 		ray.num++;
 	}
 	mlx_image_to_window(mlx, window, 0, 0);
