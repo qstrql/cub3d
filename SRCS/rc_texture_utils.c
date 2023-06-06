@@ -18,9 +18,9 @@ t_rgb	get_rgb_value(t_rc_texture texture, int x, int y)
 
 t_rgb	*texture_to_rgb_array(mlx_texture_t *texture)
 {
-	unsigned int		i;
-	int		j;
-	t_rgb	*ret;
+	unsigned int	i;
+	int				j;
+	t_rgb			*ret;
 
 	i = 0;
 	j = 0;
@@ -47,9 +47,9 @@ t_rgb	*texture_to_rgb_array(mlx_texture_t *texture)
 
 t_rgb	*texture_to_rgb_array_img(mlx_image_t *texture)
 {
-	unsigned int		i;
-	int		j;
-	t_rgb	*ret;
+	unsigned int	i;
+	int				j;
+	t_rgb			*ret;
 
 	i = 0;
 	j = 0;
@@ -77,19 +77,19 @@ t_rgb	*texture_to_rgb_array_img(mlx_image_t *texture)
 t_rc_texture	*init_rc_texture(char *path, mlx_t *mlx)
 {
 	mlx_texture_t	*tmp_texture;
-    mlx_image_t     *tmp_img;
+	mlx_image_t		*tmp_img;
 	t_rc_texture	*ret;
 
 	tmp_texture = mlx_load_png(path);
 	if (tmp_texture == NULL)
 		return (NULL);
-    tmp_img = mlx_texture_to_image(mlx, tmp_texture);
-    mlx_resize_image(tmp_img, 64, 64);
+	tmp_img = mlx_texture_to_image(mlx, tmp_texture);
+	mlx_resize_image(tmp_img, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 	ret = ft_calloc(1, sizeof(ret));
 	ret->pixels = texture_to_rgb_array_img(tmp_img);
 	ret->width = tmp_img->width;
 	ret->height = tmp_img->height;
-    mlx_delete_image(mlx, tmp_img);
+	mlx_delete_image(mlx, tmp_img);
 	mlx_delete_texture(tmp_texture);
 	return (ret);
 }
@@ -100,7 +100,7 @@ void	free_rc_texture(t_rc_texture *texture)
 	free(texture);
 }
 
-int32_t color_int32(t_rgb rgb)
+int32_t	color_int32(t_rgb rgb)
 {
-    return (ft_pixel(rgb.r, rgb.g, rgb.b, rgb.a));
+	return (ft_pixel(rgb.r, rgb.g, rgb.b, rgb.a));
 }

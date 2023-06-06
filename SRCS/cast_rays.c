@@ -70,7 +70,7 @@ void	dda_calculations(t_ray *ray, t_mapinfo *map)
 			ray->side = 1;
 		}
 		if (map->map[ray->map_x][ray->map_y] != '0')
-			ray->hit = 1;
+			ray->hit = map->map[ray->map_x][ray->map_y];
 	}
 	if (ray->side == 0)
 		ray->perp_wall_dist = (ray->side_dist_x - ray->delta_dist_x);

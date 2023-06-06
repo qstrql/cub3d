@@ -449,6 +449,7 @@ void 	mlx_test()
 	cast_rays_3d(game.mlx, game.player, game.mapinfo);
 	mlx_loop_hook(game.mlx, input_hook, &game);
 	mlx_loop(game.mlx);
+	free_split_array(&game.mapinfo->map);
 	mlx_terminate(game.mlx);
 }
 
