@@ -6,14 +6,17 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:54:42 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/29 15:04:49 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/06 11:31:12 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-void	init_mapinfo_struct(t_mapinfo *map)
+t_mapinfo	*init_mapinfo_struct(void)
 {
+	t_mapinfo *map;
+
+	map = malloc(1 * sizeof(t_mapinfo *));
 	map->fd = 0;
 	map->line_count = 0;
 	map->height = 0;
@@ -21,7 +24,7 @@ void	init_mapinfo_struct(t_mapinfo *map)
 	map->eof = 0;
 	map->map_path = NULL;
 	map->map = NULL;
-
+	return (map);
 }
 void	init_config_struct(t_config *config)
 {
@@ -37,6 +40,6 @@ void	init_data_struct(t_game *data)
 {
 	data->mlx = NULL;
 	init_config_struct(&data->config);
-//	init_mapinfo_struct(data->mapinfo);
+	data->mapinfo = init_mapinfo_struct();
 	data->raw_file = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/30 16:02:27 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/06 11:14:00 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -183,6 +183,8 @@ int get_texture_rgb(t_config *config, char **line)
 	return (ret);	
 }
 
+//void get_map()
+
 int	check_file_content(t_game *data)
 {
 	int	i;
@@ -208,6 +210,8 @@ int	check_file_content(t_game *data)
 	}
 	if (check_if_struct_filled(&data->config) == false)
 		return (INVALID_FILE);
+//	else
+//		get_map(&data->config, i);
 	debugprint(data);
 	return (VALID_FILE);
 }
@@ -218,10 +222,7 @@ int	parse_file(t_game *data, char *argv)
 		exit_program(data, INVALID_FILE);
 	get_file_content(data, argv);
 	if (check_file_content(data) == FAIL)
-	{
-		debugprint(data);
 		exit_msg(data, WRONG_FILE_CONTENT);
-	}
 	return (VALID_FILE);
 }
 

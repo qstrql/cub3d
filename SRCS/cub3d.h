@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/06 00:07:28 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/06 11:26:27 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ typedef struct	s_rc_texture
 void			debugprint(t_game *data);
 
 //init_structs.c
-void			init_mapinfo_struct(t_mapinfo *map);
+t_mapinfo		*init_mapinfo_struct(void);
 void			init_config_struct(t_config *config);
 void			init_data_struct(t_game *data);
 
