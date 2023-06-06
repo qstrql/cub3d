@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/06 12:43:14 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/06 14:59:23 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -194,7 +194,7 @@ int	check_file_content(t_game *data)
 	char **tmp;
 
 	i = 0;
-	while (data->raw_file[i])
+	while (data->raw_file[i] && check_if_struct_filled(&data->config) == false)
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
