@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:52:40 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/06 11:15:29 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/06 11:47:09 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -18,6 +18,7 @@ void	free_mapinfo_struct(t_mapinfo *map)
 		free(map->map_path);
 	if (map->map)
 		free_split_array(&map->map);
+	better_free(map);
 }
 void	free_config_struct(t_config *config)
 {

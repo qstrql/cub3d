@@ -6,7 +6,7 @@
 /*   By: lbertaux <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 16:35:46 by lbertaux          #+#    #+#             */
-/*   Updated: 2023/05/27 16:35:49 by lbertaux         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:36:35 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
@@ -69,7 +69,7 @@ void	draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_rc_texture *
 	if (ray->side == 1 && ray->ray_dir_y < 0)
 		texture_x = TEXTURE_WIDTH - texture_x - 1;
 	line[3] = texture_x;
-	draw_pixels(window, textures[2], line, ray->num);
+	draw_pixels(window, textures[1], line, ray->num);
 }
 
 void	cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map, t_rc_texture *textures[])
