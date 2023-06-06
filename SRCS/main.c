@@ -185,7 +185,8 @@ int get_texture_rgb(t_config *config, char **line)
 
 void get_map(t_game *data, int i)
 {
-	
+	(void)i;
+	(void)data;
 }
 
 int	check_file_content(t_game *data)
@@ -215,7 +216,7 @@ int	check_file_content(t_game *data)
 		return (INVALID_FILE);
 	else
 		get_map(data, i);
-	debugprint(data);
+//	debugprint(data);
 	return (VALID_FILE);
 }
 

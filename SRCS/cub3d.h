@@ -155,7 +155,7 @@ void			debugprint(t_game *data);
 void	display_map(mlx_t *mlx, t_player player, t_mapinfo map);
 
 //init_structs.c
-t_mapinfo		*init_mapinfo_struct(void);
+void			init_mapinfo_struct(t_mapinfo *map);
 void			init_config_struct(t_config *config);
 void			init_data_struct(t_game *data);
 
