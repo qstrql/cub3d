@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 17:25:39 by mjouot            #+#    #+#             */
-/*   Updated: 2023/05/29 15:08:56 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/06 11:16:31 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -57,12 +57,12 @@ char **get_raw_file_data(char *file)
 
 void get_file_content(t_game *data, char *file_path)
 {
-	//int	i;
+	int	i;
 	int	line_count;
 
-	//i = 0;
+	i = 0;
 	line_count = get_line_count(file_path);
-//	data->mapinfo->line_count = line_count;
-//	data->mapinfo->map_path = ft_strdup(file_path); 
+	data->mapinfo->line_count = line_count;
+	data->mapinfo->map_path = ft_strdup(file_path); 
 	data->raw_file = get_raw_file_data(file_path);
 }
