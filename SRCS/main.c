@@ -107,11 +107,11 @@ int	fill_floor_rgb(t_config *config, char **tmp)
 	config->floor[RED] = ft_atoi(tmp[0]);
 	config->floor[GREEN] = ft_atoi(tmp[1]);
 	config->floor[BLUE] = ft_atoi(tmp[2]);
-	if (config->floor[RED] > 255 ||  config->floor[RED] < 0)
+	if (config->floor[RED] > 255 || config->floor[RED] < 0)
 		return (FAIL);
-	if (config->floor[GREEN] > 255 ||  config->floor[GREEN] < 0)
+	if (config->floor[GREEN] > 255 || config->floor[GREEN] < 0)
 		return (FAIL);
-	if (config->floor[BLUE] > 255 ||  config->floor[BLUE] < 0)
+	if (config->floor[BLUE] > 255 || config->floor[BLUE] < 0)
 		return (FAIL);
 	return (SUCCESS);
 }
@@ -185,19 +185,31 @@ int get_texture_rgb(t_config *config, char **line)
 
 void get_map(t_game *data, int i)
 {
-	int	j;
+	int		j;
+	int		max_len;
+	char	*tmp;
 
+	data->mapinfo->height = 0;
+	max_len = 0;
 	j = 0;
-	data->mapinfo->map = malloc(data->mapinfo->line_count * sizeof(char *));
+	data->mapinfo->map = ft_calloc(data->mapinfo->line_count, sizeof(char *));
 	while (data->raw_file[i])
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
-		ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
-		data->mapinfo->map[j] = ft_strdup(data->raw_file[i]);
+		tmp = ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
+		if (tmp == NULL)
+			break;
+		data->mapinfo->map[j] = ft_strdup(tmp);
+		//data->mapinfo->map[j][ft_strlen(data->mapinfo->map[j]) - 1] = '\0';
+		if ((int)ft_strlen(data->mapinfo->map[j]) > max_len)
+			max_len = ft_strlen(data->mapinfo->map[j]);
+		data->mapinfo->height++;
+		free(tmp);
 		j++;
 		i++;
 	}
+	data->mapinfo->width = max_len;
 }
 
 int	check_file_content(t_game *data)
@@ -264,7 +276,7 @@ void	ft_printf_strs(char **strs)
 	i = 0;
 	while (strs[i] != NULL)
 	{
-		printf("%s", strs[i]);
+		printf("%s\n", strs[i]);
 		i++;
 	}
 }
@@ -306,11 +318,12 @@ void	print_map(t_mapinfo *map)
 
 	i = 0;
 	j = 0;
+	printf("map height : %d\n", map->height);
 	while (i < map->height)
 	{
 		while (map->map[i][j])
 		{
-			printf("%c, ", map->map[i][j]);
+			printf("%c,", map->map[i][j]);
 			j++;
 		}
 		j = 0;
@@ -527,8 +540,8 @@ void	init_player(t_player *player, mlx_t *mlx, t_mapinfo map)
 	player->minimap.images[0]->enabled = false;
 	player->dir_x = -1;
 	player->dir_y = 0;
-	player->x = 5;
-	player->y = 4;
+	player->x = 2;
+	player->y = 1;
 	player->plane_x = 0;
 	player->plane_y = 0.66;
 	player->move_speed = 0.055;
@@ -542,76 +555,44 @@ void	free_game(t_game *game)
 	free_rc_texture(game->textures[1]);
 	free_rc_texture(game->textures[2]);
 	free_rc_texture(game->textures[3]);
+	free_rc_texture(game->textures[4]);
+	free_rc_texture(game->textures[5]);
 	mlx_delete_texture(game->player->minimap.textures[0]);
 	mlx_delete_texture(game->player->minimap.textures[1]);
 	mlx_delete_texture(game->player->minimap.textures[2]);
 	mlx_delete_texture(game->player->minimap.textures[3]);
+	mlx_delete_texture(game->player->minimap.textures[4]);
+	mlx_delete_texture(game->player->minimap.textures[5]);
 	mlx_delete_image(game->mlx, game->player->minimap.images[0]);
 	mlx_delete_image(game->mlx, game->player->minimap.images[1]);
 	mlx_delete_image(game->mlx, game->player->minimap.images[2]);
 	mlx_delete_image(game->mlx, game->player->minimap.images[3]);
+	mlx_delete_image(game->mlx, game->player->minimap.images[4]);
+	mlx_delete_image(game->mlx, game->player->minimap.images[5]);
 	free(game->player->minimap.images);
 	free(game->player->minimap.textures);
 }
 
-void 	mlx_test()
+void 	mlx_test(t_game *game)
 {
-	t_game			game;
-	t_mapinfo		mapinfo;
 	t_player		player;
 
-	game.mapinfo = &mapinfo;
-	game.player = &player;
-	game.mapinfo->map = ft_calloc(sizeof(char *), 21);
-	game.mapinfo->height = 10;
-	game.mapinfo->width = 20;
+	game->player = &player;
 
-	for (int i = 0; i < 10; i++)
-	{
-		game.mapinfo->map[i] = ft_calloc(sizeof(char), 21);
-		if (i == 0 || i == 9)
-		{
-			for (int j = 0; j < 19; j++)
-				game.mapinfo->map[i][j] = '1';
-		}
-		else
-		{
-			game.mapinfo->map[i][0] = '1';
-			game.mapinfo->map[i][19] = '1';
-			for (int j = 1; j < 19; j++)
-				game.mapinfo->map[i][j] = '0';
-		}
-	}
-	game.mapinfo->map[2][5] = '1';
-	game.mapinfo->map[6][7] = '1';
-	game.mapinfo->map[6][6] = '1';
-	game.mapinfo->map[7][7] = '1';
-	game.mapinfo->map[2][1] = '1';
-	game.mapinfo->map[2][2] = '1';
-	game.mapinfo->map[5][15] = 'D';
-	game.mapinfo->map[2][15] = '1';
-	game.mapinfo->map[3][15] = '1';
-	game.mapinfo->map[4][15] = '1';
-	game.mapinfo->map[1][15] = '1';
-	game.mapinfo->map[6][15] = '1';
-	game.mapinfo->map[7][15] = '1';
-	game.mapinfo->map[8][15] = '1';
-	print_map(game.mapinfo);
-
-	game.mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "Cub3d II : Part IV, 358/2 days : Remastered : Remake (Cloud version)", false);
-	game.textures[0] = init_rc_texture("img/TEKWALL1.png", game.mlx);
-	game.textures[2] = init_rc_texture("img/TEKWALL2.png", game.mlx);
-	game.textures[1] = init_rc_texture("img/TEKWALL3.png", game.mlx);
-	game.textures[3] = init_rc_texture("img/TEKWALL4.png", game.mlx);
-	game.textures[4] = init_rc_texture("img/door_closed.png", game.mlx);
-	game.textures[5] = init_rc_texture("img/door_open.png", game.mlx);
-	init_player(&player, game.mlx, *game.mapinfo);
+	game->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "Cub3d II : Part IV, 358/2 days : Remastered : Remake (Cloud version)", false);
+	game->textures[0] = init_rc_texture(game->config.so, game->mlx);
+	game->textures[2] = init_rc_texture(game->config.no, game->mlx);
+	game->textures[1] = init_rc_texture(game->config.we, game->mlx);
+	game->textures[3] = init_rc_texture(game->config.ea, game->mlx);
+	game->textures[4] = init_rc_texture("img/door_closed.png", game->mlx);
+	game->textures[5] = init_rc_texture("img/door_open.png", game->mlx);
+	init_player(&player, game->mlx, *game->mapinfo);
 	//cast_rays_3d(game.mlx, game.player, game.mapinfo, game.textures);
-	player_loop(&game, 'X', 'X', false);
-	mlx_loop_hook(game.mlx, input_hook, &game);
-	mlx_loop(game.mlx);
-	free_game(&game);
-	mlx_terminate(game.mlx);
+	player_loop(game, 'X', 'X', false);
+	mlx_loop_hook(game->mlx, input_hook, game);
+	mlx_loop(game->mlx);
+	free_game(game);
+	mlx_terminate(game->mlx);
 }
 
 int	main(int argc, char **argv)
@@ -625,11 +606,13 @@ int	main(int argc, char **argv)
 		init_data_struct(&data);
 		if (parse_file(&data, argv[1]) != VALID_FILE)
 			return (INVALID_FILE);
-		debugprint(&data);
-		free_data_struct(&data, EXIT_SUCCESS);
+		//debugprint(&data);
+		print_map(data.mapinfo);
+		mlx_test(&data);
+		//free_data_struct(&data, EXIT_SUCCESS);
 	}
 	else
 	{
-		mlx_test();
+		ft_putstr_fd("File missing/Too many arguments!\n", STDERR_FILENO);
 	}
 }
