@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/08 12:19:20 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/08 14:32:26 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -230,6 +230,19 @@ int	check_file_content(t_game *data)
 	return (VALID_FILE);
 }
 
+int	verify_texture_path(t_game *data)
+{
+	if (file_exist(data->config.no) == false)
+		return (FAIL);
+	if (file_exist(data->config.so) == false)
+		return (FAIL);
+	if (file_exist(data->config.ea) == false)
+		return (FAIL);
+	if (file_exist(data->config.we) == false)
+		return (FAIL);
+	return (SUCCESS);
+}
+
 int	parse_file(t_game *data, char *argv)
 {
 	if (parse_arg(argv) == FAIL)
@@ -237,9 +250,9 @@ int	parse_file(t_game *data, char *argv)
 	get_file_content(data, argv);
 	if (check_file_content(data) == FAIL)
 		exit_msg(data, WRONG_FILE_CONTENT);
-/*	if (verify_texture_path(data) == FAIL)
+	if (verify_texture_path(data) == FAIL)
 		exit_msg(data, WRONG_TEXTURE_PATH);
-	if (verify_map_validity(data) == FAIL)
+/*	if (verify_map_validity(data) == FAIL)
 		exit_msg(data, BAD_MAP);*/
 	return (VALID_FILE);
 }
