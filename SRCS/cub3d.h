@@ -126,7 +126,7 @@ typedef struct s_game
 	t_mapinfo		*mapinfo;
 	t_player		*player;
 	t_config		config;
-	t_rc_texture	*textures[4];
+	t_rc_texture	*textures[6];
 	char			**raw_file;
 }	t_game;
 

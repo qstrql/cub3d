@@ -69,7 +69,7 @@ void	dda_calculations(t_ray *ray, t_mapinfo *map)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (map->map[ray->map_x][ray->map_y] != '0')
+		if (map->map[ray->map_x][ray->map_y] != '0' && map->map[ray->map_x][ray->map_y] != 'O')
 			ray->hit = map->map[ray->map_x][ray->map_y];
 	}
 	if (ray->side == 0)

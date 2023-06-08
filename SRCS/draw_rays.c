@@ -85,7 +85,22 @@ void	draw_rays(mlx_image_t *window, t_ray *ray,
 	if (ray->side == 1 && ray->ray_dir_y < 0)
 		texture_x = TEXTURE_WIDTH - texture_x - 1;
 	line[3] = texture_x;
-	draw_pixels(window, textures[0], line, ray->num);
+	if (ray->hit == 'D')
+		draw_pixels(window, textures[4], line, ray->num);
+	else if (ray->hit == 'O')
+		draw_pixels(window, textures[5], line, ray->num);
+	//North
+	else if (ray->side == 0 && ray->ray_dir_x <= 0)
+		draw_pixels(window, textures[0], line, ray->num);
+	//South
+	else if (ray->side == 0)
+		draw_pixels(window, textures[2], line, ray->num);
+	//West
+	else if (ray->side == 1 && ray->ray_dir_y >= 0)
+		draw_pixels(window, textures[1], line, ray->num);
+	//East
+	else
+		draw_pixels(window, textures[3], line, ray->num);
 	free(line);
 }
 
