@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:47 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/06 11:26:27 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/08 10:46:57 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@
 # define FILE_WITHOUT_EXTENSION "The file provided does not have an extension"
 # define FILE_DOESNT_EXIST "The provided file does not exist"
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
+# define WRONG_TEXTURE_PATH "Wrong texture path"
+# define BAD_MAP "Map is wrong"
 
 # define WIN_WIDTH 640
 # define WIN_HEIGHT 480
@@ -155,7 +157,7 @@ void			debugprint(t_game *data);
 void	display_map(mlx_t *mlx, t_player player, t_mapinfo map);
 
 //init_structs.c
-t_mapinfo		*init_mapinfo_struct(void);
+void			init_mapinfo_struct(t_mapinfo *map);
 void			init_config_struct(t_config *config);
 void			init_data_struct(t_game *data);
 

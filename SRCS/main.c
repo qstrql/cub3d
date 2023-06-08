@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/06 15:17:20 by lbertaux         ###   ########.fr       */
+/*   Updated: 2023/06/08 12:19:20 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //#include "../INCLUDE/cub3d.h"
@@ -183,13 +183,30 @@ int get_texture_rgb(t_config *config, char **line)
 	return (ret);	
 }
 
+void get_map(t_game *data, int i)
+{
+	int	j;
+
+	j = 0;
+	data->mapinfo->map = malloc(data->mapinfo->line_count * sizeof(char *));
+	while (data->raw_file[i])
+	{
+		while (str_is_space_only(data->raw_file[i]))
+			i++;
+		ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
+		data->mapinfo->map[j] = ft_strdup(data->raw_file[i]);
+		j++;
+		i++;
+	}
+}
+
 int	check_file_content(t_game *data)
 {
 	int	i;
 	char **tmp;
 
 	i = 0;
-	while (data->raw_file[i])
+	while (data->raw_file[i] && check_if_struct_filled(&data->config) == false)
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
@@ -208,9 +225,8 @@ int	check_file_content(t_game *data)
 	}
 	if (check_if_struct_filled(&data->config) == false)
 		return (INVALID_FILE);
-	//else
-		//get_map(data, i);
-	debugprint(data);
+	else
+		get_map(data, i);
 	return (VALID_FILE);
 }
 
@@ -221,7 +237,23 @@ int	parse_file(t_game *data, char *argv)
 	get_file_content(data, argv);
 	if (check_file_content(data) == FAIL)
 		exit_msg(data, WRONG_FILE_CONTENT);
+/*	if (verify_texture_path(data) == FAIL)
+		exit_msg(data, WRONG_TEXTURE_PATH);
+	if (verify_map_validity(data) == FAIL)
+		exit_msg(data, BAD_MAP);*/
 	return (VALID_FILE);
+}
+
+void	ft_printf_strs(char **strs)
+{
+	int	i;
+
+	i = 0;
+	while (strs[i] != NULL)
+	{
+		printf("%s", strs[i]);
+		i++;
+	}
 }
 
 void	debugprint(t_game *data)
@@ -249,6 +281,8 @@ void	debugprint(t_game *data)
 			printf("%d\n", data->config.floor[GREEN]);
 			printf("%d\n", data->config.floor[BLUE]);
 		}
+		if (data->mapinfo->map)
+			ft_printf_strs(data->mapinfo->map);
 	}
 }
 

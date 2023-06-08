@@ -12,11 +12,8 @@
 //#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
-t_mapinfo	*init_mapinfo_struct(void)
+void	init_mapinfo_struct(t_mapinfo *map)
 {
-	t_mapinfo *map;
-
-	map = malloc(1 * sizeof(t_mapinfo *));
 	map->fd = 0;
 	map->line_count = 0;
 	map->height = 0;
@@ -24,7 +21,6 @@ t_mapinfo	*init_mapinfo_struct(void)
 	map->eof = 0;
 	map->map_path = NULL;
 	map->map = NULL;
-	return (map);
 }
 void	init_config_struct(t_config *config)
 {
@@ -38,8 +34,9 @@ void	init_config_struct(t_config *config)
 
 void	init_data_struct(t_game *data)
 {
+	data->mapinfo = malloc(1* sizeof(t_mapinfo));
 	data->mlx = NULL;
 	init_config_struct(&data->config);
-	data->mapinfo = init_mapinfo_struct();
+	init_mapinfo_struct(data->mapinfo);
 	data->raw_file = NULL;
 }
