@@ -195,13 +195,12 @@ void get_map(t_game *data, int i)
 	data->mapinfo->map = ft_calloc(data->mapinfo->line_count, sizeof(char *));
 	while (data->raw_file[i])
 	{
-		while (str_is_space_only(data->raw_file[i]))
+		while (str_is_space_only(data->raw_file[i]) && i < data->mapinfo->line_count - 1)
 			i++;
+		if (i >= data->mapinfo->line_count)
+			break ;
 		tmp = ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
-		if (tmp == NULL)
-			break;
 		data->mapinfo->map[j] = ft_strdup(tmp);
-		//data->mapinfo->map[j][ft_strlen(data->mapinfo->map[j]) - 1] = '\0';
 		if ((int)ft_strlen(data->mapinfo->map[j]) > max_len)
 			max_len = ft_strlen(data->mapinfo->map[j]);
 		data->mapinfo->height++;
