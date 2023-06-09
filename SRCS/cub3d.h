@@ -43,7 +43,8 @@
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
 # define WRONG_TEXTURE_PATH "Wrong texture path"
 # define MINIMAP_FILES_MISSING "Minimap textures are missing"
-# define BAD_MAP "Map is wrong"
+# define BAD_MAP "Map is invalid"
+# define BAD_CHARACTERS "Map contains invalid characters"
 
 # define WIN_WIDTH 640
 # define WIN_HEIGHT 480

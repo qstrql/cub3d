@@ -277,6 +277,125 @@ int	verify_texture_path(t_game *data)
 	return (SUCCESS);
 }
 
+int	verify_map_left(t_game *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < data->mapinfo->height && data->mapinfo->map[i])
+	{
+		while (j < data->mapinfo->width && data->mapinfo->map[i][j] && ft_isspace(data->mapinfo->map[i][j]))
+			j++;
+		if (data->mapinfo->map[i][j] != '1')
+			return (FAIL);
+		j = 0;
+		i++;
+	}
+	return (SUCCESS);
+}
+
+int	verify_map_right(t_game *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = ft_strlen(data->mapinfo->map[i]) - 1;
+	while (i < data->mapinfo->height && data->mapinfo->map[i])
+	{
+		while (j > 1 && data->mapinfo->map[i][j] && ft_isspace(data->mapinfo->map[i][j]))
+			j--;
+		if (j <= 1)
+			return (FAIL);
+		if (data->mapinfo->map[i][j] != '1')
+			return (FAIL);
+		i++;
+		if (i < data->mapinfo->height && data->mapinfo->map[i])
+			j = ft_strlen(data->mapinfo->map[i]) - 1;
+	}
+	return (SUCCESS);
+}
+
+int	verify_map_up(t_game *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (j < data->mapinfo->width - 1)
+	{
+		while (ft_isspace(data->mapinfo->map[i][j]) && data->mapinfo->map[i][j])
+		{
+			if ((int)ft_strlen(data->mapinfo->map[i + 1]) < j)
+				break ;
+			i++;
+		}
+		if (data->mapinfo->map[i][j] != '1')
+			return (FAIL);
+		i = 0;
+		j++;
+	}
+	return (SUCCESS);
+}
+
+int	verify_map_down(t_game *data)
+{
+	int	i;
+	int	j;
+
+	i = data->mapinfo->height - 1;
+	j = 0;
+	while (j < data->mapinfo->width - 1)
+	{
+		while (i > 1)
+		{
+			if ((int)ft_strlen(data->mapinfo->map[i]) - 1 < j)
+				i--;
+			else if (ft_isspace(data->mapinfo->map[i][j]))
+				i--;
+			else
+				break ;
+		}
+		if (data->mapinfo->map[i][j] != '1')
+			return (FAIL);
+		i = data->mapinfo->height - 1;
+		j++;
+	}
+	return (SUCCESS);
+}
+
+int	verify_map_validity(t_game *data)
+{
+	if (verify_map_left(data) == FAIL || verify_map_right(data) == FAIL
+	|| verify_map_up(data) == FAIL || verify_map_down(data) == FAIL)
+		return (FAIL);
+	return (SUCCESS);
+}
+
+int	verify_map_characters(t_game *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < data->mapinfo->height)
+	{
+		while (data->mapinfo->map[i][j])
+		{
+			if (ft_strchr("10DWNSE \n\t\r\f\v", data->mapinfo->map[i][j]) == 0)
+				return (FAIL);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	return (SUCCESS);
+}
+
 int	parse_file(t_game *data, char *argv)
 {
 	if (parse_arg(argv) == FAIL)
@@ -288,8 +407,10 @@ int	parse_file(t_game *data, char *argv)
 		exit_msg(data, WRONG_TEXTURE_PATH);
 	if (verify_minimap_textures() == FAIL)
 		exit_msg(data, MINIMAP_FILES_MISSING);
-/*	if (verify_map_validity(data) == FAIL)
-		exit_msg(data, BAD_MAP);*/
+	if (verify_map_validity(data) == FAIL)
+		exit_msg(data, BAD_MAP);
+	if (verify_map_characters(data) == FAIL)
+		exit_msg(data, BAD_CHARACTERS);
 	return (VALID_FILE);
 }
 
