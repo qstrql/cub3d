@@ -63,7 +63,7 @@ int32_t mlx_get_texoffset(char c);
 bool check_if_struct_filled(t_config *config) 
 {
 	if (config->no == NULL || config->so == NULL || config->we == NULL ||
-		config->ea == NULL || config->floor == NULL || config->ceiling == NULL)
+		config->ea == NULL || config->floor.r == -1 || config->ceiling.r == -1)
 	{
         return false;
 	}
@@ -103,30 +103,30 @@ int	check_for_correct_rgb(char *rgb)
 
 int	fill_floor_rgb(t_config *config, char **tmp)
 {
-	config->floor = malloc(3 * sizeof(int));
-	config->floor[RED] = ft_atoi(tmp[0]);
-	config->floor[GREEN] = ft_atoi(tmp[1]);
-	config->floor[BLUE] = ft_atoi(tmp[2]);
-	if (config->floor[RED] > 255 || config->floor[RED] < 0)
+	config->floor.r = ft_atoi(tmp[0]);
+	config->floor.g = ft_atoi(tmp[1]);
+	config->floor.b = ft_atoi(tmp[2]);
+	config->floor.a = 255;
+	if (config->floor.r > 255 || config->floor.r < 0)
 		return (FAIL);
-	if (config->floor[GREEN] > 255 || config->floor[GREEN] < 0)
+	if (config->floor.g > 255 || config->floor.g < 0)
 		return (FAIL);
-	if (config->floor[BLUE] > 255 || config->floor[BLUE] < 0)
+	if (config->floor.b > 255 || config->floor.b < 0)
 		return (FAIL);
 	return (SUCCESS);
 }
 
 int fill_ceiling_rgb(t_config *config, char **tmp)
 {
-	config->ceiling = malloc(3 * sizeof(int));
-	config->ceiling[RED] = ft_atoi(tmp[0]);
-	config->ceiling[GREEN] = ft_atoi(tmp[1]);
-	config->ceiling[BLUE] = ft_atoi(tmp[2]);
-	if (config->ceiling[RED] > 255 ||  config->ceiling[RED] < 0)
+	config->ceiling.r = ft_atoi(tmp[0]);
+	config->ceiling.g = ft_atoi(tmp[1]);
+	config->ceiling.b = ft_atoi(tmp[2]);
+	config->ceiling.a = 255;
+	if (config->ceiling.r > 255 || config->ceiling.r < 0)
 		return (FAIL);
-	if (config->ceiling[GREEN] > 255 ||  config->ceiling[GREEN] < 0)
+	if (config->ceiling.g > 255 || config->ceiling.g < 0)
 		return (FAIL);
-	if (config->ceiling[BLUE] > 255 ||  config->ceiling[BLUE] < 0)
+	if (config->ceiling.b > 255 || config->ceiling.b < 0)
 		return (FAIL);
 	return (SUCCESS);
 }
@@ -187,7 +187,6 @@ void get_map(t_game *data, int i)
 {
 	int		j;
 	int		max_len;
-	char	*tmp;
 
 	data->mapinfo->height = 0;
 	max_len = 0;
@@ -199,12 +198,10 @@ void get_map(t_game *data, int i)
 			i++;
 		if (i >= data->mapinfo->line_count)
 			break ;
-		tmp = ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
-		data->mapinfo->map[j] = ft_strdup(tmp);
+		data->mapinfo->map[j] = ft_strdup(data->raw_file[i]);
 		if ((int)ft_strlen(data->mapinfo->map[j]) > max_len)
 			max_len = ft_strlen(data->mapinfo->map[j]);
 		data->mapinfo->height++;
-		free(tmp);
 		j++;
 		i++;
 	}
@@ -213,19 +210,33 @@ void get_map(t_game *data, int i)
 
 int	check_file_content(t_game *data)
 {
-	int	i;
-	char **tmp;
+	int		i;
+	char	*tmp_trim;
+	char	**tmp;
 
 	i = 0;
 	while (data->raw_file[i] && check_if_struct_filled(&data->config) == false)
 	{
 		while (str_is_space_only(data->raw_file[i]))
 			i++;
-		data->raw_file[i] = ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
+		tmp_trim = ft_strtrim(data->raw_file[i], " \t\n\r\f\v");
+		free(data->raw_file[i]);
+		data->raw_file[i] = ft_strdup(tmp_trim);
+		free(tmp_trim);
 		tmp = ft_split(data->raw_file[i], ' ');
 		if (check_if_struct_filled(&data->config) == false)
-			if (tmp[2] || !tmp[1])
+		{
+			if (!tmp[1])
+			{
+				free_split_array(&tmp);
 				return (INVALID_FILE);
+			}
+			else if (tmp[2])
+			{
+				free_split_array(&tmp);
+				return (INVALID_FILE);
+			}
+		}
 		if (get_texture_rgb(&data->config, tmp) == FAIL)
 		{
 			free_split_array(&tmp);
@@ -239,6 +250,18 @@ int	check_file_content(t_game *data)
 	else
 		get_map(data, i);
 	return (VALID_FILE);
+}
+
+int	verify_minimap_textures()
+{
+	if (!file_exist("img/minimap/minimap_wall.png")
+	|| !file_exist("img/minimap/map.png")
+	|| !file_exist("img/minimap/minimap_player.png")
+	|| !file_exist("img/minimap/minimap_ground.png")
+	|| !file_exist("img/minimap/minimap_door_closed.png")
+	|| !file_exist("img/minimap/minimap_door_open.png"))
+		return (FAIL);
+	return (SUCCESS);
 }
 
 int	verify_texture_path(t_game *data)
@@ -263,6 +286,8 @@ int	parse_file(t_game *data, char *argv)
 		exit_msg(data, WRONG_FILE_CONTENT);
 	if (verify_texture_path(data) == FAIL)
 		exit_msg(data, WRONG_TEXTURE_PATH);
+	if (verify_minimap_textures() == FAIL)
+		exit_msg(data, MINIMAP_FILES_MISSING);
 /*	if (verify_map_validity(data) == FAIL)
 		exit_msg(data, BAD_MAP);*/
 	return (VALID_FILE);
@@ -295,15 +320,15 @@ void	debugprint(t_game *data)
 		if (data->config.ea) {
 			printf("%s\n", data->config.ea);
 		}
-		if (data->config.ceiling) {
-			printf("%d\n", data->config.ceiling[RED]);
-			printf("%d\n", data->config.ceiling[GREEN]);
-			printf("%d\n", data->config.ceiling[BLUE]);
+		if (data->config.ceiling.r != -1) {
+			printf("%d\n", data->config.ceiling.r);
+			printf("%d\n", data->config.ceiling.g);
+			printf("%d\n", data->config.ceiling.b);
 		}
-		if (data->config.floor) {
-			printf("%d\n", data->config.floor[RED]);
-			printf("%d\n", data->config.floor[GREEN]);
-			printf("%d\n", data->config.floor[BLUE]);
+		if (data->config.floor.r != -1) {
+			printf("%d\n", data->config.floor.r);
+			printf("%d\n", data->config.floor.g);
+			printf("%d\n", data->config.floor.b);
 		}
 		if (data->mapinfo->map)
 			ft_printf_strs(data->mapinfo->map);
@@ -331,7 +356,32 @@ void	print_map(t_mapinfo *map)
 	}
 }
 
-void	display_map(mlx_t *mlx, t_player player, t_mapinfo map)
+int	reload_map_assets(mlx_t *mlx, t_player *player)
+{
+	if (player->minimap.images[0]->enabled == true)
+	{
+		player->minimap.images[0]->enabled = false;
+		mlx_delete_image(mlx, player->minimap.images[1]);
+		mlx_delete_image(mlx, player->minimap.images[2]);
+		mlx_delete_image(mlx, player->minimap.images[3]);
+		mlx_delete_image(mlx, player->minimap.images[4]);
+		mlx_delete_image(mlx, player->minimap.images[5]);
+		return (0);
+	}
+	player->minimap.images[1] = mlx_texture_to_image(mlx, player->minimap.textures[1]);
+	player->minimap.images[2] = mlx_texture_to_image(mlx, player->minimap.textures[2]);
+	player->minimap.images[3] = mlx_texture_to_image(mlx, player->minimap.textures[3]);
+	player->minimap.images[4] = mlx_texture_to_image(mlx, player->minimap.textures[4]);
+	player->minimap.images[5] = mlx_texture_to_image(mlx, player->minimap.textures[5]);
+	mlx_resize_image(player->minimap.images[1], player->minimap.cell_size, player->minimap.cell_size);
+	mlx_resize_image(player->minimap.images[2], player->minimap.cell_size, player->minimap.cell_size);
+	mlx_resize_image(player->minimap.images[3], player->minimap.cell_size, player->minimap.cell_size);
+	mlx_resize_image(player->minimap.images[4], player->minimap.cell_size, player->minimap.cell_size);
+	mlx_resize_image(player->minimap.images[5], player->minimap.cell_size, player->minimap.cell_size);
+	return (1);
+}
+
+void	display_map(mlx_t *mlx, t_player *player, t_mapinfo map)
 {
 	int i;
 	int j;
@@ -339,43 +389,25 @@ void	display_map(mlx_t *mlx, t_player player, t_mapinfo map)
 
 	i = 0;
 	j = 0;
-	middle = (WIN_WIDTH - player.minimap.cell_size * map.width) / 2;
-	if (player.minimap.images[0]->enabled == true)
-	{
-		player.minimap.images[0]->enabled = false;
-		mlx_delete_image(mlx, player.minimap.images[1]);
-		mlx_delete_image(mlx, player.minimap.images[2]);
-		mlx_delete_image(mlx, player.minimap.images[3]);
-		mlx_delete_image(mlx, player.minimap.images[4]);
-		mlx_delete_image(mlx, player.minimap.images[5]);
+	middle = (WIN_WIDTH - player->minimap.cell_size * map.width) / 2;
+	if (!reload_map_assets(mlx, player))
 		return ;
-	}
-	player.minimap.images[1] = mlx_texture_to_image(mlx, player.minimap.textures[1]);
-	player.minimap.images[2] = mlx_texture_to_image(mlx, player.minimap.textures[2]);
-	player.minimap.images[3] = mlx_texture_to_image(mlx, player.minimap.textures[3]);
-	player.minimap.images[4] = mlx_texture_to_image(mlx, player.minimap.textures[4]);
-	player.minimap.images[5] = mlx_texture_to_image(mlx, player.minimap.textures[5]);
-	mlx_resize_image(player.minimap.images[1], player.minimap.cell_size, player.minimap.cell_size);
-	mlx_resize_image(player.minimap.images[2], player.minimap.cell_size, player.minimap.cell_size);
-	mlx_resize_image(player.minimap.images[3], player.minimap.cell_size, player.minimap.cell_size);
-	mlx_resize_image(player.minimap.images[4], player.minimap.cell_size, player.minimap.cell_size);
-	mlx_resize_image(player.minimap.images[5], player.minimap.cell_size, player.minimap.cell_size);
-	player.minimap.images[0]->instances[0].x = middle;
-	player.minimap.images[0]->enabled = true;
+	player->minimap.images[0]->instances[0].x = middle;
+	player->minimap.images[0]->enabled = true;
 	while (i < map.height)
 	{
-		while (j < map.width)
+		while (j < map.width && map.map[i][j])
 		{
-			if (i == player.map_pos_x && j == player.map_pos_y)
-				mlx_image_to_window(mlx, player.minimap.images[3], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+			if (i == player->map_pos_x && j == player->map_pos_y)
+				mlx_image_to_window(mlx, player->minimap.images[3], j * player->minimap.cell_size + middle + 25, i * player->minimap.cell_size + 20);
 			else if (map.map[i][j] == '1')
-				mlx_image_to_window(mlx, player.minimap.images[1], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+				mlx_image_to_window(mlx, player->minimap.images[1], j * player->minimap.cell_size + middle + 25, i * player->minimap.cell_size + 20);
 			else if (map.map[i][j] == '0')
-				mlx_image_to_window(mlx, player.minimap.images[2], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+				mlx_image_to_window(mlx, player->minimap.images[2], j * player->minimap.cell_size + middle + 25, i * player->minimap.cell_size + 20);
 			else if (map.map[i][j] == 'D')
-				mlx_image_to_window(mlx, player.minimap.images[4], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+				mlx_image_to_window(mlx, player->minimap.images[4], j * player->minimap.cell_size + middle + 25, i * player->minimap.cell_size + 20);
 			else if (map.map[i][j] == 'O')
-				mlx_image_to_window(mlx, player.minimap.images[5], j * player.minimap.cell_size + middle + 25, i * player.minimap.cell_size + 20);
+				mlx_image_to_window(mlx, player->minimap.images[5], j * player->minimap.cell_size + middle + 25, i * player->minimap.cell_size + 20);
 			j++;
 		}
 		j = 0;
@@ -460,7 +492,6 @@ void	player_loop(t_game *game, char direction, char rotation, bool interact)
 	
 	if (interact == true)
 	{
-		//printf("trying to interact\n");
 		if (game->mapinfo->map[(int)(game->player->x + game->player->dir_x * 0.8)][(int)(game->player->y + game->player->dir_y * 0.8)] == 'D')
 			game->mapinfo->map[(int)(game->player->x + game->player->dir_x * 0.8)][(int)(game->player->y + game->player->dir_y * 0.8)] = 'O';
 		else if (game->mapinfo->map[(int)(game->player->x + game->player->dir_x * 0.8)][(int)(game->player->y + game->player->dir_y * 0.8)] == 'O'
@@ -469,7 +500,7 @@ void	player_loop(t_game *game, char direction, char rotation, bool interact)
 	}
 	game->player->map_pos_x = (int)game->player->x;
 	game->player->map_pos_y = (int)game->player->y;
-	cast_rays_3d(game->mlx, game->player, game->mapinfo, game->textures);
+	cast_rays_3d(game->mlx, game->player, game->mapinfo, &game->config);
 }
 
 void	input_hook(void *param)
@@ -488,9 +519,9 @@ void	input_hook(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT_SHIFT))
 		game->player->move_speed = 0.1;
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_M) && !game->player->minimap.images[0]->enabled)
-		display_map(game->mlx, *game->player, *game->mapinfo);
+		display_map(game->mlx, game->player, *game->mapinfo);
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_N) && game->player->minimap.images[0]->enabled)
-		display_map(game->mlx, *game->player, *game->mapinfo);
+		display_map(game->mlx, game->player, *game->mapinfo);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_E))
 		interact = true;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W) && !game->player->minimap.images[0]->enabled)
@@ -509,40 +540,97 @@ void	input_hook(void *param)
 		player_loop(game, dir, rot, interact);
 }
 
-void	init_player(t_player *player, mlx_t *mlx, t_mapinfo map)
+void	set_player_rotation(t_player *player, char rotation)
+{
+	if (rotation == 'N')
+	{
+		player->dir_x = -1;
+		player->plane_y = 0.66;
+	}
+	else if (rotation == 'S')
+	{
+		player->dir_x = 1;
+		player->plane_y = -0.66;
+	}
+	else if (rotation == 'W')
+	{
+		player->dir_y = -1;
+		player->plane_x = -0.66;
+	}
+	else if (rotation == 'E')
+	{
+		player->dir_y = 1;
+		player->plane_x = 0.66;
+	}
+}
+
+void	set_player_init_pos(t_player *player, t_mapinfo *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < map->height)
+	{
+		while (j < map->width && map->map[i][j])
+		{
+			if (ft_strchr("NSWE", map->map[i][j]))
+			{
+				player->x = i + 0.5;
+				player->y = j + 0.5;
+				player->map_pos_x = j;
+				player->map_pos_y = i;
+				set_player_rotation(player, map->map[i][j]);
+				map->map[i][j] = '0';
+				return ;
+			}
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+	player->x = -1;
+}
+
+void	init_minimap(t_player *player, mlx_t *mlx, t_mapinfo *map)
 {
 	player->minimap.images = ft_calloc(6, sizeof(mlx_image_t));
 	player->minimap.textures = ft_calloc(6, sizeof(mlx_texture_t));
-	player->minimap.textures[0] = mlx_load_png("img/map.png");
+	player->minimap.textures[0] = mlx_load_png("img/minimap/map.png");
 	player->minimap.images[0] = mlx_texture_to_image(mlx, player->minimap.textures[0]);
-	player->minimap.textures[1] = mlx_load_png("img/minimap_wall.png");
+	player->minimap.textures[1] = mlx_load_png("img/minimap/minimap_wall.png");
 	player->minimap.images[1] = mlx_texture_to_image(mlx, player->minimap.textures[1]);
-	player->minimap.textures[2] = mlx_load_png("img/minimap_ground.png");
+	player->minimap.textures[2] = mlx_load_png("img/minimap/minimap_ground.png");
 	player->minimap.images[2] = mlx_texture_to_image(mlx, player->minimap.textures[2]);
-	player->minimap.textures[3] = mlx_load_png("img/minimap_player.png");
+	player->minimap.textures[3] = mlx_load_png("img/minimap/minimap_player.png");
 	player->minimap.images[3] = mlx_texture_to_image(mlx, player->minimap.textures[3]);
-	player->minimap.textures[4] = mlx_load_png("img/minimap_door_closed.png");
+	player->minimap.textures[4] = mlx_load_png("img/minimap/minimap_door_closed.png");
 	player->minimap.images[4] = mlx_texture_to_image(mlx, player->minimap.textures[4]);
-	player->minimap.textures[5] = mlx_load_png("img/minimap_door_open.png");
+	player->minimap.textures[5] = mlx_load_png("img/minimap/minimap_door_open.png");
 	player->minimap.images[5] = mlx_texture_to_image(mlx, player->minimap.textures[5]);
-	if (map.width >= map.height)
+	if (map->width >= map->height)
 	{
-		player->minimap.cell_size = WIN_WIDTH / map.width / 2;
-		mlx_resize_image(player->minimap.images[0], player->minimap.cell_size * map.width + 50, player->minimap.cell_size * map.width + 50);
+		player->minimap.cell_size = WIN_WIDTH / map->width / 2;
+		mlx_resize_image(player->minimap.images[0], player->minimap.cell_size * map->width + 50, player->minimap.cell_size * map->width + 50);
 	}
 	else
 	{
-		player->minimap.cell_size = WIN_HEIGHT / map.height / 2;
-		mlx_resize_image(player->minimap.images[0], player->minimap.cell_size * map.height + 50, player->minimap.cell_size * map.height + 50);
+		player->minimap.cell_size = WIN_HEIGHT / map->height / 2;
+		mlx_resize_image(player->minimap.images[0], player->minimap.cell_size * map->height + 50, player->minimap.cell_size * map->height + 50);
 	}
 	mlx_image_to_window(mlx, player->minimap.images[0], 0, 0);
 	player->minimap.images[0]->enabled = false;
-	player->dir_x = -1;
+}
+
+void	init_player(t_player *player, mlx_t *mlx, t_mapinfo *map)
+{
+	init_minimap(player, mlx, map);
+	player->dir_x = 0;
 	player->dir_y = 0;
-	player->x = 2;
-	player->y = 1;
 	player->plane_x = 0;
-	player->plane_y = 0.66;
+	player->plane_y = 0;
+	set_player_init_pos(player, map);
 	player->move_speed = 0.055;
 	player->rot_speed = 0.08;
 }
@@ -550,12 +638,12 @@ void	init_player(t_player *player, mlx_t *mlx, t_mapinfo map)
 void	free_game(t_game *game)
 {
 	free_split_array(&game->mapinfo->map);
-	free_rc_texture(game->textures[0]);
-	free_rc_texture(game->textures[1]);
-	free_rc_texture(game->textures[2]);
-	free_rc_texture(game->textures[3]);
-	free_rc_texture(game->textures[4]);
-	free_rc_texture(game->textures[5]);
+	free_rc_texture(game->config.textures[0]);
+	free_rc_texture(game->config.textures[1]);
+	free_rc_texture(game->config.textures[2]);
+	free_rc_texture(game->config.textures[3]);
+	free_rc_texture(game->config.textures[4]);
+	free_rc_texture(game->config.textures[5]);
 	mlx_delete_texture(game->player->minimap.textures[0]);
 	mlx_delete_texture(game->player->minimap.textures[1]);
 	mlx_delete_texture(game->player->minimap.textures[2]);
@@ -579,14 +667,13 @@ void 	mlx_test(t_game *game)
 	game->player = &player;
 
 	game->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "Cub3d II : Part IV, 358/2 days : Remastered : Remake (Cloud version)", false);
-	game->textures[0] = init_rc_texture(game->config.so, game->mlx);
-	game->textures[2] = init_rc_texture(game->config.no, game->mlx);
-	game->textures[1] = init_rc_texture(game->config.we, game->mlx);
-	game->textures[3] = init_rc_texture(game->config.ea, game->mlx);
-	game->textures[4] = init_rc_texture("img/door_closed.png", game->mlx);
-	game->textures[5] = init_rc_texture("img/door_open.png", game->mlx);
-	init_player(&player, game->mlx, *game->mapinfo);
-	//cast_rays_3d(game.mlx, game.player, game.mapinfo, game.textures);
+	game->config.textures[0] = init_rc_texture(game->config.so, game->mlx);
+	game->config.textures[2] = init_rc_texture(game->config.no, game->mlx);
+	game->config.textures[1] = init_rc_texture(game->config.we, game->mlx);
+	game->config.textures[3] = init_rc_texture(game->config.ea, game->mlx);
+	game->config.textures[4] = init_rc_texture("img/door_closed.png", game->mlx);
+	game->config.textures[5] = init_rc_texture("img/door_open.png", game->mlx);
+	init_player(&player, game->mlx, game->mapinfo);
 	player_loop(game, 'X', 'X', false);
 	mlx_loop_hook(game->mlx, input_hook, game);
 	mlx_loop(game->mlx);
@@ -605,8 +692,8 @@ int	main(int argc, char **argv)
 		init_data_struct(&data);
 		if (parse_file(&data, argv[1]) != VALID_FILE)
 			return (INVALID_FILE);
-		//debugprint(&data);
-		print_map(data.mapinfo);
+		debugprint(&data);
+		//print_map(data.mapinfo);
 		mlx_test(&data);
 		//free_data_struct(&data, EXIT_SUCCESS);
 	}

@@ -28,8 +28,8 @@ void	init_config_struct(t_config *config)
 	config->so = NULL;
 	config->we = NULL;
 	config->ea = NULL;
-	config->floor = NULL;
-	config->ceiling = NULL;
+	config->floor.r = -1;
+	config->ceiling.r = -1;
 }
 
 void	init_data_struct(t_game *data)

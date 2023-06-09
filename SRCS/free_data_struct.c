@@ -30,10 +30,6 @@ void	free_config_struct(t_config *config)
 		free(config->we);
 	if (config->ea)
 		free(config->ea);
-	if (config->floor)
-		free(config->floor);
-	if (config->ceiling)
-		free(config->ceiling);
 }
 
 int	free_data_struct(t_game *data, int exit_code)

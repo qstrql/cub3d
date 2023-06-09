@@ -42,6 +42,7 @@
 # define FILE_DOESNT_EXIST "The provided file does not exist"
 # define WRONG_FILE_CONTENT "File content is wrong or missing"
 # define WRONG_TEXTURE_PATH "Wrong texture path"
+# define MINIMAP_FILES_MISSING "Minimap textures are missing"
 # define BAD_MAP "Map is wrong"
 
 # define WIN_WIDTH 640
@@ -89,8 +90,9 @@ typedef struct s_config
 	char 	*so;
 	char 	*we;
 	char 	*ea;
-	int 	*floor;
-	int 	*ceiling;
+	t_rc_texture	*textures[6];
+	t_rgb	floor;
+	t_rgb	ceiling;
 }				t_config;
 
 typedef struct s_sprite
@@ -128,7 +130,6 @@ typedef struct s_game
 	t_mapinfo		*mapinfo;
 	t_player		*player;
 	t_config		config;
-	t_rc_texture	*textures[6];
 	char			**raw_file;
 }	t_game;
 
@@ -154,7 +155,7 @@ typedef struct s_ray
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
 void			debugprint(t_game *data);
-void	display_map(mlx_t *mlx, t_player player, t_mapinfo map);
+void	display_map(mlx_t *mlx, t_player *player, t_mapinfo map);
 
 //init_structs.c
 void			init_mapinfo_struct(t_mapinfo *map);
@@ -194,9 +195,9 @@ void			dda_init_calculations(t_ray *ray, t_player *player);
 void			dda_calculations(t_ray *ray, t_mapinfo *map);
 
 //draw_rays.c
-void			draw_pixels(mlx_image_t *window, t_rc_texture *texture, int line[], int num);
-void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map, t_rc_texture *textures[]);
-void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_rc_texture *textures[]);
+void			draw_pixels(mlx_image_t *window, t_rc_texture *texture, int line[], t_config *config);
+void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map, t_config *config);
+void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_config *config);
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 //rc_texture_utils.c

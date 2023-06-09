@@ -17,7 +17,7 @@ int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 }
 
 void	draw_pixels(mlx_image_t *window,
-			t_rc_texture *texture, int line[], int num)
+			t_rc_texture *texture, int line[], t_config *config)
 {
 	int			i;
 	double		step;
@@ -31,7 +31,7 @@ void	draw_pixels(mlx_image_t *window,
 	while (i < WIN_HEIGHT)
 	{
 		if (i < line[0])
-			color = 0xcfcba9ff;
+			color = color_int32(config->floor);
 		if (i >= line[0] && i < line[1])
 		{
 			texture_y = (int)texture_pos & (TEXTURE_HEIGHT - 1);
@@ -39,8 +39,8 @@ void	draw_pixels(mlx_image_t *window,
 			color = color_int32(get_rgb_value(*texture, line[3], texture_y));
 		}
 		else if (i >= line[1])
-			color = 0x6e6c5aff;
-		mlx_put_pixel(window, num, i, color);
+			color = color_int32(config->ceiling);
+		mlx_put_pixel(window, line[4], i, color);
 		i++;
 	}
 }
@@ -52,7 +52,7 @@ int	*get_line_values(t_ray *ray)
 	int		draw_end;
 	int		*line;
 
-	line = ft_calloc(4, sizeof(int));
+	line = ft_calloc(6, sizeof(int));
 	line_height = (int)(WIN_HEIGHT / ray->perp_wall_dist);
 	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
 	if (draw_start < 0)
@@ -63,11 +63,12 @@ int	*get_line_values(t_ray *ray)
 	line[0] = draw_start;
 	line[1] = draw_end;
 	line[2] = line_height;
+	line[4] = ray->num;
 	return (line);
 }
 
 void	draw_rays(mlx_image_t *window, t_ray *ray,
-			t_player *player, t_rc_texture *textures[])
+			t_player *player, t_config *config)
 {
 	int		*line;
 	double	wall_x;
@@ -86,26 +87,22 @@ void	draw_rays(mlx_image_t *window, t_ray *ray,
 		texture_x = TEXTURE_WIDTH - texture_x - 1;
 	line[3] = texture_x;
 	if (ray->hit == 'D')
-		draw_pixels(window, textures[4], line, ray->num);
+		draw_pixels(window, config->textures[4], line, config);
 	else if (ray->hit == 'O')
-		draw_pixels(window, textures[5], line, ray->num);
-	//North
+		draw_pixels(window, config->textures[5], line, config);
 	else if (ray->side == 0 && ray->ray_dir_x <= 0)
-		draw_pixels(window, textures[0], line, ray->num);
-	//South
+		draw_pixels(window, config->textures[0], line, config);
 	else if (ray->side == 0)
-		draw_pixels(window, textures[2], line, ray->num);
-	//West
+		draw_pixels(window, config->textures[2], line, config);
 	else if (ray->side == 1 && ray->ray_dir_y >= 0)
-		draw_pixels(window, textures[1], line, ray->num);
-	//East
+		draw_pixels(window, config->textures[1], line, config);
 	else
-		draw_pixels(window, textures[3], line, ray->num);
+		draw_pixels(window, config->textures[3], line, config);
 	free(line);
 }
 
 void	cast_rays_3d(mlx_t *mlx, t_player *player,
-			t_mapinfo *map, t_rc_texture *textures[])
+			t_mapinfo *map, t_config *config)
 {
 	t_ray				ray;
 	static mlx_image_t	*window = NULL;
@@ -119,7 +116,7 @@ void	cast_rays_3d(mlx_t *mlx, t_player *player,
 		initial_ray_calculations(&ray, player);
 		dda_init_calculations(&ray, player);
 		dda_calculations(&ray, map);
-		draw_rays(window, &ray, player, textures);
+		draw_rays(window, &ray, player, config);
 		ray.num++;
 	}
 	mlx_image_to_window(mlx, window, 0, 0);
