@@ -72,7 +72,6 @@ void	draw_rays(mlx_image_t *window, t_ray *ray,
 {
 	int		*line;
 	double	wall_x;
-	int		texture_x;
 
 	line = get_line_values(ray);
 	if (ray->side == 0)
@@ -80,16 +79,12 @@ void	draw_rays(mlx_image_t *window, t_ray *ray,
 	else
 		wall_x = player->x + ray->perp_wall_dist * ray->ray_dir_x;
 	wall_x -= floor(wall_x);
-	texture_x = (int)(wall_x * (double)TEXTURE_WIDTH);
-	if (ray->side == 0 && ray->ray_dir_x > 0)
-		texture_x = TEXTURE_WIDTH - texture_x - 1;
-	if (ray->side == 1 && ray->ray_dir_y < 0)
-		texture_x = TEXTURE_WIDTH - texture_x - 1;
-	line[3] = texture_x;
+	line[3] = (int)(wall_x * (double)TEXTURE_WIDTH);
+	if ((ray->side == 0 && ray->ray_dir_x > 0)
+		|| (ray->side == 1 && ray->ray_dir_y < 0))
+		line[3] = TEXTURE_WIDTH - line[3] - 1;
 	if (ray->hit == 'D')
 		draw_pixels(window, config->textures[4], line, config);
-	else if (ray->hit == 'O')
-		draw_pixels(window, config->textures[5], line, config);
 	else if (ray->side == 0 && ray->ray_dir_x <= 0)
 		draw_pixels(window, config->textures[0], line, config);
 	else if (ray->side == 0)

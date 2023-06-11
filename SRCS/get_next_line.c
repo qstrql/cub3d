@@ -9,7 +9,6 @@
 /*   Updated: 2023/05/01 18:19:41 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
 char	*ft_realloc(char *buf, char *line)

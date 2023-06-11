@@ -156,7 +156,7 @@ typedef struct s_ray
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
 void			debugprint(t_game *data);
-void	display_map(mlx_t *mlx, t_player *player, t_mapinfo map);
+void	display_map(t_game *game);
 
 //init_structs.c
 void			init_mapinfo_struct(t_mapinfo *map);

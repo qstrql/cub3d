@@ -9,7 +9,6 @@
 /*   Updated: 2023/05/06 00:08:55 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
 void	close_window(t_game *data)

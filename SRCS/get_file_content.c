@@ -9,14 +9,13 @@
 /*   Updated: 2023/06/06 11:48:24 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
 int	get_line_count(char *file)
 {
-	int	tmp_fd;
-	int	line_count;
-	char *line;
+	int		tmp_fd;
+	int		line_count;
+	char	*line;
 
 	line_count = 0;
 	tmp_fd = open(file, O_RDONLY);
@@ -31,13 +30,13 @@ int	get_line_count(char *file)
 	return (line_count);
 }
 
-char **get_raw_file_data(char *file)
+char	**get_raw_file_data(char *file)
 {
-	int	i;
-	int	tmp_fd;
-	char *line;
-	int	line_count;
-	char **raw_file;
+	int		i;
+	int		tmp_fd;
+	char	*line;
+	int		line_count;
+	char	**raw_file;
 
 	i = 0;
 	tmp_fd = open(file, O_RDONLY);
@@ -55,7 +54,7 @@ char **get_raw_file_data(char *file)
 	return (raw_file);
 }
 
-void get_file_content(t_game *data, char *file_path)
+void	get_file_content(t_game *data, char *file_path)
 {
 	int	i;
 	int	line_count;
@@ -63,6 +62,6 @@ void get_file_content(t_game *data, char *file_path)
 	i = 0;
 	line_count = get_line_count(file_path);
 	data->mapinfo->line_count = line_count;
-	data->mapinfo->map_path = ft_strdup(file_path); 
+	data->mapinfo->map_path = ft_strdup(file_path);
 	data->raw_file = get_raw_file_data(file_path);
 }

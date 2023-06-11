@@ -9,11 +9,10 @@
 /*   Updated: 2023/05/03 23:04:05 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 #include <stdbool.h>
 
-bool file_exist(char *file)
+bool	file_exist(char *file)
 {
 	int	tmp_fd;
 
@@ -27,17 +26,18 @@ bool file_exist(char *file)
 	}
 }
 
-bool check_map_extension(char *argv)
+bool	check_map_extension(char *argv)
 {
-	size_t len;
+	size_t	len;
+
 	len = ft_strlen(argv);
-    if (len >= 4 && ft_strncmp(argv + len - 4, ".cub", 5) == 0)
-        return (true);
-    else
-        return (false);
+	if (len >= 4 && ft_strncmp(argv + len - 4, ".cub", 5) == 0)
+		return (true);
+	else
+		return (false);
 }
 
-bool file_is_a_directory(char *file)
+bool	file_is_a_directory(char *file)
 {
 	int	tmp_fd;
 

@@ -9,7 +9,6 @@
 /*   Updated: 2023/05/03 22:41:52 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
 int	error_msg(char *str, int exit_code)
@@ -20,7 +19,7 @@ int	error_msg(char *str, int exit_code)
 	return (exit_code);
 }
 
-void exit_msg(t_game *data, char *str)
+void	exit_msg(t_game *data, char *str)
 {
 	ft_putendl_fd("Error", STDERR_FILENO);
 	ft_putstr_fd("cub3D: ", STDERR_FILENO);

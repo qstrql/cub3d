@@ -9,7 +9,6 @@
 /*   Updated: 2023/06/06 11:36:16 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
 void	init_mapinfo_struct(t_mapinfo *map)
@@ -22,6 +21,7 @@ void	init_mapinfo_struct(t_mapinfo *map)
 	map->map_path = NULL;
 	map->map = NULL;
 }
+
 void	init_config_struct(t_config *config)
 {
 	config->no = NULL;
@@ -34,7 +34,7 @@ void	init_config_struct(t_config *config)
 
 void	init_data_struct(t_game *data)
 {
-	data->mapinfo = malloc(1* sizeof(t_mapinfo));
+	data->mapinfo = malloc(1 * sizeof(t_mapinfo));
 	data->mlx = NULL;
 	init_config_struct(&data->config);
 	init_mapinfo_struct(data->mapinfo);

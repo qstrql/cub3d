@@ -9,7 +9,6 @@
 /*   Updated: 2023/06/08 11:55:13 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "../INCLUDE/cub3d.h"
 #include "cub3d.h"
 
 void	free_mapinfo_struct(t_mapinfo *map)
@@ -20,6 +19,7 @@ void	free_mapinfo_struct(t_mapinfo *map)
 		free_split_array(&map->map);
 	better_free(map);
 }
+
 void	free_config_struct(t_config *config)
 {
 	if (config->no)
