@@ -16,6 +16,8 @@ bool str_is_space_only(char *str)
 	int	i;
 
 	i = 0;
+	if (str == NULL)
+		return (true);
 	while (str[i])
 	{
 		if (!ft_isspace(str[i]))

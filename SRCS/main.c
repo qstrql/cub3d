@@ -200,6 +200,20 @@ int	get_content(t_game *data, int i)
 	return (VALID_FILE);
 }
 
+void	remove_map_nl(t_mapinfo *map)
+{
+	int	i;
+
+	i = map->height - 1;
+	while (str_is_space_only(map->map[i]))
+	{
+		free(map->map[i]);
+		map->map[i] = NULL;
+		map->height--;
+		i--;
+	}
+}
+
 int	check_file_content(t_game *data)
 {
 	int		i;
@@ -221,6 +235,7 @@ int	check_file_content(t_game *data)
 		data->mapinfo->map = ft_calloc(data->mapinfo->line_count,
 				sizeof(char *));
 		get_map(data, i);
+		remove_map_nl(data->mapinfo);
 	}
 	return (VALID_FILE);
 }
@@ -367,10 +382,26 @@ int	verify_map_validity(t_game *data)
 {
 	if (data->mapinfo->map == NULL)
 		return (FAIL);
-	if (verify_map_left(data) == FAIL || verify_map_right(data) == FAIL
-		|| verify_map_up(data) == FAIL || verify_map_down(data) == FAIL
-		|| verify_player_present(data) == FAIL)
+	if (verify_map_left(data) == FAIL)
+	{
+		ft_putstr_fd("cub3d: Map is missing wall on left side\n", 2);
 		return (FAIL);
+	}
+	if (verify_map_right(data) == FAIL)
+	{
+		ft_putstr_fd("cub3d: Map is missing wall on right side\n", 2);
+		return (FAIL);
+	}
+	if (verify_map_up(data) == FAIL)
+	{
+		ft_putstr_fd("cub3d: Map is missing wall on upper side\n", 2);
+		return (FAIL);
+	}
+	if (verify_map_down(data) == FAIL)
+	{
+		ft_putstr_fd("cub3d: Map is missing wall on lower side\n", 2);
+		return (FAIL);
+	}
 	if (data->mapinfo->height < 3 || data->mapinfo->width < 3)
 		return (FAIL);
 	return (SUCCESS);
