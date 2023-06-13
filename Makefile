@@ -6,7 +6,7 @@
 #    By: mjouot <mjouot@student.42angouleme.fr      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/01 15:48:29 by mjouot            #+#    #+#              #
-#    Updated: 2023/06/06 10:22:07 by lbertaux         ###   ########.fr        #
+#    Updated: 2023/06/13 11:10:13 by lbertaux         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRCS = 	SRCS/main.c \
 CC = clang
 OBJS = $(SRCS:.c=.o)
 FLAGS = -Wall -Werror -Wextra -I ./libft/INCLUDES/ -ggdb3
+LIBMLX	:= ./MLX42
 #====================================COLORS====================================#
 NOC            = \033[0m
 BOLD        = \033[1m
@@ -47,12 +48,15 @@ NB_COMPIL = 0
 TOTAL_COMPIL = $(words $(OBJS))
 PROGRESS_BAR_DETAIL = 5
 #=====================================RULES====================================#
-all: $(NAME)
+all: libmlx $(NAME)
+
+libmlx:
+	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 $(NAME): $(OBJS)
 		@rm .progressbar
 		make -C libft
-		$(CC) $(FLAGS) $^ -o $(NAME) libft/libft.a MLX42/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+		$(CC) $(FLAGS) $^ -o $(NAME) libft/libft.a MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
 %.o:%.c
 	$(if $(filter $(NB_COMPIL),0), @echo "$(BLUE)Compiling cub3D$(NOC)")
@@ -81,10 +85,11 @@ create_progressbar:
 
 clean:
 	make clean -C libft
+	rm -rf $(LIBMLX)/build
+	rm -f libft/libft.a
 	rm -f $(OBJS)
 
 fclean: clean
-	rm -f libft/libft.a
 	rm -f $(NAME)
 
 re: fclean all
