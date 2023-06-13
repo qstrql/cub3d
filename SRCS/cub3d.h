@@ -25,10 +25,7 @@
 # include "../libft/INCLUDES/libft.h"
 # include "../MLX42/include/MLX42/MLX42.h"
 /*-----------------DEFINES & ENUMS--------------------------------------------*/
-
-# ifndef BUFFER_SIZE
 # define BUFFER_SIZE 1
-# endif
 
 # define VALID_FILE 1
 # define INVALID_FILE 0
@@ -50,6 +47,7 @@
 # define WIN_HEIGHT 480
 # define TEXTURE_WIDTH 256
 # define TEXTURE_HEIGHT 256
+
 enum e_rgb
 {
 	RED = 0,
@@ -67,11 +65,11 @@ typedef struct s_rgb
 	int	a;
 }	t_rgb;
 
-typedef struct	s_rc_texture
+typedef struct s_rc_texture
 {
 	t_rgb	*pixels;
-	int	width;
-	int	height;
+	int		width;
+	int		height;
 }	t_rc_texture;
 
 typedef struct s_mapinfo
@@ -87,13 +85,13 @@ typedef struct s_mapinfo
 
 typedef struct s_config
 {
-	char	*no;
-	char 	*so;
-	char 	*we;
-	char 	*ea;
+	char			*no;
+	char			*so;
+	char			*we;
+	char			*ea;
 	t_rc_texture	*textures[6];
-	t_rgb	floor;
-	t_rgb	ceiling;
+	t_rgb			floor;
+	t_rgb			ceiling;
 }				t_config;
 
 typedef struct s_sprite
@@ -102,7 +100,7 @@ typedef struct s_sprite
 	mlx_texture_t	*texture;
 }	t_sprite;
 
-typedef struct	s_minimap
+typedef struct s_minimap
 {
 	int					cell_size;
 	mlx_texture_t		**textures;
@@ -156,7 +154,7 @@ typedef struct s_ray
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
 void			debugprint(t_game *data);
-void	display_map(t_game *game);
+void			display_map(t_game *game);
 
 //init_structs.c
 void			init_mapinfo_struct(t_mapinfo *map);
@@ -164,12 +162,12 @@ void			init_config_struct(t_config *config);
 void			init_data_struct(t_game *data);
 
 //exit_program.c
-void			close_window(t_game *data);
-void			exit_program(t_game *data, int exit_code);
+void			exit_game(t_game *data, int exit_code);
 
 //free_data_struct.c
 void			free_mapinfo_struct(t_mapinfo *map);
 void			free_config_struct(t_config *config);
+void			free_game_textures(t_game *game);
 int				free_data_struct(t_game *data, int exit_code);
 
 //gnl.c
@@ -196,9 +194,12 @@ void			dda_init_calculations(t_ray *ray, t_player *player);
 void			dda_calculations(t_ray *ray, t_mapinfo *map);
 
 //draw_rays.c
-void			draw_pixels(mlx_image_t *window, t_rc_texture *texture, int line[], t_config *config);
-void			cast_rays_3d(mlx_t *mlx, t_player *player, t_mapinfo *map, t_config *config);
-void			draw_rays(mlx_image_t *window, t_ray *ray, t_player *player, t_config *config);
+void			draw_pixels(mlx_image_t *window,
+					t_rc_texture *texture, int line[], t_config *config);
+void			cast_rays_3d(mlx_t *mlx, t_player *player,
+					t_mapinfo *map, t_config *config);
+void			draw_rays(mlx_image_t *window, t_ray *ray,
+					t_player *player, t_config *config);
 int32_t			ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 //rc_texture_utils.c

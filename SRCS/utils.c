@@ -24,5 +24,5 @@ void	exit_msg(t_game *data, char *str)
 	ft_putendl_fd("Error", STDERR_FILENO);
 	ft_putstr_fd("cub3D: ", STDERR_FILENO);
 	ft_putendl_fd(str, STDERR_FILENO);
-	exit_program(data, EXIT_FAILURE);
+	exit_game(data, EXIT_FAILURE);
 }

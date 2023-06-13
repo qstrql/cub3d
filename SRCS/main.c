@@ -400,7 +400,7 @@ int	verify_map_characters(t_game *data)
 int	parse_file(t_game *data, char *argv)
 {
 	if (parse_arg(argv) == FAIL)
-		exit_program(data, INVALID_FILE);
+		exit_game(data, INVALID_FILE);
 	get_file_content(data, argv);
 	if (check_file_content(data) == FAIL)
 		exit_msg(data, WRONG_FILE_CONTENT);
@@ -820,30 +820,6 @@ void	init_player(t_player *player, mlx_t *mlx, t_mapinfo *map)
 	player->rot_speed = 0.08;
 }
 
-void	free_game(t_game *game)
-{
-	free_split_array(&game->mapinfo->map);
-	free_rc_texture(game->config.textures[0]);
-	free_rc_texture(game->config.textures[1]);
-	free_rc_texture(game->config.textures[2]);
-	free_rc_texture(game->config.textures[3]);
-	free_rc_texture(game->config.textures[4]);
-	mlx_delete_texture(game->player->minimap.textures[0]);
-	mlx_delete_texture(game->player->minimap.textures[1]);
-	mlx_delete_texture(game->player->minimap.textures[2]);
-	mlx_delete_texture(game->player->minimap.textures[3]);
-	mlx_delete_texture(game->player->minimap.textures[4]);
-	mlx_delete_texture(game->player->minimap.textures[5]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[0]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[1]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[2]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[3]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[4]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[5]);
-	free(game->player->minimap.images);
-	free(game->player->minimap.textures);
-}
-
 void	mlx_test(t_game *game)
 {
 	t_player		player;
@@ -861,7 +837,7 @@ void	mlx_test(t_game *game)
 	player_loop(game, 'X', 'X', false);
 	mlx_loop_hook(game->mlx, input_hook, game);
 	mlx_loop(game->mlx);
-	free_game(game);
+	free_game_textures(game);
 	mlx_terminate(game->mlx);
 }
 
@@ -876,7 +852,7 @@ int	main(int argc, char **argv)
 			return (INVALID_FILE);
 		debugprint(&data);
 		mlx_test(&data);
-		//free_data_struct(&data, EXIT_SUCCESS);
+		free_data_struct(&data, EXIT_SUCCESS);
 	}
 	else
 	{
