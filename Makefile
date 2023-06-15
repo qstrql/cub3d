@@ -13,8 +13,20 @@
 NAME = cub3D
 SRCS = 	SRCS/main.c \
 		SRCS/utils.c \
+		SRCS/debug.c \
+		SRCS/get_rgb.c \
+		SRCS/check_textures.c \
+		SRCS/check_map.c \
+		SRCS/check_map_utils.c \
+		SRCS/check_utils.c \
+		SRCS/init_utils.c \
+		SRCS/input_hook_setup.c \
+		SRCS/player_utils.c \
+		SRCS/display_to_screen.c \
 		SRCS/parse_arg.c \
+		SRCS/parse_file.c \
 		SRCS/get_file_content.c \
+		SRCS/check_file_content_utils.c \
 		SRCS/init_structs.c \
 		SRCS/exit_program.c \
 		SRCS/free_data_struct.c \

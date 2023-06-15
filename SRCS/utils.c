@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 #include "cub3d.h"
 
+int	str_array_len(char **strs)
+{
+	int	i;
+
+	i = 0;
+	while (strs[i])
+		i++;
+	return (i);
+}
+
 int	error_msg(char *str, int exit_code)
 {
 	ft_putendl_fd("Error", STDERR_FILENO);

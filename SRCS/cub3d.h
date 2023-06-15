@@ -153,6 +153,8 @@ typedef struct s_ray
 
 /*-----------------FUNCTIONS--------------------------------------------------*/
 
+//debug.c
+void	ft_printf_strs(char **strs);
 void			debugprint(t_game *data);
 void			display_map(t_game *game);
 
@@ -173,10 +175,69 @@ int				free_data_struct(t_game *data, int exit_code);
 //gnl.c
 char			*get_next_line(int fd);
 
+//get_file_content.c
+void	get_file_content(t_game *data, char *file_path);
+char	**get_raw_file_data(char *file);
+int	get_line_count(char *file);
+
 //parse_file.c
-int				get_line_count(char *file);
-char			**get_raw_file_data(char *file);
-void			get_file_content(t_game *data, char *file);
+int	parse_file(t_game *data, char *argv);
+int	check_file_content(t_game *data);
+
+//check_file_content_utils.c
+int	get_content(t_game *data, int i);
+int	get_coord_path(t_config *config, char **line);
+int	get_texture_rgb(t_config *config, char **line);
+void	get_map(t_game *data, int i);
+void	remove_map_nl(t_mapinfo *map);
+
+//get_rgb.c
+int	get_rbg(t_config *config, char **line);
+int	fill_ceiling_rgb(t_config *config, char **tmp);
+int	fill_floor_rgb(t_config *config, char **tmp);
+
+//check_textures.c
+int	verify_minimap_textures(void);
+int	verify_texture_path(t_game *data);
+
+//check_map.c
+int	verify_map_validity(t_game *data);
+int	verify_map_down(t_game *data);
+int	verify_map_up(t_game *data);
+int	verify_map_right(t_game *data);
+int	verify_map_left(t_game *data);
+
+//check_map_utils.c
+int	verify_player_present(t_game *data);
+int	verify_map_characters(t_game *data);
+
+//init_utils.c
+void	init_player(t_player *player, mlx_t *mlx, t_mapinfo *map);
+void	init_minimap(t_player *player, mlx_t *mlx, t_mapinfo *map);
+void	init_minimap_textures(mlx_t *mlx, t_minimap *minimap);
+void	set_player_init_pos(t_player *player, t_mapinfo *map);
+void	set_player_rotation(t_player *player, char rotation);
+
+//input_hook_setup.c
+void	secondary_input_hook(t_game *game, bool *interact);
+void	input_hook(void *param);
+
+//player_utils.c
+void	player_loop(t_game *game, char direction, char rotation, bool interact);
+void	player_interact(t_game *game);
+void	strafe_player(t_player *player, t_mapinfo *mapinfo, char direction);
+void	move_player(t_player *player, t_mapinfo *mapinfo, char direction);
+void	rotate_player(t_player *player, char rotation);
+
+//display_to_screen.c
+int	reload_map_assets(mlx_t *mlx, t_minimap *minimap);
+void	put_tiles_to_screen(t_game *game, int i, int j, int middle);
+void	display_map(t_game *game);
+
+//check_utils.c
+int	check_for_correct_rgb(char *rgb);
+int	check_for_correct_coord(char *coord);
+bool	check_if_struct_filled(t_config *config);
 
 //parse_arg.c
 bool			file_exist(char *argv);
@@ -185,6 +246,7 @@ bool			check_map_extension(char *argv);
 int				parse_arg(char *argv);
 
 //utils.c
+int	str_array_len(char **strs);
 int				error_msg(char *str, int exit_code);
 void			exit_msg(t_game *data, char *str);
 
