@@ -83,8 +83,12 @@ void	draw_rays(mlx_image_t *window, t_ray *ray,
 	if ((ray->side == 0 && ray->ray_dir_x > 0)
 		|| (ray->side == 1 && ray->ray_dir_y < 0))
 		line[3] = TEXTURE_WIDTH - line[3] - 1;
-	if (ray->hit == 'D')
+	if (*ray->hit == 'D')
 		draw_pixels(window, config->textures[4], line, config);
+	else if (*ray->hit >= 1 && *ray->hit <= 9)
+	{
+		draw_pixels(window, config->door_anim[*ray->hit - 1], line, config);
+	}
 	else if (ray->side == 0 && ray->ray_dir_x <= 0)
 		draw_pixels(window, config->textures[0], line, config);
 	else if (ray->side == 0)

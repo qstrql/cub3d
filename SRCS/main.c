@@ -11,6 +11,19 @@
 /* ************************************************************************** */
 #include "cub3d.h"
 
+void	init_door_animation_textures(t_game *game)
+{
+	game->config.door_anim[0] = init_rc_texture("img/door_anim/door_anim0.png", game->mlx);
+	game->config.door_anim[1] = init_rc_texture("img/door_anim/door_anim1.png", game->mlx);
+	game->config.door_anim[2] = init_rc_texture("img/door_anim/door_anim2.png", game->mlx);
+	game->config.door_anim[3] = init_rc_texture("img/door_anim/door_anim3.png", game->mlx);
+	game->config.door_anim[4] = init_rc_texture("img/door_anim/door_anim4.png", game->mlx);
+	game->config.door_anim[5] = init_rc_texture("img/door_anim/door_anim5.png", game->mlx);
+	game->config.door_anim[6] = init_rc_texture("img/door_anim/door_anim6.png", game->mlx);
+	game->config.door_anim[7] = init_rc_texture("img/door_anim/door_anim7.png", game->mlx);
+	game->config.door_anim[8] = init_rc_texture("img/door_anim/door_anim8.png", game->mlx);
+}
+
 void	mlx_test(t_game *game)
 {
 	t_player		player;
@@ -24,6 +37,7 @@ void	mlx_test(t_game *game)
 	game->config.textures[3] = init_rc_texture(game->config.ea, game->mlx);
 	game->config.textures[4] = init_rc_texture("img/door_closed.png",
 			game->mlx);
+	init_door_animation_textures(game);
 	init_player(&player, game->mlx, game->mapinfo);
 	player_loop(game, 'X', 'X', false);
 	mlx_loop_hook(game->mlx, input_hook, game);

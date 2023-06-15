@@ -92,6 +92,7 @@ typedef struct s_config
 	char			*we;
 	char			*ea;
 	t_rc_texture	*textures[6];
+	t_rc_texture	*door_anim[10];
 	t_rgb			floor;
 	t_rgb			ceiling;
 }				t_config;
@@ -149,7 +150,7 @@ typedef struct s_ray
 	int		map_y;
 	int		step_x;
 	int		step_y;
-	char	hit;
+	char	*hit;
 	int		side;
 }	t_ray;
 
