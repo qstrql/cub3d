@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:14:26 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/15 12:14:27 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/15 12:56:41 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
@@ -54,4 +54,3 @@ int	parse_file(t_game *data, char *argv)
 		exit_msg(data, BAD_CHARACTERS);
 	return (VALID_FILE);
 }
-

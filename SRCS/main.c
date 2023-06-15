@@ -6,11 +6,10 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:50:23 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/08 14:32:26 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/15 12:56:34 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
-
 
 void	mlx_test(t_game *game)
 {

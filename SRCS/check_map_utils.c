@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:33:20 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/15 12:33:21 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/15 12:55:46 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
@@ -52,4 +52,3 @@ int	verify_map_characters(t_game *data)
 	}
 	return (SUCCESS);
 }
-

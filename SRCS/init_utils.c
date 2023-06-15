@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:35:27 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/15 12:35:30 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/15 12:56:27 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
@@ -114,4 +114,3 @@ void	init_player(t_player *player, mlx_t *mlx, t_mapinfo *map)
 	player->move_speed = 0.055;
 	player->rot_speed = 0.08;
 }
-

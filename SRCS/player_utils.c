@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:39:20 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/15 12:39:21 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/15 12:56:54 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
@@ -123,4 +123,3 @@ void	player_loop(t_game *game, char direction, char rotation, bool interact)
 	game->player->map_pos_y = (int)game->player->y;
 	cast_rays_3d(game->mlx, game->player, game->mapinfo, &game->config);
 }
-
