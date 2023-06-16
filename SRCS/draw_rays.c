@@ -16,7 +16,7 @@ int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void	draw_pixels(mlx_image_t *window,
+void	draw(mlx_image_t *window,
 			t_rc_texture *texture, int line[], t_config *config)
 {
 	int			i;
@@ -74,29 +74,26 @@ void	draw_rays(mlx_image_t *window, t_ray *ray,
 	double	wall_x;
 
 	line = get_line_values(ray);
+	wall_x = player->x + ray->perp_wall_dist * ray->ray_dir_x;
 	if (ray->side == 0)
 		wall_x = player->y + ray->perp_wall_dist * ray->ray_dir_y;
-	else
-		wall_x = player->x + ray->perp_wall_dist * ray->ray_dir_x;
 	wall_x -= floor(wall_x);
 	line[3] = (int)(wall_x * (double)TEXTURE_WIDTH);
 	if ((ray->side == 0 && ray->ray_dir_x > 0)
 		|| (ray->side == 1 && ray->ray_dir_y < 0))
 		line[3] = TEXTURE_WIDTH - line[3] - 1;
 	if (*ray->hit == 'D')
-		draw_pixels(window, config->textures[4], line, config);
-	else if (*ray->hit >= 1 && *ray->hit <= 9)
-	{
-		draw_pixels(window, config->door_anim[*ray->hit - 1], line, config);
-	}
+		draw(window, config->textures[4], line, config);
+	else if (*ray->hit >= 1 && *ray->hit <= 18)
+		draw(window, config->door_anim[(*ray->hit % 10) - 1], line, config);
 	else if (ray->side == 0 && ray->ray_dir_x <= 0)
-		draw_pixels(window, config->textures[0], line, config);
+		draw(window, config->textures[0], line, config);
 	else if (ray->side == 0)
-		draw_pixels(window, config->textures[2], line, config);
+		draw(window, config->textures[2], line, config);
 	else if (ray->side == 1 && ray->ray_dir_y >= 0)
-		draw_pixels(window, config->textures[1], line, config);
+		draw(window, config->textures[1], line, config);
 	else
-		draw_pixels(window, config->textures[3], line, config);
+		draw(window, config->textures[3], line, config);
 	free(line);
 }
 

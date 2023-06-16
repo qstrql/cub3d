@@ -89,13 +89,11 @@ void	strafe_player(t_player *player, t_mapinfo *mapinfo, char direction)
 			player->x += player->dir_y * player->move_speed;
 	}	
 }
-#include <unistd.h>
 
 void	player_interact(t_game *game)
 {
 	char	*tile_checked;
 	char	*player_pos;
-	double	time;
 
 	tile_checked = &(game->mapinfo->map \
 	[(int)(game->player->x + game->player->dir_x * 0.8)] \
@@ -103,25 +101,13 @@ void	player_interact(t_game *game)
 	player_pos = &(game->mapinfo->map[game->player->map_pos_x] \
 			[game->player->map_pos_y]);
 	if (*tile_checked == 'D')
-	{
 		*tile_checked = 1;
-		while (*tile_checked < 10)
-		{
-			time = mlx_get_time();
-			cast_rays_3d(game->mlx, game->player, game->mapinfo, &game->config);
-			while (mlx_get_time() < time + 0.02)
-				;
-			*tile_checked += 1;
-		}
-		*tile_checked = 'O';
-	}
 	else if (*tile_checked == 'O' && *player_pos != 'O')
-		*tile_checked = 'D';
+		*tile_checked = 17;
 }
 
 void	player_loop(t_game *game, char direction, char rotation, bool interact)
 {
-	//printf("time : %f\n", mlx_get_time());
 	if (rotation != 'X')
 		rotate_player(game->player, rotation);
 	if (direction == 'W' || direction == 'S')

@@ -222,7 +222,7 @@ void			set_player_init_pos(t_player *player, t_mapinfo *map);
 void			set_player_rotation(t_player *player, char rotation);
 
 //input_hook_setup.c
-void			secondary_input_hook(t_game *game, bool *interact);
+void			secondary_input_hook(t_game *game, bool *interact, char *rot);
 void			input_hook(void *param);
 
 //player_utils.c
@@ -262,7 +262,7 @@ void			dda_init_calculations(t_ray *ray, t_player *player);
 void			dda_calculations(t_ray *ray, t_mapinfo *map);
 
 //draw_rays.c
-void			draw_pixels(mlx_image_t *window,
+void			draw(mlx_image_t *window,
 					t_rc_texture *texture, int line[], t_config *config);
 void			cast_rays_3d(mlx_t *mlx, t_player *player,
 					t_mapinfo *map, t_config *config);

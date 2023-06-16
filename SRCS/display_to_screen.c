@@ -49,7 +49,8 @@ void	put_tiles_to_screen(t_game *game, int i, int j, int middle)
 	player = game->player;
 	if (i == player->map_pos_x && j == player->map_pos_y)
 		texture_num = 3;
-	else if (!ft_strchr("10DO", game->mapinfo->map[i][j]))
+	else if (!game->mapinfo->map[i][j] ||
+			!ft_strchr("10DO", game->mapinfo->map[i][j]))
 		return ;
 	else if (game->mapinfo->map[i][j] == '1')
 		texture_num = 1;
