@@ -11,6 +11,32 @@
 /* ************************************************************************** */
 #include "cub3d.h"
 
+void	fill_map_lines(t_mapinfo *mapinfo)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+
+	i = 0;
+	while (i < mapinfo->height && mapinfo->map[i])
+	{
+		if ((int)ft_strlen(mapinfo->map[i]) < mapinfo->width)
+		{
+			tmp = ft_strdup(mapinfo->map[i]);
+			free(mapinfo->map[i]);
+			mapinfo->map[i] = ft_calloc(sizeof(char), mapinfo->width);
+			j = 0;
+			while (tmp[j])
+			{
+				mapinfo->map[i][j] = tmp[j];
+				j++;
+			}
+			free(tmp);
+		}
+		i++;
+	}
+}
+
 int	check_file_content(t_game *data)
 {
 	int		i;
@@ -32,6 +58,7 @@ int	check_file_content(t_game *data)
 		data->mapinfo->map = ft_calloc(data->mapinfo->line_count,
 				sizeof(char *));
 		get_map(data, i);
+		fill_map_lines(data->mapinfo);
 		remove_map_nl(data->mapinfo);
 	}
 	return (VALID_FILE);

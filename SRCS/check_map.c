@@ -20,7 +20,7 @@ int	verify_map_left(t_game *data)
 	j = 0;
 	while (i < data->mapinfo->height && data->mapinfo->map[i])
 	{
-		while (j < data->mapinfo->width && data->mapinfo->map[i][j]
+		while (data->mapinfo->map[i][j] && j < data->mapinfo->width
 			&& ft_isspace(data->mapinfo->map[i][j]))
 			j++;
 		if (data->mapinfo->map[i][j] != '1')
@@ -40,7 +40,7 @@ int	verify_map_right(t_game *data)
 	j = ft_strlen(data->mapinfo->map[i]) - 1;
 	while (i < data->mapinfo->height && data->mapinfo->map[i])
 	{
-		while (j > 1 && data->mapinfo->map[i][j]
+		while (data->mapinfo->map[i][j] && j > 1
 			&& ft_isspace(data->mapinfo->map[i][j]))
 			j--;
 		if (j <= 1)
@@ -63,13 +63,13 @@ int	verify_map_up(t_game *data)
 	j = 0;
 	while (j < data->mapinfo->width - 1)
 	{
-		while (ft_isspace(data->mapinfo->map[i][j]) && data->mapinfo->map[i][j])
+		while (data->mapinfo->map[i][j] && ft_isspace(data->mapinfo->map[i][j]))
 		{
 			if ((int)ft_strlen(data->mapinfo->map[i + 1]) < j)
 				break ;
 			i++;
 		}
-		if (data->mapinfo->map[i][j] != '1' && data->mapinfo->map[i][j])
+		if (data->mapinfo->map[i][j] && data->mapinfo->map[i][j] != '1')
 			return (FAIL);
 		i = 0;
 		j++;

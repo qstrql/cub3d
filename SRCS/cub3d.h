@@ -45,10 +45,12 @@
 # define BAD_MAP "Map is invalid"
 # define BAD_CHARACTERS "Map contains invalid characters"
 
-# define WIN_WIDTH 640
-# define WIN_HEIGHT 480
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
 # define TEXTURE_WIDTH 256
 # define TEXTURE_HEIGHT 256
+//1 - très lent, 10 - très rapide
+# define SENSITIVITY 5
 
 enum e_rgb
 {
@@ -97,12 +99,6 @@ typedef struct s_config
 	t_rgb			ceiling;
 }				t_config;
 
-typedef struct s_sprite
-{
-	mlx_image_t		*img;
-	mlx_texture_t	*texture;
-}	t_sprite;
-
 typedef struct s_minimap
 {
 	int					cell_size;
@@ -112,7 +108,6 @@ typedef struct s_minimap
 
 typedef struct s_player
 {
-	t_sprite	sprite;
 	double		x;
 	double		y;
 	double		dir_x;

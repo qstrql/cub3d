@@ -49,6 +49,7 @@ void	mlx_test(t_game *game)
 	init_door_animation_textures(game);
 	init_player(&player, game->mlx, game->mapinfo);
 	player_loop(game, 'X', 'X', false);
+	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
 	mlx_loop_hook(game->mlx, input_hook, game);
 	mlx_loop(game->mlx);
 	free_game_textures(game);
