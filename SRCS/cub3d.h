@@ -166,8 +166,10 @@ void			exit_game(t_game *data, int exit_code);
 //free_data_struct.c
 void			free_mapinfo_struct(t_mapinfo *map);
 void			free_config_struct(t_config *config);
-void			free_game_textures(t_game *game);
 int				free_data_struct(t_game *data, int exit_code);
+
+//free_textures.c
+void			free_game_textures(t_game *game);
 
 //gnl.c
 char			*get_next_line(int fd);
@@ -211,7 +213,7 @@ int				verify_map_characters(t_game *data);
 //init_utils.c
 void			init_player(t_player *player, mlx_t *mlx, t_mapinfo *map);
 void			init_minimap(t_player *player, mlx_t *mlx, t_mapinfo *map);
-void			init_minimap_textures(mlx_t *mlx, t_minimap *minimap);
+int				init_minimap_textures(mlx_t *mlx, t_minimap *minimap);
 void			set_player_init_pos(t_player *player, t_mapinfo *map);
 void			set_player_rotation(t_player *player, char rotation);
 

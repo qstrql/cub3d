@@ -32,43 +32,6 @@ void	free_config_struct(t_config *config)
 		free(config->ea);
 }
 
-void	free_door_anims(t_game *game)
-{
-	free_rc_texture(game->config.door_anim[0]);
-	free_rc_texture(game->config.door_anim[1]);
-	free_rc_texture(game->config.door_anim[2]);
-	free_rc_texture(game->config.door_anim[3]);
-	free_rc_texture(game->config.door_anim[4]);
-	free_rc_texture(game->config.door_anim[5]);
-	free_rc_texture(game->config.door_anim[6]);
-	free_rc_texture(game->config.door_anim[7]);
-	free_rc_texture(game->config.door_anim[8]);
-}
-
-void	free_game_textures(t_game *game)
-{
-	free_door_anims(game);
-	free_rc_texture(game->config.textures[0]);
-	free_rc_texture(game->config.textures[1]);
-	free_rc_texture(game->config.textures[2]);
-	free_rc_texture(game->config.textures[3]);
-	free_rc_texture(game->config.textures[4]);
-	mlx_delete_texture(game->player->minimap.textures[0]);
-	mlx_delete_texture(game->player->minimap.textures[1]);
-	mlx_delete_texture(game->player->minimap.textures[2]);
-	mlx_delete_texture(game->player->minimap.textures[3]);
-	mlx_delete_texture(game->player->minimap.textures[4]);
-	mlx_delete_texture(game->player->minimap.textures[5]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[0]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[1]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[2]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[3]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[4]);
-	mlx_delete_image(game->mlx, game->player->minimap.images[5]);
-	free(game->player->minimap.images);
-	free(game->player->minimap.textures);
-}
-
 int	free_data_struct(t_game *data, int exit_code)
 {
 	free_config_struct(&data->config);

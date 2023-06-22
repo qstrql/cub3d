@@ -33,6 +33,20 @@ void	init_door_animation_textures(t_game *game)
 			game->mlx);
 }
 
+int	check_textures_not_corrupted(t_config config, t_minimap minimap)
+{
+	if (!config.textures[0] || !config.textures[1] || !config.textures[2]
+		|| !config.textures[3] || !config.door_anim[0] || !config.door_anim[1]
+		|| !config.door_anim[2] || !config.door_anim[3] || !config.door_anim[4]
+		|| !config.door_anim[5] || !config.door_anim[6] || !config.door_anim[7]
+		|| !config.door_anim[8] || !minimap.textures[0]
+		|| !minimap.textures[1] || !minimap.textures[2]
+		|| !minimap.textures[3] || !minimap.textures[4]
+		|| !minimap.textures[5])
+		return (FAIL);
+	return (SUCCESS);
+}
+
 void	mlx_test(t_game *game)
 {
 	t_player		player;
@@ -48,10 +62,13 @@ void	mlx_test(t_game *game)
 			game->mlx);
 	init_door_animation_textures(game);
 	init_player(&player, game->mlx, game->mapinfo);
-	player_loop(game, 'X', 'X', false);
-	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
-	mlx_loop_hook(game->mlx, input_hook, game);
-	mlx_loop(game->mlx);
+	if (check_textures_not_corrupted(game->config, player.minimap) == SUCCESS)
+	{
+		player_loop(game, 'X', 'X', false);
+		mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
+		mlx_loop_hook(game->mlx, input_hook, game);
+		mlx_loop(game->mlx);
+	}
 	free_game_textures(game);
 	mlx_terminate(game->mlx);
 }
@@ -65,7 +82,6 @@ int	main(int argc, char **argv)
 		init_data_struct(&data);
 		if (parse_file(&data, argv[1]) != VALID_FILE)
 			return (INVALID_FILE);
-		debugprint(&data);
 		mlx_test(&data);
 		free_data_struct(&data, EXIT_SUCCESS);
 	}

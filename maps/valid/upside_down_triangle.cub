@@ -1,10 +1,10 @@
-SO ./img/malveillance.png        
-NO ./img/malveillance.png      
-EA ./img/malveillance.png               
-WE ./img/malveillance.png  
+SO ./img/normal_cat.png        
+NO ./img/jinx.png      
+EA ./img/looking.png               
+WE ./img/floppa.png  
 
 
-C 199,203,240
+C 199,203,200
 F 31,4,4
 
  1111111111111111111111

@@ -1,11 +1,12 @@
-SO ./img/malveillance.png
-SO ./img/malveillance.png   
-SO ./img/malveillance.png   
-SO ./img/malveillance.png   
-SO ./img/malveillance.png      
-NO ./img/malveillance.png      
-EA ./img/malveillance.png               
-WE ./img/malveillance.png  
+SO ./img/normal_cat.png    
+SO ./img/normal_cat.png    
+SO ./img/normal_cat.png    
+SO ./img/normal_cat.png    
+SO ./img/normal_cat.png    
+SO ./img/normal_cat.png    
+NO ./img/jinx.png      
+EA ./img/looking.png               
+WE ./img/floppa.png  
 
 C 255,255,255
 F 0,0,0

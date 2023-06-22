@@ -64,27 +64,34 @@ void	set_player_init_pos(t_player *player, t_mapinfo *map)
 	player->x = -1;
 }
 
-void	init_minimap_textures(mlx_t *mlx, t_minimap *minimap)
+int	init_minimap_textures(mlx_t *mlx, t_minimap *minimap)
 {
 	minimap->images = ft_calloc(6, sizeof(mlx_image_t));
 	minimap->textures = ft_calloc(6, sizeof(mlx_texture_t));
 	minimap->textures[0] = mlx_load_png("img/minimap/map.png");
-	minimap->images[0] = mlx_texture_to_image(mlx, minimap->textures[0]);
 	minimap->textures[1] = mlx_load_png("img/minimap/minimap_wall.png");
-	minimap->images[1] = mlx_texture_to_image(mlx, minimap->textures[1]);
 	minimap->textures[2] = mlx_load_png("img/minimap/minimap_ground.png");
-	minimap->images[2] = mlx_texture_to_image(mlx, minimap->textures[2]);
 	minimap->textures[3] = mlx_load_png("img/minimap/minimap_player.png");
-	minimap->images[3] = mlx_texture_to_image(mlx, minimap->textures[3]);
 	minimap->textures[4] = mlx_load_png("img/minimap/minimap_door_closed.png");
-	minimap->images[4] = mlx_texture_to_image(mlx, minimap->textures[4]);
 	minimap->textures[5] = mlx_load_png("img/minimap/minimap_door_open.png");
+	if (!minimap->textures[0]
+		|| !minimap->textures[1] || !minimap->textures[2]
+		|| !minimap->textures[3] || !minimap->textures[4]
+		|| !minimap->textures[5])
+		return (FAIL);
+	minimap->images[0] = mlx_texture_to_image(mlx, minimap->textures[0]);
+	minimap->images[1] = mlx_texture_to_image(mlx, minimap->textures[1]);
+	minimap->images[2] = mlx_texture_to_image(mlx, minimap->textures[2]);
+	minimap->images[3] = mlx_texture_to_image(mlx, minimap->textures[3]);
+	minimap->images[4] = mlx_texture_to_image(mlx, minimap->textures[4]);
 	minimap->images[5] = mlx_texture_to_image(mlx, minimap->textures[5]);
+	return (SUCCESS);
 }
 
 void	init_minimap(t_player *player, mlx_t *mlx, t_mapinfo *map)
 {
-	init_minimap_textures(mlx, &(player->minimap));
+	if (init_minimap_textures(mlx, &(player->minimap)) == FAIL)
+		return ;
 	if (map->width >= map->height)
 	{
 		player->minimap.cell_size = WIN_WIDTH / map->width / 2;

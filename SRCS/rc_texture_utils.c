@@ -67,6 +67,8 @@ t_rc_texture	*init_rc_texture(char *path, mlx_t *mlx)
 
 void	free_rc_texture(t_rc_texture *texture)
 {
+	if (texture == NULL)
+		return ;
 	free(texture->pixels);
 	free(texture);
 }
