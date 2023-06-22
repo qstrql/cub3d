@@ -43,7 +43,7 @@ int	verify_map_characters(t_game *data)
 	{
 		while (data->mapinfo->map[i][j])
 		{
-			if (ft_strchr("10DWNSE \n\t\r\f\v", data->mapinfo->map[i][j]) == 0)
+			if (ft_strchr("10ODWNSE \n\t\r\f\v", data->mapinfo->map[i][j]) == 0)
 				return (FAIL);
 			j++;
 		}

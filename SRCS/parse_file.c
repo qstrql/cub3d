@@ -60,8 +60,39 @@ int	check_file_content(t_game *data)
 		get_map(data, i);
 		fill_map_lines(data->mapinfo);
 		remove_map_nl(data->mapinfo);
+		if (data->mapinfo->width < 2 || data->mapinfo->height < 2)
+			return (INVALID_FILE);
 	}
 	return (VALID_FILE);
+}
+
+int	check_map_alignement(t_game *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->mapinfo->height
+		&& data->mapinfo->map[i])
+	{
+		if (!ft_isspace(data->mapinfo->map[i][0]))
+			return (SUCCESS);
+		i++;
+	}
+	return (FAIL);
+}
+
+int	check_file_is_empty(t_game *data)
+{
+	int	i;
+
+	i = 0;
+	while (data->raw_file[i])
+	{
+		if (!str_is_space_only(data->raw_file[i]))
+			return (SUCCESS);
+		i++;
+	}
+	return (FAIL);
 }
 
 int	parse_file(t_game *data, char *argv)
@@ -69,15 +100,21 @@ int	parse_file(t_game *data, char *argv)
 	if (parse_arg(argv) == FAIL)
 		exit_game(data, INVALID_FILE);
 	get_file_content(data, argv);
+	if (check_file_is_empty(data) == FAIL)
+		exit_msg(data, WRONG_FILE_CONTENT);
 	if (check_file_content(data) == FAIL)
 		exit_msg(data, WRONG_FILE_CONTENT);
 	if (verify_texture_path(data) == FAIL)
 		exit_msg(data, WRONG_TEXTURE_PATH);
 	if (verify_minimap_textures() == FAIL)
 		exit_msg(data, MINIMAP_FILES_MISSING);
+	if (check_map_alignement(data) == FAIL)
+		exit_msg(data, "Must have a line that doesn't start by white space");
 	if (verify_map_validity(data) == FAIL)
 		exit_msg(data, BAD_MAP);
 	if (verify_map_characters(data) == FAIL)
 		exit_msg(data, BAD_CHARACTERS);
+	if (verify_player_present(data) == FAIL)
+		exit_msg(data, PLAYER_MISSING);
 	return (VALID_FILE);
 }

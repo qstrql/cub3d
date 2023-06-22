@@ -44,12 +44,11 @@
 # define MINIMAP_FILES_MISSING "Minimap textures are missing"
 # define BAD_MAP "Map is invalid"
 # define BAD_CHARACTERS "Map contains invalid characters"
-
+# define PLAYER_MISSING "Player is missing from the map"
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define TEXTURE_WIDTH 256
 # define TEXTURE_HEIGHT 256
-//1 - très lent, 10 - très rapide
 # define SENSITIVITY 5
 
 enum e_rgb

@@ -16,7 +16,7 @@ void	remove_map_nl(t_mapinfo *map)
 	int	i;
 
 	i = map->height - 1;
-	while (str_is_space_only(map->map[i]))
+	while (map->height > 0 && str_is_space_only(map->map[i]))
 	{
 		free(map->map[i]);
 		map->map[i] = NULL;

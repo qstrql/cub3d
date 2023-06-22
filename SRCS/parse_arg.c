@@ -53,7 +53,9 @@ bool	file_is_a_directory(char *file)
 int	parse_arg(char *argv)
 {
 	if (file_exist(argv) == false)
+	{
 		return (error_msg(FILE_DOESNT_EXIST, INVALID_FILE));
+	}
 	if (ft_strchr(argv, '.'))
 	{
 		if (check_map_extension(argv) == false)
