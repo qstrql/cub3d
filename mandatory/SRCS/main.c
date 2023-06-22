@@ -11,38 +11,10 @@
 /* ************************************************************************** */
 #include "cub3d.h"
 
-void	init_door_animation_textures(t_game *game)
-{
-	game->config.door_anim[0] = init_rc_texture("img/door_anim/door_anim0.png",
-			game->mlx);
-	game->config.door_anim[1] = init_rc_texture("img/door_anim/door_anim1.png",
-			game->mlx);
-	game->config.door_anim[2] = init_rc_texture("img/door_anim/door_anim2.png",
-			game->mlx);
-	game->config.door_anim[3] = init_rc_texture("img/door_anim/door_anim3.png",
-			game->mlx);
-	game->config.door_anim[4] = init_rc_texture("img/door_anim/door_anim4.png",
-			game->mlx);
-	game->config.door_anim[5] = init_rc_texture("img/door_anim/door_anim5.png",
-			game->mlx);
-	game->config.door_anim[6] = init_rc_texture("img/door_anim/door_anim6.png",
-			game->mlx);
-	game->config.door_anim[7] = init_rc_texture("img/door_anim/door_anim7.png",
-			game->mlx);
-	game->config.door_anim[8] = init_rc_texture("img/door_anim/door_anim8.png",
-			game->mlx);
-}
-
-int	check_textures_not_corrupted(t_config config, t_minimap minimap)
+int	check_textures_not_corrupted(t_config config)
 {
 	if (!config.textures[0] || !config.textures[1] || !config.textures[2]
-		|| !config.textures[3] || !config.door_anim[0] || !config.door_anim[1]
-		|| !config.door_anim[2] || !config.door_anim[3] || !config.door_anim[4]
-		|| !config.door_anim[5] || !config.door_anim[6] || !config.door_anim[7]
-		|| !config.door_anim[8] || !minimap.textures[0]
-		|| !minimap.textures[1] || !minimap.textures[2]
-		|| !minimap.textures[3] || !minimap.textures[4]
-		|| !minimap.textures[5])
+		|| !config.textures[3])
 		return (FAIL);
 	return (SUCCESS);
 }
@@ -60,11 +32,10 @@ void	mlx_test(t_game *game)
 	game->config.textures[3] = init_rc_texture(game->config.ea, game->mlx);
 	game->config.textures[4] = init_rc_texture("img/door_closed.png",
 			game->mlx);
-	init_door_animation_textures(game);
-	init_player(&player, game->mlx, game->mapinfo);
-	if (check_textures_not_corrupted(game->config, player.minimap) == SUCCESS)
+	init_player(&player, game->mapinfo);
+	if (check_textures_not_corrupted(game->config) == SUCCESS)
 	{
-		player_loop(game, 'X', 'X', false);
+		player_loop(game, 'X', 'X');
 		mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
 		mlx_loop_hook(game->mlx, input_hook, game);
 		mlx_loop(game->mlx);

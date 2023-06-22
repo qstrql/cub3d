@@ -23,7 +23,7 @@
 # include <math.h>
 # include <limits.h>
 # include "../libft/INCLUDES/libft.h"
-# include "../MLX42/include/MLX42/MLX42.h"
+# include "../../MLX42/include/MLX42/MLX42.h"
 
 /*-----------------DEFINES & ENUMS--------------------------------------------*/
 

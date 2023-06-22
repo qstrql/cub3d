@@ -30,6 +30,7 @@ SRCS = 	SRCS/main.c \
 		SRCS/init_structs.c \
 		SRCS/exit_program.c \
 		SRCS/free_data_struct.c \
+		SRCS/free_textures.c \
 		SRCS/get_next_line.c \
 		SRCS/cast_rays.c \
 		SRCS/draw_rays.c \
@@ -38,7 +39,7 @@ SRCS = 	SRCS/main.c \
 CC = clang
 OBJS = $(SRCS:.c=.o)
 FLAGS = -Wall -Werror -Wextra -I ./libft/INCLUDES/ -ggdb3
-LIBMLX	:= ./MLX42
+LIBMLX	:= ../MLX42
 #====================================COLORS====================================#
 NOC            = \033[0m
 BOLD        = \033[1m
@@ -68,7 +69,7 @@ libmlx:
 $(NAME): $(OBJS)
 		@rm .progressbar
 		make -C libft
-		$(CC) $(FLAGS) $^ -o $(NAME) libft/libft.a MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+		$(CC) $(FLAGS) $^ -o $(NAME) libft/libft.a ../MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
 %.o:%.c
 	$(if $(filter $(NB_COMPIL),0), @echo "$(BLUE)Compiling cub3D$(NOC)")
