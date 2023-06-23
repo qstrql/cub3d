@@ -76,7 +76,8 @@ all: libmlx $(NAME)
 bonus: libmlx $(NAMEBONUS)
 
 libmlx:
-	make -C $(LIBMLX)/build
+	if test -d $(LIBMLX)/build; then :; else @cmake $(LIBMLX) -B $(LIBMLX)/build; fi
+	make -C $(LIBMLX)/build -j4
 
 $(NAME): $(OBJS)
 	make -C libft
@@ -91,13 +92,12 @@ $(NAMEBONUS): $(BONUSOBJS)
 
 clean:
 	make clean -C libft
-	make clean -C $(LIBMLX)/build
-	#rm -rf $(LIBMLX)/build
-	rm -f libft/libft.a
 	rm -f $(OBJS)
 	rm -f $(BONUSOBJS)
 
 fclean: clean
+	make clean -C $(LIBMLX)/build
+	make fclean -C libft
 	rm -f $(NAME)
 	rm -f $(NAMEBONUS)
 
