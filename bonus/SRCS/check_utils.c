@@ -40,13 +40,19 @@ int	check_for_correct_coord(char *coord)
 int	check_for_correct_rgb(char *rgb)
 {
 	int	i;
+	int	flag;
 
 	i = 0;
+	flag = 0;
 	while (rgb[i])
 	{
 		if (!ft_isdigit(rgb[i]) && rgb[i] != ',')
 			return (FAIL);
+		if (rgb[i] == ',')
+			flag++;
 		i++;
 	}
+	if (flag > 2)
+		return (FAIL);
 	return (SUCCESS);
 }

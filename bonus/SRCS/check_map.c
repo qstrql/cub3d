@@ -66,7 +66,7 @@ int	verify_map_up(t_game *data)
 			if (data->mapinfo->map[i + 1] != NULL
 				&& (int)ft_strlen(data->mapinfo->map[i + 1]) < j)
 				break ;
-			else
+			else if (data->mapinfo->map[i + 1] == NULL)
 				return (FAIL);
 			i++;
 		}
