@@ -63,8 +63,11 @@ int	verify_map_up(t_game *data)
 	{
 		while (data->mapinfo->map[i][j] && ft_isspace(data->mapinfo->map[i][j]))
 		{
-			if ((int)ft_strlen(data->mapinfo->map[i + 1]) < j)
+			if (data->mapinfo->map[i + 1] != NULL
+				&& (int)ft_strlen(data->mapinfo->map[i + 1]) < j)
 				break ;
+			else
+				return (FAIL);
 			i++;
 		}
 		if (data->mapinfo->map[i][j] && data->mapinfo->map[i][j] != '1')
