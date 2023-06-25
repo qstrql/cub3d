@@ -6,7 +6,7 @@
 /*   By: mjouot <mjouot@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:23:16 by mjouot            #+#    #+#             */
-/*   Updated: 2023/06/15 12:23:18 by mjouot           ###   ########.fr       */
+/*   Updated: 2023/06/25 18:23:35 by mjouot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "cub3d.h"
@@ -40,13 +40,19 @@ int	check_for_correct_coord(char *coord)
 int	check_for_correct_rgb(char *rgb)
 {
 	int	i;
+	int	flag;
 
 	i = 0;
+	flag = 0;
 	while (rgb[i])
 	{
 		if (!ft_isdigit(rgb[i]) && rgb[i] != ',')
 			return (FAIL);
+		if (rgb[i] == ',')
+			flag++;
 		i++;
 	}
+	if (flag > 2)
+		return (FAIL);
 	return (SUCCESS);
 }
