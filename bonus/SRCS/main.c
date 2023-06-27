@@ -47,13 +47,15 @@ int	check_textures_not_corrupted(t_config config, t_minimap minimap)
 	return (SUCCESS);
 }
 
-void	mlx_test(t_game *game)
+int	mlx_test(t_game *game)
 {
 	t_player		player;
 
 	game->player = &player;
 	game->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "Cub3d II : Part IV, \
 	358/2 days : Remastered : Remake (Cloud version (Bonus))", false);
+	if (game->mlx == NULL)
+		return (FAIL);
 	game->config.textures[0] = init_rc_texture(game->config.so, game->mlx);
 	game->config.textures[2] = init_rc_texture(game->config.no, game->mlx);
 	game->config.textures[1] = init_rc_texture(game->config.we, game->mlx);
@@ -71,6 +73,7 @@ void	mlx_test(t_game *game)
 	}
 	free_game_textures(game);
 	mlx_terminate(game->mlx);
+	return (SUCCESS);
 }
 
 int	main(int argc, char **argv)
@@ -82,7 +85,8 @@ int	main(int argc, char **argv)
 		init_data_struct(&data);
 		if (parse_file(&data, argv[1]) != VALID_FILE)
 			return (INVALID_FILE);
-		mlx_test(&data);
+		if (mlx_test(&data) == FAIL)
+			ft_putstr_fd("cub3d : could not initialze MLX\n", 2);
 		free_data_struct(&data, EXIT_SUCCESS);
 	}
 	else
