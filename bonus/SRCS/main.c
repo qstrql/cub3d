@@ -67,7 +67,7 @@ int	mlx_test(t_game *game)
 	if (check_textures_not_corrupted(game->config, player.minimap) == SUCCESS)
 	{
 		player_loop(game, 'X', 'X', false);
-		mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
+		mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
 		mlx_loop_hook(game->mlx, input_hook, game);
 		mlx_loop(game->mlx);
 	}
